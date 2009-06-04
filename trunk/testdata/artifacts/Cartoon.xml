@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artefacts userid="0">
+	<lang>1</lang>
+	<artefact>
+		<header>
+			<link rel="meta" href="http://www.mccord-museum.qc.ca/en/collection/artifacts/M996.10.62/meta/dc/"/>
+			<link rel="bookmark" href="http://www.mccord-museum.qc.ca/en/collection/artifacts/M996.10.62/"/>
+		</header>
+		<objectid>94341</objectid>
+		<accessnumber>M996.10.62</accessnumber>
+		<title><![CDATA[Happy Canada Day! Joyeux Canada Jour !]]></title>
+		<artist><![CDATA[Serge Chapleau]]></artist>
+		<dimensions><![CDATA[43 x 35.7 cm]]></dimensions>
+		<dated><![CDATA[1994, 20th century]]></dated>
+		<object><![CDATA[Drawing, cartoon]]></object>
+		<culture/>
+		<geoculturalarea/>
+		<medium><![CDATA[Graphite on paper]]></medium>
+		<mention><![CDATA[Gift of M. Serge Chapleau]]></mention>
+		<copyright><![CDATA[© McCord Museum]]></copyright>
+		<soundfiles/>
+		<images>
+			<image id="145725" rank="0" primarydisplay="yes" url="" alt="" view="" copyright="© McCord Museum">
+				<longdesc/>
+				<rights>
+					<right type="cc">
+						<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/" title="This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License" target="_blank">
+							<img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"/>
+						</a>
+					</right>
+				</rights>
+				<imagesfiles>
+					<imagefile id="664223" format="mini" label="Square" height="74" width="74" filesize="5" sizeunit="kB">http://www.mccord-museum.qc.ca/ThumbView/M996.10.62.jpg</imagefile>
+					<imagefile id="778288" format="small" label="Thumbnail" height="114" width="112" filesize="7" sizeunit="kB">http://www.mccord-museum.qc.ca/ListView/M996.10.62.jpg</imagefile>
+					<imagefile id="778288" format="carrousel" label="Thumbnail" height="85" width="83" filesize="7" sizeunit="kB">http://www.mccord-museum.qc.ca/ListView/M996.10.62.jpg</imagefile>
+					<imagefile id="910533" format="medium" label="Medium" height="385" width="379" filesize="60" sizeunit="kB">http://www.mccord-museum.qc.ca/ObjView/M996.10.62.jpg</imagefile>
+					<imagefile id="910533" format="album" label="Medium" height="200" width="196" filesize="60" sizeunit="kB">http://www.mccord-museum.qc.ca/ObjView/M996.10.62.jpg</imagefile>
+					<imagefile id="1042776" format="large" label="Large" height="768" width="757" filesize="64" sizeunit="kB">http://www.mccord-museum.qc.ca/largeimages/M996.10.62.jpg</imagefile>
+					<imagefile id="1440929" format="zoomify" label="" height="" width="" filesize="" sizeunit="">http://wozniak.wsg.mcgill.ca/zoomify/BATCH_PPD_14/M996.10.62</imagefile>
+				</imagesfiles>
+				<imagemaps/>
+			</image>
+		</images>
+		<descriptions>
+			<description_museum><![CDATA[Serge Chapleau is the creator of a large group of humorous drawings that constitute the most recent major acquisition to enrich the McCord Museum's collection of over 15,000 caricatures. Chapleau - Aislin's francophone counterpart in Montreal - executed his first works in 1971 for the weekly magazine Perspectives. After having contributed to a number of daily papers and magazines, he became political cartoonist for Le Devoir in 1991, and for La Presse in 1996. Here, he shows Prime Minister Jean Chrétien wishing us all a Happy Canada Day.]]></description_museum>
+			<description_cura><![CDATA["One of my early classics of Chrétien. The drawing really captures the man, who speaks two second languages absolutely perfectly!"<br><br>Serge Chapleau]]></description_cura>
+			<what><![CDATA[A populist politician, Jean Chrétien is famous for frequently butchering the French language by translating literally expressions from Canada's other official language, English. Many cartoonists have lampooned Chrétien for this...]]></what>
+			<when><![CDATA[On July 1, 1994, Jean Chrétien celebrated Canada Day for the first time as the country's prime minister. His Liberal Party was brought to power in the general election of October 1993.]]></when>
+			<where><![CDATA[Canada Day is celebrated annually throughout Canada. In Quebec, however, where there is a deeply entrenched sovereignist movement, the celebration often rekindles the nationalist debate.]]></where>
+			<who><![CDATA[Jean Chrétien was elected leader of the Liberal Party of Canada in 1990 and served as prime minister of Canada from 1993 to 2004.]]></who>
+		</descriptions>
+		<comments count="1">
+			<comment id="2238" public="1" offensive="0" reported="0">
+				<published>2009-05-08 15:03:26</published>
+				<last_modified>2009-05-08 15:03:26</last_modified>
+				<author userid="1521" username="hugues" avatar="http://www.mccord-museum.qc.ca/images/avatars/anonyme.jpg"/>
+				<text><![CDATA[I never thought i would miss Jean Chr&eacute;tien.]]></text>
+			</comment>
+		</comments>
+		<keywords>
+			<keyword id="21369" count="4">
+				<label><![CDATA[Canada Day]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=21369</href>
+				</search_link>
+			</keyword>
+			<keyword id="6231" count="19138">
+				<label><![CDATA[Cartoon]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=6231</href>
+				</search_link>
+			</keyword>
+			<keyword id="6635" count="18637">
+				<label><![CDATA[Drawing]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=6635</href>
+				</search_link>
+			</keyword>
+			<keyword id="6636" count="18379">
+				<label><![CDATA[drawing]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=6636</href>
+				</search_link>
+			</keyword>
+			<keyword id="21704" count="334">
+				<label><![CDATA[Federal]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=21704</href>
+				</search_link>
+			</keyword>
+			<keyword id="9565" count="1849">
+				<label><![CDATA[figure]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=9565</href>
+				</search_link>
+			</keyword>
+			<keyword id="21886" count="4">
+				<label><![CDATA[Holiday]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=21886</href>
+				</search_link>
+			</keyword>
+			<keyword id="21972" count="80">
+				<label><![CDATA[Jean Chrétien]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=21972</href>
+				</search_link>
+			</keyword>
+			<keyword id="22020" count="1">
+				<label><![CDATA[July 1st]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=22020</href>
+				</search_link>
+			</keyword>
+			<keyword id="22083" count="243">
+				<label><![CDATA[Liberal Party of Canada]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=22083</href>
+				</search_link>
+			</keyword>
+			<keyword id="10009" count="1608">
+				<label><![CDATA[male]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=10009</href>
+				</search_link>
+			</keyword>
+			<keyword id="22447" count="800">
+				<label><![CDATA[Political parties]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=22447</href>
+				</search_link>
+			</keyword>
+			<keyword id="22450" count="859">
+				<label><![CDATA[Politicians]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=22450</href>
+				</search_link>
+			</keyword>
+			<keyword id="22451" count="1624">
+				<label><![CDATA[Politics]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=22451</href>
+				</search_link>
+			</keyword>
+		</keywords>
+		<tags>
+			<tag id="20096" keywordid="20096" userid="" count="4" usercount="0">
+				<label><![CDATA[Jean Chrétien]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20096&amp;userid</href>
+				</search_link>
+				<search_link global="no">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20096</href>
+				</search_link>
+			</tag>
+			<tag id="24934" keywordid="24934" userid="" count="1" usercount="0">
+				<label><![CDATA[patriote]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=24934&amp;userid</href>
+				</search_link>
+				<search_link global="no">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=24934</href>
+				</search_link>
+			</tag>
+			<tag id="20092" keywordid="20092" userid="" count="7" usercount="0">
+				<label><![CDATA[Politiciens]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20092&amp;userid</href>
+				</search_link>
+				<search_link global="no">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20092</href>
+				</search_link>
+			</tag>
+		</tags>
+		<links>
+			<type id="internal">
+				<category id="clip_default" label="Videos">
+					<link id="200">
+						<href><![CDATA[http://wozniak.wsg.mcgill.ca/video/docu/chapleau_complete_hi.mov]]></href>
+						<target><![CDATA[_blank]]></target>
+						<label><![CDATA[Chapleau présente Aislin]]></label>
+						<title/>
+					</link>
+					<link id="200">
+						<href><![CDATA[http://wozniak.wsg.mcgill.ca/video/docu/aislin_complete_hi.mov]]></href>
+						<target><![CDATA[_blank]]></target>
+						<label><![CDATA[Aislin presents Chapleau]]></label>
+						<title/>
+					</link>
+				</category>
+				<category id="webtour_default" label="Related Web Tours">
+					<link id="0">
+						<href><![CDATA[/en/keys/webtours/tourID/CW_CaricatureEdito_EN]]></href>
+						<target><![CDATA[_self]]></target>
+						<label><![CDATA[Once a Politician, Always a Butt: Introduction to Editorial Cartooning]]></label>
+						<title><![CDATA[Once a Politician, Always a Butt: Introduction to Editorial Cartooning]]></title>
+					</link>
+					<link id="0">
+						<href><![CDATA[/en/keys/webtours/tourID/VQ_P4_6_EN]]></href>
+						<target><![CDATA[_self]]></target>
+						<label><![CDATA[Funny and Moody: The Best of Chapleau's Cartoons]]></label>
+						<title><![CDATA[Funny and Moody: The Best of Chapleau's Cartoons]]></title>
+					</link>
+				</category>
+			</type>
+		</links>
+	</artefact>
+</artefacts>
