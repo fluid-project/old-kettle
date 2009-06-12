@@ -30,7 +30,7 @@ var fluid = fluid || fluid_1_1;
     var MARKER = {};
     
     function push(context, value) {
-        var tagname = context.parser.getName();
+        var tagname = context.parser.m_name;
         var length = context.stack.length;
         var top = context.stack[length - 1];
         var exist = top[tagname];
@@ -46,7 +46,9 @@ var fluid = fluid || fluid_1_1;
                     elen = 1;
                 }
                 if (typeof(value) === "string") {
-                    exist[elen - 1].nodetext = value;
+                    if (value !== "") {
+                        exist[elen - 1].nodetext = value;
+                    }
                 }
                 else {
                     exist[elen] = value;
@@ -55,9 +57,7 @@ var fluid = fluid || fluid_1_1;
         }
     }
     
-    function processDefaultTag(context) {
-        var parser = context.parser;
-        var text = parser.m_xml.substr(parser.m_cB, parser.m_cE - parser.m_cB);
+    function processDefaultTag(context, text) {
         context.text = $.trim(text);
     }
     
@@ -75,18 +75,52 @@ var fluid = fluid || fluid_1_1;
     	  push(context, context.text);
     }
     
-    fluid.mapping.parseXml = function(doc) {
-      var togo = {};
-      var stack = [togo];
-      var parser = new XMLP(doc);
-      var context = {
+    function makeContext(togo, parser) {
+      return {
         togo: togo,
-        stack: stack,
+        stack: [togo],
         parser: parser,
         defstart: -1,
         defend: -1,
         text: ""
       };
+    }
+    
+    function stripDec(doc) {
+        var match = doc.match(/(^<\?.+\?>[\s]*)/);
+        if (match) {
+            doc = doc.substring( match[0].length);
+        }
+        return doc;
+    }
+    
+    fluid.mapping.parseResig = function(doc) {
+      var togo = {};
+      var context = makeContext(togo, {});
+      doc = stripDec(doc);
+      var handler = {
+        start: function(tag, attrs, unary) {
+            context.parser.m_name = tag;
+            context.parser.m_attributes = attrs;
+            processTagStart(context, unary);
+        },
+        end: function(tag) {
+            context.m_name = tag;
+            processTagEnd(context);
+        },
+        chars: function(text) {
+            processDefaultTag(context, text);
+        }
+      };
+      var parser = HTMLParser(doc, handler);
+      return togo;
+    };
+    
+    fluid.mapping.parseXml = function(doc) {
+      var togo = {};
+      var parser = new XMLP(doc);
+      var context = makeContext(togo, parser);
+
       parseloop: while(true) {
       var iEvent = parser.next();
 //        if (iEvent === XMLP._NONE) break parseloop;
@@ -99,7 +133,8 @@ var fluid = fluid || fluid_1_1;
           processTagStart(context, false);
           break;
         case XMLP._ELM_E:
-          processDefaultTag(context);
+          var text = parser.m_xml.substr(parser.m_cB, parser.m_cE - parser.m_cB);
+          processDefaultTag(context, text);
           processTagEnd(context);
           break;
         case XMLP._ELM_EMP:
@@ -109,7 +144,7 @@ var fluid = fluid || fluid_1_1;
           break;
         case XMLP._PI:
         case XMLP._DTD:
-          defstart = -1;
+          context.defstart = -1;
           continue; // not interested in reproducing these
         case XMLP._TEXT:
         case XMLP._ENTITY:
@@ -135,11 +170,48 @@ var fluid = fluid || fluid_1_1;
       return togo;
     };
     
+    fluid.mapping.parseDom = function(dom) {
+      var togo = {};
+      var context = makeContext(togo, {});
+      
+      function parseNode(dom) {
+         context.parser.m_name = dom.tagName;
+         var attrs = {};
+         if (dom.attributes) {
+             for (var i = 0; i < dom.attributes.length; ++ i) {
+                 var name = dom.attributes[i].name;
+                 var value = dom.attributes[i].value;
+                 if (name && value) {
+                   attrs[name] = value;
+                 }
+             }
+         }
+         context.parser.m_attributes = attrs;
+         processTagStart(context, false);
+         var children = dom.childNodes;
+         for (var i = 0; i < children.length; ++ i) {
+             var node = dom.childNodes[i];
+             if (node.nodeType === 1) {
+                 parseNode(node);
+             }
+             else if (node.nodeType === 3 || node.nodeType === 4) {
+                 processDefaultTag(context, node.nodeValue);
+             }
+         }
+         context.parser.m_name = dom.tagName;
+         processTagEnd(context);
+         context.text = "";
+      }
+      
+      parseNode(dom);
+      return togo;
+    };
+    
     function writeOutput(message) {
-        alert(message);
+        $("#render-root").append(message + "<br/>");
     }
     
-    fluid.mapping.loadFiles = function(files) {
+    function makeSpecs(files, getDom) {
        var specs = {};
        for (var i = 0; i < files.length; ++ i) {
            var file = files[i];
@@ -148,11 +220,20 @@ var fluid = fluid || fluid_1_1;
            var spec = {
               href: file
            };
+           if (getDom) {
+              spec.options = {
+                 dataType: "xml"
+              };
+           }
            specs[key] = spec;
        }
+       return specs;  
+    }
+    
+    fluid.mapping.loadFiles = function(files) {
+
        
-       function parseSpecs(specs) {
-           var times = 10;
+       function timeSpecs(specs, func, times) {
            var time = new Date();
            var count = 0;
            for (var i = 0; i < times; ++ i) {
@@ -160,18 +241,29 @@ var fluid = fluid || fluid_1_1;
                for (var key in specs) {
                    ++ count;
                    var spec = specs[key];
-                   spec.data = fluid.mapping.parseXml(spec.resourceText);
+                   spec.data = fluid.invokeGlobalFunction(func, [spec.resourceText]);
                }
            }
            var delay = (new Date() - time);
            var usdelay = delay / ((times * count));
-           writeOutput("Parsed " + (times * count) + " documents in " +  delay + "ms: " + usdelay + "ms per call");
- 
+           writeOutput(func + " parsed " + (times * count) + " documents in " +  delay + "ms: " + usdelay + "ms per call");
+            
        }
        
-       fluid.fetchResources(specs, parseSpecs);
+       function parseSpecs(specs) {
+           timeSpecs(specs, "fluid.mapping.parseXml", 10);
+           timeSpecs(specs, "fluid.mapping.parseResig", 1);
+       }
+       
+       function parseSpecs2(specs) {
+           timeSpecs(specs, "fluid.mapping.parseDom", 10);
+       }
+       
+       fluid.fetchResources(makeSpecs(files), parseSpecs);
+       
+       fluid.fetchResources(makeSpecs(files, true), parseSpecs2);
        
     }
     
         
-})(jQuery, fluid_1_1);
+})(jQuery, fluid_1_2);
