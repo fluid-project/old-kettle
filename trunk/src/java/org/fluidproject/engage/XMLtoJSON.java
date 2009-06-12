@@ -11,7 +11,7 @@ public class XMLtoJSON {
 
   public static final String dir = "testdata/artifacts/";
 
-  public static final int reps = 100;
+  public static final int reps = 1000;
 
   public static void main(String[] args) {
     long time = System.currentTimeMillis();
