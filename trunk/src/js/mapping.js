@@ -220,11 +220,9 @@ var fluid = fluid || fluid_1_1;
            var spec = {
               href: file
            };
-           if (getDom) {
-              spec.options = {
-                 dataType: "xml"
-              };
-           }
+           spec.options = {
+               dataType: getDom? "xml" : "text"
+           };
            specs[key] = spec;
        }
        return specs;  
