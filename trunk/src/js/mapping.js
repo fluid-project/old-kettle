@@ -20,11 +20,39 @@ var fluid = fluid || fluid_1_1;
 (function ($, fluid) {
     fluid.mapping = fluid.mapping || {};
     
-    function processDefaultTag(context) {
-        // accrete any mixed content - probably an error
-    }
-    function processTagStart(context) {
+    var MARKER = {};
     
+    function processDefaultTag(context) {
+         var text = context.parser.m_xml.substr(context.defstart, context.defend - context.defstart);
+         context.text = $.trim(text);
+    }
+    function processTagStart(context, isempty) {
+        var tagname = context.parser.getName();
+        var length = context.stack.length;
+        var top = context.stack[length - 1];
+        if (top === MARKER) {
+            context.stack[length - 1] = {};
+        }
+        context.stack[length] = top[tagname] = MARKER;
+        context.text = "";
+    }
+    function processTagEnd(context, isempty) {
+    	  var tagname = context.parser.getName();
+    	  var length = --context.stack.length;
+        var top = context.stack[length - 1];
+        var exist = top[tagname];
+        if (exist === MARKER) {
+            top[tagname] = context.text;
+        }
+        else {
+            var elen = exist.length;
+            if(typeof elen === "number"){
+                exist[elen] = context.text;
+            }
+            else {
+                top[tagname] = [exist, context.text];
+            }
+        }
     }
     
     fluid.mapping.parseXml = function(doc) {
@@ -36,7 +64,8 @@ var fluid = fluid || fluid_1_1;
         stack: stack,
         parser: parser,
         defstart: -1,
-        defend: -1
+        defend: -1,
+        text: ""
       };
       parseloop: while(true) {
       var iEvent = parser.next();
@@ -101,7 +130,7 @@ var fluid = fluid || fluid_1_1;
        function parseSpecs(specs) {
            for (var key in specs) {
                var spec = specs[key];
-               spec.data = parseXml(specs.resourceText);
+               spec.data = fluid.mapping.parseXml(spec.resourceText);
            }
        }
        

@@ -11,14 +11,14 @@
       
       <link rel="stylesheet" type="text/css" href="../css/InlineEdit.css"  media="screen" charset="utf-8" />
  
-      <script type="text/javascript" src="../../../../../fluid-components/src/lib/jquery/core/js/jquery.js"></script>
-      <script type="text/javascript" src="../../../../../fluid-components/lib/jquery/ui/js/ui.core.js"></script>
-      <script type="text/javascript" src="../../../../../fluid-components/lib/fastXmlPull/js/fastXmlPull.js"></script>
-      <script type="text/javascript" src="../../../../../fluid-components/src/webapp/framework/core/js/Fluid.js"></script>
-      <script type="text/javascript" src="../../../../../fluid-components/src/webapp/framework/renderer/js/FluidRenderer.js"></script>
-      <script type="text/javascript" src="../../../../../fluid-components/src/webapp/framework/renderer/js/FluidParser.js"></script>
+      <script type="text/javascript" src="../../../fluid-components/src/webapp/lib/jquery/core/js/jquery.js"></script>
+      <script type="text/javascript" src="../../../fluid-components/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
+      <script type="text/javascript" src="../../../fluid-components/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>
+      <script type="text/javascript" src="../../../fluid-components/src/webapp/framework/core/js/Fluid.js"></script>
+      <script type="text/javascript" src="../../../fluid-components/src/webapp/framework/renderer/js/FluidRenderer.js"></script>
+      <script type="text/javascript" src="../../../fluid-components/src/webapp/framework/renderer/js/FluidParser.js"></script>
                 
-
+      <script type="text/javascript" src="../js/mapping.js"></script>
   </head>
   <body>
     <h1>Mapping sketch page</h1>
@@ -26,12 +26,12 @@
          
       </div>
       <script type="text/javascript">
-        var files = {
+        var files = [
         "../../testdata/artifacts/Cartoon.xml",
         "../../testdata/artifacts/Headdress.xml",
         "../../testdata/artifacts/Photograph.xml",
-        "../../testdata/artifacts/Snuffbox.xml"};
-        fluid.mapping.loadData(files);
+        "../../testdata/artifacts/Snuffbox.xml"];
+        fluid.mapping.loadFiles(files);
       </script>
   </body>
 </html>
