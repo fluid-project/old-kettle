@@ -207,6 +207,11 @@ var fluid = fluid || fluid_1_1;
       return togo;
     };
     
+    fluid.mapping.parseFrank = function(doc) {
+       var togo = xml2json.parser(doc);
+       return togo;
+    };
+    
     function writeOutput(message) {
         $("#render-root").append(message + "<br/>");
     }
@@ -239,6 +244,10 @@ var fluid = fluid || fluid_1_1;
                for (var key in specs) {
                    ++ count;
                    var spec = specs[key];
+                   if (spec.fetchError) {
+                       writeOutput("Error fetching file at " + spec.href + ": " + spec.fetchError.errorThrown);
+                       fluid.fail("Error fetching file");
+                   }
                    spec.data = fluid.invokeGlobalFunction(func, [spec.resourceText]);
                }
            }
@@ -251,6 +260,7 @@ var fluid = fluid || fluid_1_1;
        function parseSpecs(specs) {
            timeSpecs(specs, "fluid.mapping.parseXml", 10);
            timeSpecs(specs, "fluid.mapping.parseResig", 1);
+           timeSpecs(specs, "fluid.mapping.parseFrank", 1);
        }
        
        function parseSpecs2(specs) {
