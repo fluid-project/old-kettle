@@ -21,7 +21,8 @@ var window = this;
 	
 	window.__defineSetter__("location", function(url){
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", url);
+		// Patch, AMB - server-side I/O should really be synchronous
+		xhr.open("GET", url, false);
 		xhr.onreadystatechange = function(){
 			curLocation = new java.net.URL( curLocation, url );
 			window.document = xhr.responseXML;
@@ -145,6 +146,10 @@ var window = this;
 	DOMDocument.prototype = {
 		get nodeType(){
 			return 9;
+		},
+		// PATCH: AMB
+		createComment: function(data) {
+			return makeNode( this._dom.createComment(data));
 		},
 		createTextNode: function(text){
 			return makeNode( this._dom.createTextNode(
@@ -640,8 +645,9 @@ var window = this;
 	XMLHttpRequest.prototype = {
 		open: function(method, url, async, user, password){ 
 			this.readyState = 1;
-			if (async)
-				this.async = true;
+			// PATCH: AMB
+			if (async !== undefined)
+				this.async = async;
 			this.method = method || "GET";
 			this.url = url;
 			this.onreadystatechange();
