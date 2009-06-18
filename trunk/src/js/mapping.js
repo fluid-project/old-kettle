@@ -213,7 +213,7 @@ var fluid = fluid || fluid_1_1;
     };
     
     function writeOutput(message) {
-    	  if (typeof java !== undefined) {
+    	  if (/CATT/.test(navigator.userAgent)) {
     	  	java.lang.System.out.println(message);
     	  }
     	  else {
