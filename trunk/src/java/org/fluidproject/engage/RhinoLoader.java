@@ -68,6 +68,13 @@ public class RhinoLoader {
     }
     else this.docpath = docpath;
   }
+  
+  private void markLoaded() {
+    if (debuggerLoader != null) {
+      debuggerLoader.doBreak();
+    }
+    context.evaluateString(shell, "fluid.dom.evalScripts()", null, 1, null);
+  }
 
   private static final String dir = "src/html/";
   
@@ -76,12 +83,14 @@ public class RhinoLoader {
     String[] files = loadJsonArray("src/java/org/fluidproject/engage/XMLtoJSONincludes.json");
     RhinoLoader loader = new RhinoLoader(args.length > 0 && args[0].equals("debug"));
 
-    loader.setDocument("src/html/root.xml");
+    loader.setDocument("src/html/mapping.html");
     
     for (int i = 0; i < files.length; ++ i) {
       loader.loadFile(dir + files[i]);
       if (files[i].endsWith("env.js")) {
       }
     }
+    loader.markLoaded();
   }
+
 }

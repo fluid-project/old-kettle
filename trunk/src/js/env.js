@@ -13,7 +13,8 @@ var window = this;
 
 	window.navigator = {
 		get userAgent(){
-			return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.3) Gecko/20070309 Firefox/2.0.0.3";
+			return "THE CATT Browser"
+			//return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.3) Gecko/20070309 Firefox/2.0.0.3";
 		}
 	};
 	
@@ -40,7 +41,8 @@ var window = this;
 				return curLocation.getProtocol() + ":";
 			},
 			get href(){
-				return curLocation.toString();
+				// PATCH: AMB
+				return new String(curLocation.toString());
 			},
 			toString: function(){
 				return this.href;
@@ -135,9 +137,13 @@ var window = this;
 	
 	window.DOMDocument = function(file){
 		this._file = file;
-		this._dom = Packages.javax.xml.parsers.
-			DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder().parse(file);
+		// PATCH: AMB
+		var dbf = Packages.javax.xml.parsers.
+      DocumentBuilderFactory.newInstance(); 
+		
+		dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+    dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		this._dom = dbf.newDocumentBuilder().parse(file);
 		
 		if ( !obj_nodes.containsKey( this._dom ) )
 			obj_nodes.put( this._dom, this );
@@ -647,7 +653,7 @@ var window = this;
 			this.readyState = 1;
 			// PATCH: AMB
 			if (async !== undefined)
-				this.async = async;
+			  this.async = async;
 			this.method = method || "GET";
 			this.url = url;
 			this.onreadystatechange();
@@ -731,13 +737,13 @@ var window = this;
 					});
 					
 					if ( self.responseText.match(/^\s*</) ) {
-						try {
+						// PATCH: AMB
 							responseXML = new DOMDocument(
 								new java.io.ByteArrayInputStream(
 									(new java.lang.String(
 										self.responseText)).getBytes("UTF8")));
-						} catch(e) {}
 					}
+					self.responseText = new String(self.responseText);
 				}
 				
 				self.onreadystatechange();
@@ -780,7 +786,7 @@ var window = this;
 				return returnedHeaders.join("\r\n");
 			}
 		},
-		async: true,
+		async: false,
 		readyState: 0,
 		responseText: "",
 		status: 0

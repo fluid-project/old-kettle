@@ -213,7 +213,12 @@ var fluid = fluid || fluid_1_1;
     };
     
     function writeOutput(message) {
-        $("#render-root").append(message + "<br/>");
+    	  if (typeof java !== undefined) {
+    	  	java.lang.System.out.println(message);
+    	  }
+    	  else {
+          $("#render-root").append(message + "<br/>");
+    	  }
     }
     
     function makeSpecs(files, getDom) {
@@ -269,7 +274,7 @@ var fluid = fluid || fluid_1_1;
        
        fluid.fetchResources(makeSpecs(files), parseSpecs);
        
-       fluid.fetchResources(makeSpecs(files, true), parseSpecs2);
+       //fluid.fetchResources(makeSpecs(files, true), parseSpecs2);
        
     }
     
