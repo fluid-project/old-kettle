@@ -4,9 +4,7 @@
 package org.fluidproject.engage;
 
 import java.io.Reader;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.ScriptableObject;
@@ -56,24 +54,7 @@ public class DebuggerLoader {
   
   public void loadFile(String url, Reader reader) {
     try {
-      
       dim.evalScript(url, StreamCopyUtil.readerToString(reader));
-      return;
-/*      Class clazz = Class.forName("org.mozilla.javascript.tools.debugger.RunProxy");
-      Constructor cons = clazz.getConstructor(new Class[] {SwingGui.class, Integer.TYPE});
-      cons.setAccessible(true);
-      Object runProxy = cons.newInstance(new Object[] {swingGui, new Integer(2)}); // RunProxy.LOAD_FILE
-      //proxy.fileName = fileName;
-      //proxy.text = text;
-      Field filename = clazz.getDeclaredField("fileName");
-      filename.setAccessible(true);
-      filename.set(runProxy, "url");
-      Field text = clazz.getDeclaredField("text");
-      text.setAccessible(true);
-      text.set(runProxy, null);
-      Method m = clazz.getMethod("run", new Class[] {});
-      m.setAccessible(true);
-      m.invoke(runProxy, new Object[] {});      */
     }
     catch (Exception e) {
       throw UniversalRuntimeException.accumulate(e);
