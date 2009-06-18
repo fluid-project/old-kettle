@@ -27,6 +27,10 @@ var fluid = fluid || fluid_1_1;
         return true;
     }
     
+    fluid.isServer = function() {
+    	return /CATT/.test(navigator.userAgent);
+    }
+    
     var MARKER = {};
     
     function push(context, value) {
@@ -212,8 +216,14 @@ var fluid = fluid || fluid_1_1;
        return togo;
     };
     
+    fluid.mapping.parseYusuke = function(doc) {
+    	var parser = new JKL.ParseXML();
+    	var togo = parser.parseDocument(doc);
+    	return togo;
+    }
+    
     function writeOutput(message) {
-    	  if (/CATT/.test(navigator.userAgent)) {
+    	  if (fluid.isServer()) {
     	  	java.lang.System.out.println(message);
     	  }
     	  else {
@@ -270,12 +280,14 @@ var fluid = fluid || fluid_1_1;
        
        function parseSpecs2(specs) {
            timeSpecs(specs, "fluid.mapping.parseDom", 10);
+           timeSpecs(specs, "fluid.mapping.parseYusuke", 10);
        }
        
        fluid.fetchResources(makeSpecs(files), parseSpecs);
        
-       //fluid.fetchResources(makeSpecs(files, true), parseSpecs2);
-       
+       if (!fluid.isServer()) {
+         fluid.fetchResources(makeSpecs(files, true), parseSpecs2);
+       }
     }
     
         
