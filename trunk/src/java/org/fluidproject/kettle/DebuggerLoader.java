@@ -1,7 +1,7 @@
 /*
  * Created on 18 Jun 2009
  */
-package org.fluidproject.engage;
+package org.fluidproject.kettle;
 
 import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.ScriptableObject;

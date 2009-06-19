@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <context-param>
+    <param-name>kettleConfigLocation</param-name>
+    <param-value>
+      /WEB-INF/kettleDemo.json
+    </param-value>
+  </context-param>
+
+
+	<!-- The declaration of your FacesServlet -->
+	<servlet>
+		<servlet-name>KettleServlet</servlet-name>
+		<servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- URL to your app default view will be http://server/appname/rsf/ -->
+	<servlet-mapping>
+		<servlet-name>KettleServlet</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+
+</web-app>

@@ -9,7 +9,7 @@ public class XMLtoJSON {
   public static final String[] files = { "Cartoon.xml", "Headdress.xml",
       "Photograph.xml", "Snuffbox.xml" };
 
-  public static final String dir = "testdata/artifacts/";
+  public static final String dir = "src/webapp/mapping/testdata/artifacts/";
 
   public static final int reps = 1000;
 

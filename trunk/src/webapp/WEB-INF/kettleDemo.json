@@ -1,0 +1,10 @@
+// Standard kettle app configuration file
+
+{
+  initFunction: "fluid.dom.evalScripts",
+  handlerFunction: "fluid.kettle.servlet.process",
+  appFunction: "fluid.kettle.demoApp",
+  includes: "classpath:org/fluidproject/kettle/KettleIncludes.json",
+  includesPrefix: "kettle/html/",
+  debugMode: true
+}
