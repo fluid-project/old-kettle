@@ -5,16 +5,16 @@
                       http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>fluid-engage-sketches</artifactId>
+  <artifactId>fluid-kettle</artifactId>
   <groupId>org.fluidproject</groupId>
-  <version>1.2-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
 
   <organization>
     <name>Fluid Project</name>
     <url>http://fluidproject.org</url>
   </organization>
-  <inceptionYear>2007</inceptionYear>
-  <packaging>jar</packaging>
+  <inceptionYear>2009</inceptionYear>
+  <packaging>war</packaging>
   <description>
     A set of test components for evaluating conversion and rendering strategies
   </description>
@@ -73,6 +73,16 @@
       <version>3.8.1</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <artifactId>jetty</artifactId>
+      <groupId>org.mortbay.jetty</groupId>
+      <version>6.1.18</version>
+    </dependency>
+    <dependency>
+      <artifactId>jetty-util</artifactId>
+      <groupId>org.mortbay.jetty</groupId>
+      <version>6.1.18</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -82,6 +92,12 @@
         <configuration>
           <source>1.4</source>
           <target>1.4</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warSourceDirectory>src/webapp</warSourceDirectory>
         </configuration>
       </plugin>
     </plugins>

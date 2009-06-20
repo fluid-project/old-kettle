@@ -1,0 +1,8 @@
+
+{initFunction: "fluid.dom.evalScripts",
+  handlerFunction: "fluid.kettle.servlet.process",
+  includes: "kettle/KettleIncludes.json",
+  includesPrefix: "kettle/html/",
+  appFunction: "fluid.kettleDemo.app",
+  debugMode: false
+}

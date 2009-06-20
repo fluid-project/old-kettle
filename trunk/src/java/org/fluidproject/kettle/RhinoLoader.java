@@ -3,64 +3,45 @@
  */
 package org.fluidproject.kettle;
 
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
 
-import uk.org.ponder.json.support.DeJSONalizer;
-import uk.org.ponder.saxalizer.SAXalizerMappingContext;
 import uk.org.ponder.util.UniversalRuntimeException;
 
 public class RhinoLoader {
 
-    private static Object readJson(String filename, Object root) {
-        try {
-            FileInputStream fis = new FileInputStream(filename);
-            DeJSONalizer de = new DeJSONalizer(SAXalizerMappingContext.instance(), fis);
-            return de.readObject(root, null);
-        }
-        catch (Exception e) {
-            throw UniversalRuntimeException.accumulate(e);
-        }        
-    }
-    
-    public static String[] loadJsonArray(String filename) {
-        return (String[]) readJson(filename, new String[] {});
-    }
-    
-    public static Map loadJson(String filename) {
-        return (Map) readJson(filename, new HashMap());
-    }
-
-    private ScriptableObject shell;
+    private ScriptableObject scope;
     private boolean envLoaded = false;
     private String docpath = null;
 
     private DebuggerLoader debuggerLoader;
 
     public RhinoLoader(boolean debug) {
-        shell = new ScriptableObject() {
+        scope = new ScriptableObject() {
             public String getClassName() {
                 return "RhinoLoader";
             }
         };
         if (debug) {
-            debuggerLoader = new DebuggerLoader("RhinoLoader debugger", shell);
+            debuggerLoader = new DebuggerLoader("RhinoLoader debugger", scope);
         }
         Context context = Context.enter();
-        context.initStandardObjects(shell);
+        context.initStandardObjects(scope);
         Context.exit();
+    }
+    
+    public ScriptableObject getScope() {
+        return scope;
     }
 
     public void loadFile(String filename) {
         try {
             FileReader fr = new FileReader(filename);
             Context context = Context.enter();
-            context.evaluateReader(shell, fr, filename, 1, null);
+            context.evaluateReader(scope, fr, filename, 1, null);
             if (filename.endsWith("env.js") && docpath != null) {
                 envLoaded = true;
                 setDocument(this.docpath);
@@ -76,7 +57,7 @@ public class RhinoLoader {
 
     public void setDocument(String docpath) {
         if (envLoaded) {
-            evaluateString("window.location = \"" + docpath + "\"");
+            evaluateString("window.location = \"" + docpath.replaceAll("\\\\", "\\\\\\\\") + "\"");
         }
         else
             this.docpath = docpath;
@@ -85,10 +66,27 @@ public class RhinoLoader {
     public Object evaluateString(String toEvaluate) {
         Context context = Context.enter();
         try {
-            return context.evaluateString(shell, toEvaluate, null, 1, null);
+            return context.evaluateString(scope, toEvaluate, null, 1, null);
+        }
+        catch (Exception e) {
+            throw UniversalRuntimeException.accumulate(e, "Error evaluating Javascript string " + toEvaluate);
         }
         finally {
             Context.exit();
+        }
+    }
+
+    public Function getFunction(Object functionName) {
+        try {
+            Object func = evaluateString(functionName.toString());
+            if (!(func instanceof Function)) {
+                throw new IllegalArgumentException("Acquired object of " + func.getClass() + " rather than Function");
+            }
+            return (Function) func;
+        }
+        catch (Exception e) {
+            throw UniversalRuntimeException.accumulate(e, "Error looking up name \"" 
+                    + functionName + "\" as function");
         }
     }
 
@@ -99,7 +97,7 @@ public class RhinoLoader {
     }
 
     public void loadJSONFiles(String prefix, String path) {
-        String[] files = loadJsonArray(path);
+        String[] files = ResourceUtil.loadJsonArray(path);
         for (int i = 0; i < files.length; ++i) {
             loadFile(prefix + files[i]);
         }

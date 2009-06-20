@@ -73,30 +73,12 @@ var fluid = fluid || fluid_1_2;
 		    
 		    // set the headers
 		    for (var key in headers) {
-		        fluid.transform(headers[key].split("\n"))(function(value) {
+		        fluid.transform(headers[key].split("\n"), function(value) {
 		            response.addHeader(key, value);
 		        });
 		    }
 		
-		    // determine if the response should be chunked (FIXME: need a better way?)
-		    //var chunked = HashP.includes(headers, "Transfer-Encoding") && HashP.get(headers, "Transfer-Encoding") !== 'identity';
-		    
-		    var os = response.getOutputStream(),
-		        output = new IO(null, os);
-		   
-		    // output the body, flushing after each write if it's chunked
-		    body.forEach(function(chunk) {
-		        if (!sendfilePath) {
-		            //output.write(new java.lang.String(chunk).getBytes("US-ASCII"));
-		            //output.write(chunk, "US-ASCII");
-		            output.write(chunk);
-		
-		            if (chunked)
-		                response.flushBuffer(); //output.flush();
-		        }
-		    });
-		
-		    output.close();
+        Packages.org.fluidproject.kettle.ResourceUtil.sendResponse(response, body);
 		}
 
 })(jQuery, fluid_1_2);

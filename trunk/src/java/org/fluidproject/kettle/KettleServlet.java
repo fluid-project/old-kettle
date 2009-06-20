@@ -6,6 +6,7 @@ package org.fluidproject.kettle;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,31 +26,46 @@ import org.mozilla.javascript.Scriptable;
 
 public class KettleServlet extends HttpServlet {
     private RhinoLoader loader;
-    private Scriptable scope;
     private Function app;
     private Function handler;
+    
+    private void assertKeys(String path, Map map, String[] keys) {
+        for (int i = 0; i < keys.length; ++ i) {
+            if (map.get(keys[i]) == null) {
+                throw new IllegalArgumentException("Error in configuration file at path " + path + 
+                        ", required key \"" + keys[i] + "\" not found");
+            }
+        }
+    }
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         String kettleLocation = getInitParam(config, "kettleConfigLocation", "/WEB-INF/kettleDemo.json");
-        String kettlePath = getServletContext().getRealPath(kettleLocation);
-        Map kettleConfig = RhinoLoader.loadJson(kettlePath);
-
-        loader = new RhinoLoader(kettleConfig.get("debugMode") == Boolean.TRUE);
-        loader.loadJSONFiles((String) kettleConfig.get("includesPrefix"), (String) kettleConfig.get("includes"));
+        ServletContext context = getServletContext();
+        String kettlePath = context.getRealPath(kettleLocation);
+        Map kettleConfig = ResourceUtil.loadJson(kettlePath);
+        assertKeys(kettlePath, kettleConfig, new String[] {"includes", "handlerFunction", "appFunction"});
+        String contextPath = context.getRealPath("/") + "/";
+// Bug 1 - DeJSON does not recognise boolean
+        loader = new RhinoLoader(kettleConfig.get("debugMode").equals("true"));
+        String includes = (String) kettleConfig.get("includes");
+        String includesPrefix = (String) kettleConfig.get("includesPrefix");
+        if (includesPrefix == null) includesPrefix = "";
+        loader.setDocument("file:/" + contextPath + "kettle/html/root.xml");
+        loader.loadJSONFiles(contextPath + includesPrefix, contextPath + includes);
 
         // load Servlet handler "process" method
-        handler = (Function) loader.evaluateString((String) kettleConfig.get("handler"));
-
+        handler = loader.getFunction(kettleConfig.get("handlerFunction"));
+ 
         // load the app
-        app = (Function) loader.evaluateString((String) kettleConfig.get("app"));
+        app = loader.getFunction(kettleConfig.get("appFunction"));
     }
 
     public void service(HttpServletRequest request, HttpServletResponse response) {
         Context context = Context.enter();
         try {
             Object args[] = { app, request, response };
-            handler.call(context, scope, null, args);
+            handler.call(context, loader.getScope(), null, args);
         }
         finally {
             Context.exit();
@@ -58,7 +74,6 @@ public class KettleServlet extends HttpServlet {
 
     private String getInitParam(ServletConfig config, String name, String defaultValue) {
         String value = config.getInitParameter(name);
-        return value == null ? defaultValue
-                : value;
+        return value == null ? defaultValue : value;
     }
 }
