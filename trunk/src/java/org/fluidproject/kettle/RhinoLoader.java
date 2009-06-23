@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.Reader;
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -92,6 +91,16 @@ public class RhinoLoader {
         catch (Exception e) {
             throw UniversalRuntimeException.accumulate(e, "Error looking up name \"" 
                     + functionName + "\" as function");
+        }
+    }
+    
+    public Object invokeFunction(Function func, Object[] args){
+        Context context = Context.enter();
+        try {
+            return func.call(context, scope, null, args);
+        }
+        finally {
+            Context.exit();
         }
     }
 

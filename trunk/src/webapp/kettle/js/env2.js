@@ -34,6 +34,12 @@ var fluid = fluid || fluid_1_2;
         }    	
     }
     
+    window.console = {
+        debug: function(message) {
+            java.lang.System.out.println(message);
+        }
+    };
+    
     $.ajaxSettings.async = false;
 })(jQuery, fluid_1_2);
     

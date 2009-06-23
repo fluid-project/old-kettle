@@ -54,7 +54,7 @@ var fluid = fluid || fluid_1_2;
 		    }
 		    
 		    env["SCRIPT_NAME"]          = String(request.getServletPath() || "");
-		    env["PATH_INFO"]            = String(request.getPathInfo() || "");
+		    env["PATH_INFO"]            = String(request.getRequestURI() || "");
 		    
 		    env["REQUEST_METHOD"]       = String(request.getMethod() || "");
 		    env["SERVER_NAME"]          = String(request.getServerName() || "");
@@ -65,7 +65,7 @@ var fluid = fluid || fluid_1_2;
 		    env["REMOTE_HOST"]          = String(request.getRemoteHost() || "");
 		    
 		    // not part of the formal spec
-		    env["REQUEST_URI"]          = String(request.getRequestURI() || "");
+		    env["REQUEST_URI"]          = String(request.getRequestURL() || "");
 		        
 		    // call the app
 		    var result = app(env),

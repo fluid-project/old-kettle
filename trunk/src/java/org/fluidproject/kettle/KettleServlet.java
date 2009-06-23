@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
 
 /**
  * The root handler servlet for the Kettle framework. Taken with thanks and
@@ -44,8 +42,10 @@ public class KettleServlet extends HttpServlet {
         ServletContext context = getServletContext();
         String kettlePath = context.getRealPath(kettleLocation);
         Map kettleConfig = ResourceUtil.loadJson(kettlePath);
-        assertKeys(kettlePath, kettleConfig, new String[] {"includes", "handlerFunction", "appFunction"});
+        kettleConfig.put("appName", config.getServletName());
+        assertKeys(kettlePath, kettleConfig, new String[] {"includes", "handlerFunction"});
         String contextPath = context.getRealPath("/") + "/";
+        kettleConfig.put("baseDir", contextPath);
 // Bug 1 - DeJSON does not recognise boolean
         loader = new RhinoLoader(kettleConfig.get("debugMode").equals("true"));
         String includes = (String) kettleConfig.get("includes");
@@ -58,18 +58,26 @@ public class KettleServlet extends HttpServlet {
         handler = loader.getFunction(kettleConfig.get("handlerFunction"));
  
         // load the app
-        app = loader.getFunction(kettleConfig.get("appFunction"));
+        Object appFunction = kettleConfig.get("appFunction");
+        Object loaderFunction = kettleConfig.get("loaderFunction");
+        if (appFunction == null && loaderFunction == null) {
+            throw new IllegalArgumentException("One of appFunction and loaderFunction must be defined");
+        }
+        if (appFunction != null) {
+            app = loader.getFunction(appFunction);
+        }
+        else {
+            Function loaderFunc = loader.getFunction(loaderFunction);
+            Object funcret = loader.invokeFunction(loaderFunc, new Object[] {kettleConfig});
+            if (!(funcret instanceof Function)) {
+                throw new IllegalArgumentException("loaderFunction needs to return an app function");
+            }
+            app = (Function) funcret;
+        }
     }
 
     public void service(HttpServletRequest request, HttpServletResponse response) {
-        Context context = Context.enter();
-        try {
-            Object args[] = { app, request, response };
-            handler.call(context, loader.getScope(), null, args);
-        }
-        finally {
-            Context.exit();
-        }
+        loader.invokeFunction(handler, new Object[] { app, request, response });
     }
 
     private String getInitParam(ServletConfig config, String name, String defaultValue) {

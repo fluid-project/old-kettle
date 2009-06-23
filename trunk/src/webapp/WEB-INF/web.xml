@@ -11,7 +11,7 @@
 		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
       <init-param>
           <param-name>kettleConfigLocation</param-name>
-          <param-value>/kettleDemo/kettleDemo.json</param-value>
+          <param-value>/kettleDemo/kettleCherryDemo.json</param-value>
       </init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

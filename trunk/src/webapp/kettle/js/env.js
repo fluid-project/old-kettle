@@ -753,8 +753,20 @@ var window = this;
 				(new java.lang.Thread(new java.lang.Runnable({
 					run: makeRequest
 				}))).start();
-			else
-				makeRequest();
+			else {
+			  try {
+				  makeRequest();
+			  }
+			  catch (e) {
+			    // PATCH: AMB
+			    //self.readyState = 4;
+			    //self.errorThrown = e;
+			    self.textStatus = e.message;
+			    throw(e);
+			    //self.status = 404;
+			    //self.onreadystatechange();
+			  }
+			}
 		},
 		abort: function(){},
 		onreadystatechange: function(){},

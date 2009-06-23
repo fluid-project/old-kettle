@@ -11,5 +11,6 @@
    "../js/contentTypes.js",
    "../js/kettle.js",
    "../js/servletJSGI.js",
-   "../../kettleDemo/js/kettleJSGIDemo.js"
+   "../../kettleDemo/js/kettleJSGIDemo.js",
+   "../../kettleDemo/js/kettleCherryDemo.js", 
    ]
