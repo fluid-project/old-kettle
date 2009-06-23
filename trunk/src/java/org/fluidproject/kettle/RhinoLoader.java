@@ -4,11 +4,14 @@
 package org.fluidproject.kettle;
 
 import java.io.FileReader;
+import java.io.Reader;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
 
+import uk.org.ponder.streamutil.StreamCloseUtil;
 import uk.org.ponder.util.UniversalRuntimeException;
 
 public class RhinoLoader {
@@ -38,8 +41,9 @@ public class RhinoLoader {
     }
 
     public void loadFile(String filename) {
+        Reader fr = null;
         try {
-            FileReader fr = new FileReader(filename);
+            fr = new FileReader(filename);
             Context context = Context.enter();
             context.evaluateReader(scope, fr, filename, 1, null);
             if (filename.endsWith("env.js") && docpath != null) {
@@ -48,9 +52,10 @@ public class RhinoLoader {
             }
         }
         catch (Exception e) {
-            throw UniversalRuntimeException.accumulate(e);
+            throw UniversalRuntimeException.accumulate(e, "Error evaluating file " + filename);
         }
         finally {
+            StreamCloseUtil.closeReader(fr);
             Context.exit();
         }
     }

@@ -8,7 +8,8 @@
    "../../../../../fluid-components/src/webapp/framework/renderer/js/fluidRenderer.js",
    "../../../../../fluid-components/src/webapp/framework/renderer/js/fluidParser.js",
    "../js/env2.js",
+   "../js/contentTypes.js",
    "../js/kettle.js",
-   "../js/kettleHandler.js",
-   "../../kettleDemo/js/kettleDemo.js"
+   "../js/servletJSGI.js",
+   "../../kettleDemo/js/kettleJSGIDemo.js"
    ]

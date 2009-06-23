@@ -34,8 +34,8 @@ var fluid = fluid || fluid_1_2;
 
 
 (function ($, fluid) {
-    fluid.kettle = fluid.kettle || {
-    	servlet: {}};
+    fluid.kettle = fluid.kettle || {};
+    fluid.kettle.servlet = fluid.kettle.servlet || {};
 
     fluid.kettle.servlet.process = function(app, request, response) {
 		    var env = {};
@@ -63,6 +63,9 @@ var fluid = fluid || fluid_1_2;
 		    env["HTTP_VERSION"]         = String(request.getProtocol() || "");
 		    
 		    env["REMOTE_HOST"]          = String(request.getRemoteHost() || "");
+		    
+		    // not part of the formal spec
+		    env["REQUEST_URI"]          = String(request.getRequestURI() || "");
 		        
 		    // call the app
 		    var result = app(env),
