@@ -4,5 +4,5 @@
   includes: "kettle/KettleIncludes.json",
   includesPrefix: "kettle/html/",
   appFunction: "fluid.kettleDemo.app",
-  debugMode: false
+  debugMode: true
 }

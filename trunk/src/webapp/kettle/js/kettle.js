@@ -88,6 +88,7 @@ var fluid = fluid || fluid_1_2;
             // TODO: allow to vary over the app
             contentType: fluid.kettle.contentTypeRegistry.HTML,
             renderOptions: {
+                rebaseURLs: true,
                 serialDecorators: true
             }
         }
