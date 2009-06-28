@@ -2,7 +2,7 @@
 {initFunction: "fluid.dom.evalScripts",
   handlerFunction: "fluid.kettle.servlet.process",
   includes: "kettle/KettleIncludes.json",
-  includesPrefix: "kettle/html/",
+  includesPrefix: "kettle/",
   appFunction: "fluid.kettleDemo.app",
   debugMode: true
 }

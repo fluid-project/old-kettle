@@ -23,7 +23,7 @@ var fluid = fluid || fluid_1_2;
     fluid.kettleDemo.initCherryDemo = function(config) {
         var app = fluid.kettle.makeKettleApp(config.get("appName"));
         
-        var handler = fluid.kettle.renderHandler({baseDir: config.get("baseDir")+ "kettleDemo/html/"});
+        var handler = fluid.kettle.renderHandler({baseDir: config.get("baseDir")+ "kettleDemo/"});
         
         handler.registerProducer("kettle", function(context, env) {
           return {"output": "THE CATT"}
