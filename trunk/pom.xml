@@ -83,6 +83,11 @@
       <groupId>org.mortbay.jetty</groupId>
       <version>6.1.18</version>
     </dependency>
+    <dependency>
+      <artifactId>xercesImpl</artifactId>
+      <groupId>xerces</groupId>
+      <version>2.9.1</version>
+    </dependency>
   </dependencies>
 
   <build>
