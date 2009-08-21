@@ -60,6 +60,18 @@ var fluid = fluid || fluid_1_2;
             extension: "svg", 
             doctype: "",
             contentTypeHeader: "image/svg+xml; charset=UTF-8",
+        },
+        // This non-standard value is most commonly used:
+        // http://www.bluehostforum.com/showthread.php?t=15913
+        "JS": {
+            extension: "js", 
+            doctype: "",
+            contentTypeHeader: "application/x-javascript; charset=UTF-8",
+        },
+        "CSS": {
+            extension: "css", 
+            doctype: "",
+            contentTypeHeader: "text/css; charset=UTF-8",
         }
     }
 })(jQuery, fluid_1_2);

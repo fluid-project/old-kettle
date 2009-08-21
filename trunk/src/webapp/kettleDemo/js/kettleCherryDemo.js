@@ -22,14 +22,25 @@ var fluid = fluid || fluid_1_2;
     
     fluid.kettleDemo.initCherryDemo = function(config) {
         var app = fluid.kettle.makeKettleApp(config.get("appName"));
+        var baseDir = config.get("baseDir");
         
-        var handler = fluid.kettle.renderHandler({baseDir: config.get("baseDir")+ "kettleDemo/"});
+        var handler = fluid.kettle.renderHandler(
+        {baseDir: baseDir + "kettleDemo/",
+         renderOptions: [{source: "../../../../fluid-infusion/src/webapp",
+                          target: "fluid-infusion"}]});
         
         handler.registerProducer("kettle", function(context, env) {
           return {"output": "THE CATT"}
         })
         
-        app.root["*"] = [ handler ];
+        var rootMount = fluid.kettle.mountDirectory(baseDir, "kettleDemo/");
+        
+        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../fluid-infusion/src/webapp/");
+        
+        app.root["*"] = [handler, rootMount];
+        app.root["fluid-infusion"] = {
+          "*": infusionMount
+        };
         
         return app.app;
     }

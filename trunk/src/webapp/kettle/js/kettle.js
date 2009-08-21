@@ -64,18 +64,43 @@ var fluid = fluid || fluid_1_2;
         return togo;
     };
 
-    function routeSegment(segment, root) {
+    function makeRelPath(parsed, index) {
+        var togo = "";
+        var segs = parsed.pathInfo;
+        for (var i = index; i < segs.length - 1; ++ i) {
+            togo += segs[i] + "/";
+        }
+        togo += segs[segs.length - 1];
+        if (parsed.extension) {
+            togo += "." + parsed.extension;
+        }
+        return togo;
+    }
+
+    function routeSegment(segment, root, parsed, index) {
         if (!segment) {segment = "/"};
         var exist = root[segment];
         if (exist) {
-          return exist;
+            return {route: exist};
         }
-        var defs = root["*"];
+        var relPath = makeRelPath(parsed, index);
+        var defs = fluid.makeArray(root["*"]);
         for (var i = 0; i < defs.length; ++ i) {
-          var rule = defs[i];
-          return rule.accept(segment);
+            var rule = defs[i];
+            var accept = rule.accept(segment, relPath, parsed);
+            if (accept) {
+                return accept;
+            }  
         }
     }
+
+    /** Two utilities that might well go into the framework **/
+
+    /** Version of jQuery.makeArray that handles the case where the argument is undefined **/
+    
+    fluid.makeArray = function (array) {
+       return $.makeArray(array === undefined? null: array);
+    };
     
     fluid.initLittleComponent = function(name, options) {
         var that = {};
@@ -83,16 +108,35 @@ var fluid = fluid || fluid_1_2;
         return that;
     }
     
-    fluid.defaults("fluid.kettle.renderHandler", 
-        {   
+    fluid.defaults("fluid.kettle.renderHandler", {   
+            templateExtension: "html",
             // TODO: allow to vary over the app
             contentType: fluid.kettle.contentTypeRegistry.HTML,
             renderOptions: {
-                rebaseURLs: true,
+                //rebaseURLs: true,
                 serialDecorators: true
             }
         }
     );
+    
+    fluid.kettle.mountDirectory = function (baseDir, relDirPath) {
+        if (relDirPath === ".") {
+            relDirPath = "";
+        }
+        var absBase = baseDir + relDirPath;
+        return {
+          accept: function(segment, relPath, pathInfo) {
+            var absPath = absBase + relPath;
+            var file = new java.io.File(absPath);
+            var exists = file.exists();
+            fluid.log("File " + absPath + " exists: " + exists);
+            return exists? {
+              handle: function (context, env) {
+                 return [200, fluid.kettle.contentTypeFromExtension(pathInfo.extension), file];
+              }
+            } : null;
+        }};
+    };
     
     fluid.kettle.loadTemplate = function (href, options) {
         
@@ -116,8 +160,24 @@ var fluid = fluid || fluid_1_2;
         return "file://" + (path.charAt(0) === '/' ? "" : "/") + path;
     }
     
+    fluid.kettle.headerFromEntry = function(entry) {
+      return {"Content-type": entry.contentTypeHeader};
+    }
+    
+    fluid.kettle.contentTypeFromExtension = function(extension) {
+        var reg = fluid.kettle.contentTypeRegistry;
+        for (var type in reg) {
+            var el = reg[type];
+            if (el.extension === extension) {
+                return fluid.kettle.headerFromEntry(el);
+            }
+        }
+        return "";
+    };
+    
     fluid.kettle.renderHandler = function(options) {
         var that = fluid.initLittleComponent("fluid.kettle.renderHandler", options);
+        
         var cache = {};
         function pathForSegment(segment) {
             return fluid.kettle.pathToFileURL(options.baseDir + segment + "." + that.getContentType(segment).extension);
@@ -143,14 +203,17 @@ var fluid = fluid || fluid_1_2;
                     var tree = entry.producer(context, env);
                     var markup = fluid.renderTemplates(entry.templates, tree, that.options.renderOptions);
                     var contentType = that.getContentType(segment);
-                    return [200, contentType.contentTypeHeader, markup];
+                    return [200, fluid.kettle.headerFromEntry(contentType), markup];
                 }
             };
         }
         that.getContentType = function (segment) {
             return that.options.contentType;
         }
-        that.accept = function(segment) {
+        that.accept = function(segment, relPath, parsed) {
+            if (parsed.extension && parsed.extension !== that.options.templateExtension) {
+                return null;
+            }
             fillCache(segment);
             return cache[segment].templates? segmentHandler(segment): null;
         }
@@ -170,7 +233,7 @@ var fluid = fluid || fluid_1_2;
         var root = that.root;
         for (var i = 0; i < segs.length; ++ i) {
             var seg = segs[i];
-            var disposition = routeSegment(seg, root);
+            var disposition = routeSegment(seg, root, context.urlState, i);
             if (disposition) {
               if (disposition.handle) {
                  return disposition.handle(context, env);

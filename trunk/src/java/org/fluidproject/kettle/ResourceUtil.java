@@ -3,8 +3,11 @@
  */
 package org.fluidproject.kettle;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import uk.org.ponder.json.support.DeJSONalizer;
 import uk.org.ponder.saxalizer.SAXalizerMappingContext;
 import uk.org.ponder.streamutil.StreamCloseUtil;
+import uk.org.ponder.streamutil.StreamCopyUtil;
 import uk.org.ponder.util.UniversalRuntimeException;
 
 public class ResourceUtil {
@@ -54,14 +58,29 @@ public class ResourceUtil {
         OutputStream os = null;
         try {
             os = response.getOutputStream();
-            String s = tosend.toString();
-            os.write(s.getBytes("UTF-8"));
+            if (tosend instanceof File) {
+                sendFile((File)tosend, os);
+            }
+            else {
+                String s = tosend.toString();
+                os.write(s.getBytes("UTF-8"));
+            }
         }
         catch (Exception e) {
             System.err.print("Error writing response: " + e.getMessage());
         }
         finally {
             StreamCloseUtil.closeOutputStream(os);
+        }
+    }
+
+    public static void sendFile(File tosend, OutputStream os) {
+        try {
+            InputStream is = new FileInputStream(tosend);
+            StreamCopyUtil.inputToOutput(is, os, true, false, null);
+        }
+        catch (FileNotFoundException e) {
+            throw UniversalRuntimeException.accumulate(e, "File " + tosend.getAbsolutePath() + " not found");
         }
     }
     

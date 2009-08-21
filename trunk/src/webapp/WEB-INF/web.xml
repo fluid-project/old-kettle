@@ -19,7 +19,7 @@
 	<!-- URL to your app default view will be http://server/appname/rsf/ -->
 	<servlet-mapping>
 	    <servlet-name>KettleServlet</servlet-name>
-	    <url-pattern>*.html</url-pattern>
+	    <url-pattern>/</url-pattern>
 	</servlet-mapping>
 
 </web-app>
