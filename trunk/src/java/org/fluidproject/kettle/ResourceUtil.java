@@ -38,6 +38,10 @@ public class ResourceUtil {
         }
     }
     
+    public static String pathToFileUrl(String path) {
+        return "file://" + (path.charAt(0) == '/' ? "" : "/") + path;
+    }
+    
     public static String[] loadJsonArray(String filename) {
         return (String[]) readJson(filename, new String[] {});
     }

@@ -112,11 +112,15 @@ var fluid = fluid || fluid_1_2;
         return togo;
     }
     
+    fluid.kettle.pathToFileURL = function (path) {
+        return "file://" + (path.charAt(0) === '/' ? "" : "/") + path;
+    }
+    
     fluid.kettle.renderHandler = function(options) {
         var that = fluid.initLittleComponent("fluid.kettle.renderHandler", options);
         var cache = {};
         function pathForSegment(segment) {
-            return "file:/"+options.baseDir + segment + "." + that.getContentType(segment).extension;
+            return fluid.kettle.pathToFileURL(options.baseDir + segment + "." + that.getContentType(segment).extension);
         }
         function loadTemplate(segment) {
             var path = pathForSegment(segment);

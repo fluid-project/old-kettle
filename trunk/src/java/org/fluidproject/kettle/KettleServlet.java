@@ -51,7 +51,7 @@ public class KettleServlet extends HttpServlet {
         String includes = (String) kettleConfig.get("includes");
         String includesPrefix = (String) kettleConfig.get("includesPrefix");
         if (includesPrefix == null) includesPrefix = "";
-        loader.setDocument("file:/" + contextPath + "kettle/root.xml");
+        loader.setDocument(ResourceUtil.pathToFileUrl(contextPath + "kettle/root.xml"));
         loader.loadJSONFiles(contextPath + includesPrefix, contextPath + includes);
 
         // load Servlet handler "process" method
