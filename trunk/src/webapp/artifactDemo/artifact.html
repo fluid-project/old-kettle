@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		    
+        <title>Artifact demo</title>
+
+        <link type="text/css" rel="stylesheet" href="../../../../../../fluid-infusion/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../../../fluid-infusion/framework/fss/css/fss-text.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../../../fluid-infusion/framework/fss/css/fss-transitions.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../../../fluid-infusion/framework/fss/css/fss-mobile-iphone-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../../../fluid-infusion/framework/fss/css/fss-mobile-iphone-theme.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../../engage-client/trunk/components/artifact/css/Artifact.css" />
+   
+        <script type="text/javascript" src="../../../../../../fluid-infusion/lib/jquery/core/js/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../../fluid-infusion/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../../../fluid-infusion/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../../../fluid-infusion/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../../../fluid-infusion/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../../../fluid-infusion/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../../../fluid-infusion/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../../../fluid-infusion/lib/fastXmlPull/js/fastXmlPull.js"></script>   
+        
+        <script type="text/javascript" src="../../../../../engage-client/trunk/components/artifact/js/artifact.js"></script>
+        <script type="text/javascript" src="../../../../../engage-client/trunk/components/artifact/js/loadData.js"></script>      
+    </head>   
+	  <body> 
+        <div class="fl-artifact fl-theme-iPhone">
+            <!--The div named artifact-container gives the renderer and component its scope -->
+            <div class="artifact-container">
+                <!-- the class name flc-artifact-renderscope is for renderer scoping-->
+                <div class="flc-artifact-renderscope">
+                    <div class="flc-screenNavigator-navbar fl-navbar fl-table">
+                        <div class="fl-table-row">              
+                        	<!--Artifact name that appears in the top nav bar -->
+                        	<h1 class="fl-table-cell artifact-name">Artifact name</h1>                          
+                        </div>
+                    </div>            
+                    <div class="fl-container-auto">
+                        <!-- Image of the artifact -->
+                        <img src="../images/Snuffbox.jpg" alt="" class="fl-force-left fl-artifact-thumbnail artifact-picture" />
+                        
+                        <!-- Short description of the artifact besides the image -->
+                        <ul class="fl-artifact-quickInfo">
+                          <!-- Only one element here. Rest is added by the renderer -->
+                          <li class="artifact-info-list">Artifact Info added here and maybe additional elements</li>
+                        </ul>
+                        
+                        <p class="artifact-description">
+                          Here goes a longer artifact description!
+                        </p>
+        
+                        <!--Start panel for tags-->
+        			         	<div class="flc-artifact-panel-tags fl-panel-autoHeading fl-panel fl-panel-collapsable fl-artifact-panel-hidden">
+        	                <h2 class="flc-artifact-panel-tags-title">Tags</h2>
+        	                <div class="flc-artifact-panel-tags-content">
+        	                    <a href="#">Tag</a><a href="#">This</a><a href="#">Is</a><a href="#">A Tag</a>           
+        	                    <input type="text" value="Search" />
+        	                </div>
+                        </div>
+                        <!--Stop panel for tags-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Calling the JavaScript that pulls the data and calls artifact.js -->   
+        <script type="text/javascript">
+            demo.loadJson(window.location);
+        </script>
+    </body>
+</html>

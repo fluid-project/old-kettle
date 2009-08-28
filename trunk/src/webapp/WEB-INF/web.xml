@@ -6,7 +6,7 @@
 <web-app>
 
 	<!-- The declaration of your FacesServlet -->
-	<servlet>
+	<!--<servlet>
 		  <servlet-name>KettleServlet</servlet-name>
 		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
       <init-param>
@@ -14,12 +14,38 @@
           <param-value>/kettleDemo/kettleCherryDemo.json</param-value>
       </init-param>
 		<load-on-startup>1</load-on-startup>
+	</servlet>-->
+    <servlet>
+		  <servlet-name>ArtifactServlet</servlet-name>
+		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
+      <init-param>
+          <param-name>kettleConfigLocation</param-name>
+          <param-value>/artifactDemo/ArtifactDemo.json</param-value>
+      </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+    <servlet>
+		  <servlet-name>CouchServlet</servlet-name>
+		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
+      <init-param>
+          <param-name>kettleConfigLocation</param-name>
+          <param-value>/artifactDemo/CouchDemo.json</param-value>
+      </init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<!-- URL to your app default view will be http://server/appname/rsf/ -->
-	<servlet-mapping>
+	<!--<servlet-mapping>
 	    <servlet-name>KettleServlet</servlet-name>
 	    <url-pattern>/</url-pattern>
+	</servlet-mapping>-->
+    <servlet-mapping>
+	    <servlet-name>ArtifactServlet</servlet-name>
+	    <url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>CouchServlet</servlet-name>
+	    <url-pattern>/couch</url-pattern>
 	</servlet-mapping>
 
 </web-app>
