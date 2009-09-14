@@ -2,5 +2,5 @@
 includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 appFunction: "fluid.artifactDemo.couch",
-debugMode: false
+debugMode: true
 }

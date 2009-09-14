@@ -1,17 +1,19 @@
 
   [
    "js/env.js",
-   "../../../../fluid-infusion/src/webapp/lib/jquery/core/js/jquery.js",
-   "../../../../fluid-infusion/src/webapp/lib/jquery/ui/js/ui.core.js",
-   "../../../../fluid-infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js",
-   "../../../../fluid-infusion/src/webapp/lib/json/js/json2.js",
-   "../../../../fluid-infusion/src/webapp/framework/core/js/Fluid.js",
-   "../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidRenderer.js",
-   "../../../../fluid-infusion/src/webapp/framework/renderer/js/fluidParser.js",
+   "../../../../../../fluid/infusion/trunk/src/webapp/lib/jquery/core/js/jquery.js",
+   "../../../../../../fluid/infusion/trunk/src/webapp/lib/jquery/ui/js/ui.core.js",
+   "../../../../../../fluid/infusion/trunk/src/webapp/lib/fastXmlPull/js/fastXmlPull.js",
+   "../../../../../../fluid/infusion/trunk/src/webapp/lib/json/js/json2.js",
+   "../../../../../../fluid/infusion/trunk/src/webapp/framework/core/js/Fluid.js",
+   "../../../../../../fluid/infusion/trunk/src/webapp/framework/renderer/js/fluidRenderer.js",
+   "../../../../../../fluid/infusion/trunk/src/webapp/framework/renderer/js/fluidParser.js",
    "js/env2.js",
    "js/contentTypes.js",
    "js/kettle.js",
    "js/servletJSGI.js",
    "../kettleDemo/js/kettleJSGIDemo.js",
    "../kettleDemo/js/kettleCherryDemo.js", 
-   ]
+   "../artifactDemo/js/artifactDemo.js",
+   "../artifactDemo/js/csRenderer.js",
+  ]

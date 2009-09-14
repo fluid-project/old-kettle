@@ -21,27 +21,110 @@ var fluid = fluid || fluid_1_2;
 	
     fluid.artifactDemo = fluid.artifactDemo || {};
     
-    fluid.artifactDemo.couch = function(env) {
+    fluid.defaults("fluid.artifactDemo.couchHandler", {   
+    	response: {},
+		model: {},
+		spec: {},
+		couchURL: "http://titan.atrc.utoronto.ca:5984/mmi/_fti/lucene/all?include_docs=true&q=",
+		specURL: "../artifactDemo/schema.json",
+		getImageURL: function(imageString) {
+    		return {
+    			attrs: {
+    				src: imageString.substring(imageString.indexOf("src='") + 5, 
+    						imageString.indexOf(".jpg'") + 4) 
+    			}
+    		};
+		},
+		styles: {
+			artNameHeadingInList: "fl-text-bold"
+		}
+    });
+    
+    fluid.artifactDemo.couchHandler = function(options) {
     	
-    	var response = {};
+    	var that = fluid.initLittleComponent("fluid.artifactDemo.couchHandler", options);
     	
-    	var url = "http://titan.atrc.utoronto.ca:5984/mccord/_fti/lucene/all?include_docs=true&q=" + 
-    				env["QUERY_STRING"].replace('?', '');
-    	
-    	var getDoc = function(data, status) {
-    		data = JSON.parse(data);
-    		if (data.total_rows && data.total_rows > 0) {
-    			response = [200, {"Content-Type":"text/plain"}, JSON.stringify(data.rows[0].doc)];
+    	that.cleanUp = function (data){
+    		if (data instanceof Array) {
+    			for (var i=0; i < data.length; i++) {
+    				if (data[i] instanceof Array || data[i] instanceof Object) {
+    					data[i] = that.cleanUp(data[i]);
+    				}
+    				if (!data[i]) {
+    					if (data.length < 2)
+							return undefined;
+    					else {
+    						data.splice(i, 1);
+    						i--;
+    					}
+    				}
+    			}
+    			if (data.length < 2) data = data[0];
     		}
+    		else if (data instanceof Object) {
+    			for (var key in data) {
+    				if (data[key] instanceof Array || data[key] instanceof Object) {
+    					data[key] = that.cleanUp(data[key]);
+    				}
+    				if (!data[key]) {
+    					delete data[key];
+    				}
+    			}
+    			//	if (size(data) < 1) return undefined;
+    		}
+			return data;
     	};
     	
-    	$.ajax({
-			url: url, 
-			success: getDoc,
-			dataType: "json"
-		});
+    	that.getDoc = function() {
+    		return function (data, status) {
+	    		data = JSON.parse(data);
+	    		if (data.total_rows && data.total_rows > 0) {
+	    			that.options.model = that.cleanUp(data.rows[0].doc);
+	    		}
+	    		else {
+	    			return [200, {"Content-Type":"text/plain"}, "Query returned nothing."];
+	    		}
+	    		
+	    		var getSpec = function() {
+	    			return function (data, status) {
+	    				data = JSON.parse(data);
+	    				that.options.spec = data.spec;	    				
+	    			};
+	    		};
+	    		
+	    		(function (that, callback) {
+	    			$.ajax({
+	        			url: that.options.specURL, 
+	        			success: callback,
+	        			dataType: "json"
+	        		});
+	    		})(that, getSpec());
+	    		
+	    		var toRender = {
+	    			tree: fluid.csRenderer.buildComponentTree(that.options),
+	    			cutpoints: fluid.csRenderer.createCutpoints(that.options.spec),
+	    			model: that.options.model
+	    		};
+	    		
+	    		that.options.response = [200, {"Content-Type":"text/plain"}, JSON.stringify(toRender)];
+    		};
+    	};
+    	return that;
+    };
+    
+    fluid.artifactDemo.couch = function(env) {
     	
-    	return response;
+    	var that = fluid.artifactDemo.couchHandler();    	
+    	
+    	(function (that, callback) {
+    		$.ajax({
+    			url: that.options.couchURL + env["QUERY_STRING"].replace('?', ''), 
+    			success: callback,
+    			dataType: "json"
+    		});
+    	})(that, that.getDoc());
+    	
+    	return that.options.response;
     };
     
     fluid.artifactDemo.initArtifactDemo = function(config) {
@@ -52,8 +135,8 @@ var fluid = fluid || fluid_1_2;
         {baseDir: baseDir + "artifactDemo/",
          renderOptions: [{source: "../../../../../../fluid/infusion/trunk/src/webapp/",
                           target: "fluid-infusion"},
-                          {source: "../../../../../engage-client/trunk/components/artifact/",
-                           target: "fluid-infusion"}]});
+                         {source: "../../../../../engage-client/trunk/components/",
+                          target: "engage-client"}]});
         
         handler.registerProducer("artifact", function(context, env) {
         	return {"output": "THE CATT"}
@@ -63,7 +146,7 @@ var fluid = fluid || fluid_1_2;
         
         var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../../../fluid/infusion/trunk/src/webapp/");
         
-        var engageClientMount = fluid.kettle.mountDirectory(baseDir, "../../../../engage-client/trunk/components/artifact/");
+        var engageClientMount = fluid.kettle.mountDirectory(baseDir, "../../../../engage-client/trunk/components/");
         
         app.root["*"] = [handler, rootMount];
         app.root["fluid-infusion"] = {
