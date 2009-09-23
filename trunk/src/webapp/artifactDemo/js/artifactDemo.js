@@ -145,9 +145,9 @@ var fluid = fluid || fluid_1_2;
         
         var handler = fluid.kettle.renderHandler(
         {baseDir: baseDir + "artifactDemo/",
-         renderOptions: [{source: "../../../../../../fluid/infusion/trunk/src/webapp/",
+         renderOptions: [{source: "../../../../infusion/src/webapp/",
                           target: "fluid-infusion"},
-                         {source: "../../../../../engage-client/trunk/components/",
+                         {source: "../../../../engage/components/",
                           target: "engage-client"}]});
         
         handler.registerProducer("artifact", function(context, env) {
@@ -156,9 +156,9 @@ var fluid = fluid || fluid_1_2;
         
         var rootMount = fluid.kettle.mountDirectory(baseDir, "artifactDemo/");
         
-        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../../../fluid/infusion/trunk/src/webapp/");
+        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../infusion/src/webapp/");
         
-        var engageClientMount = fluid.kettle.mountDirectory(baseDir, "../../../../engage-client/trunk/components/");
+        var engageClientMount = fluid.kettle.mountDirectory(baseDir, "../../../engage/components/");
         
         app.root["*"] = [handler, rootMount];
         app.root["fluid-infusion"] = {

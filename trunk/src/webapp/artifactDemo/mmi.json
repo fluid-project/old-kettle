@@ -1,0 +1,48 @@
+{ 
+	"spec": [
+		{
+	    	"Object Title": {
+		   		"selector": ".artifact-name",
+				"valuebinding": true
+			}
+	   	},
+		{
+		    "Media file": {
+		        "selector": ".artifact-picture",
+				"decorators": [{
+					"type": "function",
+					"name": "decoratorFunction",
+					"decoratorFunction": "getImageURL"
+				}]
+			}
+	    },
+		{
+			"Object Title": {
+		   		"selector": ".artifact-descr-name",
+				"valuebinding": true,
+				"decorators": [{
+	                "type": "addClass",
+	                "classes": "artNameHeadingInList"
+	            }]
+		   	}
+		},
+		{
+			"Provenance": {
+				"selector": ".artifact-provenance",
+				"valuebinding": true
+			}
+		},
+		{
+			"Creation date": {
+				"selector": ".artifact-date",
+				"valuebinding": true
+			}
+		},
+		{
+			"Accession number": {
+				"selector": ".artifact-accession-number",
+				"valuebinding": true
+			}
+		}
+	]
+}
