@@ -13,6 +13,7 @@
         <link type="text/css" rel="stylesheet" href="engage-client/artifact/css/Artifact.css" />
 		<link type="text/css" rel="stylesheet" href="engage-client/browse/css/Cabinet.css" />
 		<link rel="stylesheet" type="text/css" href="engage-client/tags/css/Tags.css" />
+		<link rel="stylesheet" type="text/css" href="engage-client/description/css/description.css" />
    
         <script type="text/javascript" src="fluid-infusion/lib/jquery/core/js/jquery.js"></script>
 		<script type="text/javascript" src="fluid-infusion/lib/jquery/ui/js/ui.core.js"></script>
@@ -31,6 +32,7 @@
 		<script type="text/javascript" src="engage-client/browse/js/NavigationList.js"></script>
 		<script type="text/javascript" src="engage-client/tags/js/Tags.js"></script> 
         <script type="text/javascript" src="engage-client/browse/js/Cabinet.js"></script>
+		<script type="text/javascript" src="engage-client/description/js/Description.js"></script>
 		      
     </head>   
 	  <body> 
@@ -51,7 +53,6 @@
 						<p class="artifact-provenance">Here goes a longer artifact provenance!</p>
 						<p class="artifact-date">Here goes a longer artifact date!</p>
 						<p class="artifact-accession-number">Here goes a longer artifact accession number!</p>
-						<p class="artifact-description">Here goes a longer artifact description!</p>        
                         <!--
 						<div class="flc-artifact-panel-tags fl-panel-autoHeading fl-panel fl-panel-collapsable fl-artifact-panel-hidden">
         	                <h2 class="flc-artifact-panel-tags-title">Tags</h2>
@@ -62,10 +63,13 @@
                         </div>-->
                     </div>
                 </div>
+				<div class="fl-artifact-description">
+					<div class="fl-artifact-description-content"></div>
+				</div>
 				<div class="cabinet">
 		            <div class="flc-cabinet-drawer">
 		                <div class="flc-cabinet-handle">
-		                    <h2 class="flc-cabinet-header" id="drawer-tags">Tags</h2>
+		                    <h2 id="drawer-tags" class="flc-cabinet-header">Tags</h2>
 		                </div>
 		                <div class="flc-cabinet-contents">
 		                    <div class="tags-pane"></div>
@@ -86,15 +90,7 @@
 		                <div class="flc-cabinet-contents">
 		                    <p>Some other contents</p>
 		                </div>
-		            </div>
-					<div class="flc-cabinet-drawer">
-		                <div class="flc-cabinet-handle">
-		                    <h2 class="flc-cabinet-header">Image pairs</h2>
-		                </div>
-		                <div class="flc-cabinet-contents">
-		                    <p>Some other contents</p>
-		                </div>
-		            </div>
+		            </div>					
 		            <div class="flc-cabinet-drawer">
 		                <div class="flc-cabinet-handle fl-cabinet-headerWithDescription">
 		                    <h2 class="flc-cabinet-header">Related/similar artifacts</h2>
@@ -117,30 +113,6 @@
         </div>
         <script type="text/javascript">
             demo.loadJson(window.location);
-//			var navigationListOptions = {
-//                links: [{
-//                    target: "../../../integration_demo/images/Artifacts-.jpg",
-//                    image: "../../../integration_demo/images/Artifacts-.jpg",
-//                    title: "Title",
-//                    description: "Description"
-//                }, {
-//                    target: "../../../integration_demo/images/Snuffbox.jpg",
-//                    image: "../../../integration_demo/images/Snuffbox.jpg",
-//                    title: "Title",
-//                    description: "Description"
-//                }, {
-//                    target: "../../../integration_demo/images/Snuffbox.jpg",
-//                    image: "../../../integration_demo/images/Snuffbox.jpg",
-//                    title: "Title",
-//                    description: "Description"
-//                }, {
-//                    target: "http://build.fluidproject.org",
-//                    title: "Category",
-//                    size: 100
-//                }]
-//            };            
-//            fluid.navigationList($(".flc-navigationList"), navigationListOptions);
-//            fluid.cabinet(".cabinet");
         </script>
     </body>
 </html>

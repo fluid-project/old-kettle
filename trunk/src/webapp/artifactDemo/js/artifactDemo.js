@@ -25,8 +25,8 @@ var fluid = fluid || fluid_1_2;
     	response: {},
 		model: {},
 		spec: {},
-		couchURL: "http://titan.atrc.utoronto.ca:5984/mmi/_fti/lucene/all?include_docs=true&q=",
-		specURL: "../artifactDemo/schema.json",
+		couchURL: "localhost:5984",
+		specURL: null,
 		getImageURL: function(imageString) {
     		return {
     			attrs: {
@@ -44,22 +44,25 @@ var fluid = fluid || fluid_1_2;
     	
     	var that = fluid.initLittleComponent("fluid.artifactDemo.couchHandler", options);
     	
-    	that.cleanUp = function (data){
+    	that.cleanUp = function (data) {
     		if (data instanceof Array) {
-    			for (var i=0; i < data.length; i++) {
+    			for (var i = 0; i < data.length; i++) {
     				if (data[i] instanceof Array || data[i] instanceof Object) {
     					data[i] = that.cleanUp(data[i]);
     				}
     				if (!data[i]) {
-    					if (data.length < 2)
+    					if (data.length < 2) {
 							return undefined;
+    					}
     					else {
     						data.splice(i, 1);
     						i--;
     					}
     				}
     			}
-    			if (data.length < 2) data = data[0];
+    			if (data.length < 2) {
+    				data = data[0];
+    			}
     		}
     		else if (data instanceof Object) {
     			for (var key in data) {
@@ -114,11 +117,20 @@ var fluid = fluid || fluid_1_2;
     
     fluid.artifactDemo.couch = function(env) {
     	
-    	var that = fluid.artifactDemo.couchHandler();    	
+    	var ampIndex = env.QUERY_STRING.indexOf("&");    	
+    	var databaseName = env.QUERY_STRING.substring(1, ampIndex);
+    	var artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
+    	
+    	var that = fluid.artifactDemo.couchHandler({
+    		couchURL: "http://titan.atrc.utoronto.ca:5984/" + 
+    				  databaseName + 
+    				  "/_fti/lucene/all?include_docs=true&q=",
+    		specURL: "../artifactDemo/" + databaseName + ".json"
+    	});
     	
     	(function (that, callback) {
     		$.ajax({
-    			url: that.options.couchURL + env["QUERY_STRING"].replace('?', ''), 
+    			url: that.options.couchURL + artifactQuery, 
     			success: callback,
     			dataType: "json"
     		});
@@ -139,7 +151,7 @@ var fluid = fluid || fluid_1_2;
                           target: "engage-client"}]});
         
         handler.registerProducer("artifact", function(context, env) {
-        	return {"output": "THE CATT"}
+        	return {"output": "THE CATT"};
         });
         
         var rootMount = fluid.kettle.mountDirectory(baseDir, "artifactDemo/");

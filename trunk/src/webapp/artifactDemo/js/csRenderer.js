@@ -201,7 +201,7 @@ var fluid = fluid || fluid_1_2;
                 autoBind: true
             };
             var cutpoints = buildCutpointsFromSpec(fullUISpec);            
-            var tree = cspace.renderer.buildComponentTree(fullUISpec, that.model);
+            var tree = fluid.csRenderer.buildComponentTree(fullUISpec, that.model);
             var resources = {};
             for (var key in that.options.templates) {
                 if (that.options.templates.hasOwnProperty(key)) {
