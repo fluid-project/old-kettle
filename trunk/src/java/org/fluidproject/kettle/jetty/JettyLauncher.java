@@ -13,7 +13,6 @@ public class JettyLauncher {
         Server server = new Server();
 
         Connector connector = new SelectChannelConnector();
-        connector.setHost("142.150.154.163");
         connector.setPort(Integer.getInteger("jetty.port", 8080).intValue());
         server.setConnectors(new Connector[] { connector });
 
