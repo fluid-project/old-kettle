@@ -2,37 +2,39 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		    
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
         <title>Artifact demo</title>
 
-        <link type="text/css" rel="stylesheet" href="fluid-infusion/framework/fss/css/fss-layout.css" />
-        <link type="text/css" rel="stylesheet" href="fluid-infusion/framework/fss/css/fss-text.css" />
-        <link type="text/css" rel="stylesheet" href="fluid-infusion/framework/fss/css/fss-transitions.css" />
-        <link type="text/css" rel="stylesheet" href="fluid-infusion/framework/fss/css/fss-mobile-iphone-layout.css" />
-        <link type="text/css" rel="stylesheet" href="fluid-infusion/framework/fss/css/fss-mobile-iphone-theme.css" />
-        <link type="text/css" rel="stylesheet" href="engage-client/artifact/css/Artifact.css" />
-		<link type="text/css" rel="stylesheet" href="engage-client/browse/css/Cabinet.css" />
-		<link rel="stylesheet" type="text/css" href="engage-client/tags/css/Tags.css" />
-		<link rel="stylesheet" type="text/css" href="engage-client/description/css/description.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-text.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-transitions.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-layout.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../infusion/src/webapp/framework/fss/css/fss-mobile-iphone-theme.css" />
+        <link type="text/css" rel="stylesheet" href="../../../../engage/components/artifact/css/Artifact.css" />
+		<link type="text/css" rel="stylesheet" href="../../../../engage/components/browse/css/Cabinet.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../engage/components/tags/css/Tags.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../engage/components/description/css/Description.css" />
    
-        <script type="text/javascript" src="fluid-infusion/lib/jquery/core/js/jquery.js"></script>
-		<script type="text/javascript" src="fluid-infusion/lib/jquery/ui/js/ui.core.js"></script>
-        <script type="text/javascript" src="fluid-infusion/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
-		<script type="text/javascript" src="fluid-infusion/framework/core/js/jquery.keyboard-a11y.js"></script>
-        <script type="text/javascript" src="fluid-infusion/lib/json/js/json2.js"></script>
-        <script type="text/javascript" src="fluid-infusion/framework/core/js/Fluid.js"></script>
-        <script type="text/javascript" src="fluid-infusion/framework/core/js/FluidDOMUtilities.js"></script>
-        <script type="text/javascript" src="fluid-infusion/framework/core/js/DataBinding.js"></script>
-        <script type="text/javascript" src="fluid-infusion/framework/renderer/js/fluidParser.js"></script>
-        <script type="text/javascript" src="fluid-infusion/framework/renderer/js/fluidRenderer.js"></script>
-        <script type="text/javascript" src="fluid-infusion/lib/fastXmlPull/js/fastXmlPull.js"></script>   
+        <script type="text/javascript" src="../../../../infusion/src/webapp/lib/jquery/core/js/jquery.js"></script>
+		<script type="text/javascript" src="../../../../infusion/src/webapp/lib/jquery/ui/js/ui.core.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/lib/jquery/plugins/delegate/js/jquery.delegate.js"></script>
+		<script type="text/javascript" src="../../../../infusion/src/webapp/framework/core/js/jquery.keyboard-a11y.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/lib/json/js/json2.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/framework/core/js/Fluid.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/framework/core/js/FluidDOMUtilities.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/framework/core/js/DataBinding.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/framework/renderer/js/fluidParser.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/framework/renderer/js/fluidRenderer.js"></script>
+        <script type="text/javascript" src="../../../../infusion/src/webapp/lib/fastXmlPull/js/fastXmlPull.js"></script>   
         
-        <script type="text/javascript" src="engage-client/artifact/js/artifact.js"></script>
-        <script type="text/javascript" src="engage-client/artifact/js/loadData.js"></script>
-		<script type="text/javascript" src="engage-client/browse/js/NavigationList.js"></script>
-		<script type="text/javascript" src="engage-client/tags/js/Tags.js"></script> 
-        <script type="text/javascript" src="engage-client/browse/js/Cabinet.js"></script>
-		<script type="text/javascript" src="engage-client/description/js/Description.js"></script>
+        <script type="text/javascript" src="../../../../engage/components/artifact/js/artifact.js"></script>
+        <script type="text/javascript" src="../../../../engage/components/artifact/js/loadData.js"></script>
+		<script type="text/javascript" src="../../../../engage/components/artifact/js/csRenderer.js"></script>		
+		<script type="text/javascript" src="../../../../engage/components/browse/js/NavigationList.js"></script>
+		<script type="text/javascript" src="../../../../engage/components/tags/js/Tags.js"></script> 
+        <script type="text/javascript" src="../../../../engage/components/browse/js/Cabinet.js"></script>
+		<script type="text/javascript" src="../../../../engage/components/description/js/Description.js"></script>
 		      
     </head>   
 	  <body> 
@@ -46,25 +48,14 @@
                     </div>            
                     <div class="fl-container-auto">
                         <img src="../images/Snuffbox.jpg" alt="" class="fl-force-left fl-artifact-thumbnail artifact-picture" />
-                        <!--<ul class="fl-artifact-quickInfo">
-                        	<li class="artifact-info-list">Artifact Info added here and maybe additional elements</li>
-                        </ul>-->
 						<p class="artifact-descr-name">Here goes a longer artifact name!</p>
 						<p class="artifact-provenance">Here goes a longer artifact provenance!</p>
 						<p class="artifact-date">Here goes a longer artifact date!</p>
 						<p class="artifact-accession-number">Here goes a longer artifact accession number!</p>
-                        <!--
-						<div class="flc-artifact-panel-tags fl-panel-autoHeading fl-panel fl-panel-collapsable fl-artifact-panel-hidden">
-        	                <h2 class="flc-artifact-panel-tags-title">Tags</h2>
-        	                <div class="flc-artifact-panel-tags-content">
-        	                    <a href="#">Tag</a><a href="#">This</a><a href="#">Is</a><a href="#">A Tag</a>           
-        	                    <input type="text" value="Search" />
-        	                </div>
-                        </div>-->
                     </div>
                 </div>
-				<div class="fl-artifact-description">
-					<div class="fl-artifact-description-content"></div>
+				<div class="flc-description">
+					<div class="flc-description-content"></div>
 				</div>
 				<div class="cabinet">
 		            <div class="flc-cabinet-drawer">

@@ -21,122 +21,47 @@ var fluid = fluid || fluid_1_2;
 	
     fluid.artifactDemo = fluid.artifactDemo || {};
     
-    fluid.defaults("fluid.artifactDemo.couchHandler", {   
-    	response: {},
-		model: {},
-		spec: {},
-		couchURL: "localhost:5984",
-		specURL: null,
-		getImageURL: function(imageString) {
-    		return {
-    			attrs: {
-    				src: imageString.substring(imageString.indexOf("src='") + 5, 
-    						imageString.indexOf(".jpg'") + 4) 
-    			}
-    		};
-		},
-		styles: {
-			artNameHeadingInList: "fl-text-bold"
-		}
-    });
-    
-    fluid.artifactDemo.couchHandler = function(options) {
-    	
-    	var that = fluid.initLittleComponent("fluid.artifactDemo.couchHandler", options);
-    	
-    	that.cleanUp = function (data) {
-    		if (data instanceof Array) {
-    			for (var i = 0; i < data.length; i++) {
-    				if (data[i] instanceof Array || data[i] instanceof Object) {
-    					data[i] = that.cleanUp(data[i]);
-    				}
-    				if (!data[i]) {
-    					if (data.length < 2) {
-							return undefined;
-    					}
-    					else {
-    						data.splice(i, 1);
-    						i--;
-    					}
-    				}
-    			}
-    			if (data.length < 2) {
-    				data = data[0];
-    			}
-    		}
-    		else if (data instanceof Object) {
-    			for (var key in data) {
-    				if (data[key] instanceof Array || data[key] instanceof Object) {
-    					data[key] = that.cleanUp(data[key]);
-    				}
-    				if (!data[key]) {
-    					delete data[key];
-    				}
-    			}
-    			//	if (size(data) < 1) return undefined;
-    		}
-			return data;
-    	};
-    	
-    	that.getDoc = function() {
-    		return function (data, status) {
-	    		data = JSON.parse(data);
-	    		if (data.total_rows && data.total_rows > 0) {
-	    			that.options.model = that.cleanUp(data.rows[0].doc);
-	    		}
-	    		else {
-	    			return [200, {"Content-Type":"text/plain"}, "Query returned nothing."];
-	    		}
-	    		
-	    		var getSpec = function() {
-	    			return function (data, status) {
-	    				data = JSON.parse(data);
-	    				that.options.spec = data.spec;	    				
-	    			};
-	    		};
-	    		
-	    		(function (that, callback) {
-	    			$.ajax({
-	        			url: that.options.specURL, 
-	        			success: callback,
-	        			dataType: "json"
-	        		});
-	    		})(that, getSpec());
-	    		
-	    		var toRender = {
-	    			tree: fluid.csRenderer.buildComponentTree(that.options),
-	    			cutpoints: fluid.csRenderer.createCutpoints(that.options.spec),
-	    			model: that.options.model
-	    		};
-	    		
-	    		that.options.response = [200, {"Content-Type":"text/plain"}, JSON.stringify(toRender)];
-    		};
-    	};
-    	return that;
-    };
-    
     fluid.artifactDemo.couch = function(env) {
     	
     	var ampIndex = env.QUERY_STRING.indexOf("&");    	
     	var databaseName = env.QUERY_STRING.substring(1, ampIndex);
     	var artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
     	
-    	var that = fluid.artifactDemo.couchHandler({
-    		couchURL: "http://titan.atrc.utoronto.ca:5984/" + 
+    	var handler = fluid.artifact.handler({
+    		modelURL: "http://titan.atrc.utoronto.ca:5984/" + 
     				  databaseName + 
     				  "/_fti/lucene/all?include_docs=true&q=",
-    		specURL: "../artifactDemo/" + databaseName + ".json"
+    		specURL: "../../../../engage/components/artifact/spec/" + databaseName + ".json",
+    		getImageURL: function(imageString) {
+	    		return {
+	    			attrs: {
+	    				src: imageString.substring(imageString.indexOf("src='") + 5, 
+	    						imageString.indexOf(".jpg'") + 4) 
+	    			}
+	    		};
+			},
+			styles: {
+				artNameHeadingInList: "fl-text-bold"
+			}
     	});
     	
-    	(function (that, callback) {
-    		$.ajax({
-    			url: that.options.couchURL + artifactQuery, 
-    			success: callback,
-    			dataType: "json"
-    		});
-    	})(that, that.getDoc());
+    	var wrapGetDoc = function (data, status) {
+    		data = JSON.parse(data);
+    		if (data.total_rows && data.total_rows > 0) {
+    			handler.getDoc(data.rows[0].doc, status);
+    		}
+    		else {
+    			return [200, {"Content-Type":"text/plain"}, "Query returned nothing."];
+    		}
+    	};
     	
-    	return that.options.response;
+		$.ajax({
+			url: handler.options.modelURL + artifactQuery, 
+			success: wrapGetDoc,
+			dataType: "json"
+		});
+    	
+    	return [200, {"Content-Type":"text/plain"}, JSON.stringify(handler.options.toRender)];
     };
     
     fluid.artifactDemo.initArtifactDemo = function(config) {
@@ -145,10 +70,10 @@ var fluid = fluid || fluid_1_2;
         
         var handler = fluid.kettle.renderHandler(
         {baseDir: baseDir + "artifactDemo/",
-         renderOptions: [{source: "../../../../infusion/src/webapp/",
-                          target: "fluid-infusion"},
-                         {source: "../../../../engage/components/",
-                          target: "engage-client"}]});
+         renderOptions: [{source: "../../../../infusion/",
+                          target: "infusion"},
+                         {source: "../../../../engage/",
+                          target: "engage"}]});
         
         handler.registerProducer("artifact", function(context, env) {
         	return {"output": "THE CATT"};
@@ -156,15 +81,15 @@ var fluid = fluid || fluid_1_2;
         
         var rootMount = fluid.kettle.mountDirectory(baseDir, "artifactDemo/");
         
-        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../infusion/src/webapp/");
+        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../infusion/");
         
-        var engageClientMount = fluid.kettle.mountDirectory(baseDir, "../../../engage/components/");
+        var engageClientMount = fluid.kettle.mountDirectory(baseDir, "../../../engage/");
         
         app.root["*"] = [handler, rootMount];
-        app.root["fluid-infusion"] = {
+        app.root["infusion"] = {
         	"*": infusionMount
         };
-        app.root["engage-client"] = {
+        app.root["engage"] = {
         	"*": engageClientMount
         };
         
