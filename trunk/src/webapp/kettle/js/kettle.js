@@ -102,12 +102,6 @@ var fluid = fluid || fluid_1_2;
        return $.makeArray(array === undefined? null: array);
     };
     
-    fluid.initLittleComponent = function(name, options) {
-        var that = {};
-        fluid.mergeComponentOptions(that, name, options);
-        return that;
-    }
-    
     fluid.defaults("fluid.kettle.renderHandler", {   
             templateExtension: "html",
             // TODO: allow to vary over the app
