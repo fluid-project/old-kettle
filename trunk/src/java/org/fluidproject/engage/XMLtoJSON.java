@@ -6,7 +6,7 @@ package org.fluidproject.engage;
 import java.io.FileInputStream;
 
 public class XMLtoJSON {
-  public static final String[] files = { "Cartoon.xml", "Headdress.xml",
+  public static final String[] files = { "ENGAGE-90-test.xml", "Cartoon.xml", "Headdress.xml",
       "Photograph.xml", "Snuffbox.xml" };
 
   public static final String dir = "src/webapp/mapping/testdata/artifacts/";
