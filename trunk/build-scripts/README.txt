@@ -4,12 +4,14 @@ It is meant to be run from within the directory structure created by the fluid-a
 These are the things it still needs to do:
   1. Remove engage non-production stuff (i.e. mapping, kettle-demo, etc.)
   2. Minify engage-client
-  3. Get engage-client into engage-server [either explode Maven or copy]
-  4. Build WAR with Maven, resolving all dependencies
+  3. Build WAR with Maven, resolving all dependencies
+  4. zip the packages
 
 These are tidy up tasks that still need to be done:
   1. put in a complete description in the ant file for how to run it
   2. address repetition between infusion ant script and engage ant script using the 'import' ant task
+  3. fix the naming of the properties - they aren't all clear.
+  4. rename artifact demo to artifact
   
 These are things we still need to address:
   1. For Engage 0.1 do we want an Engage-all.js?

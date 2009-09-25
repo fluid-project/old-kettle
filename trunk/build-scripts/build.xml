@@ -17,6 +17,8 @@
         <mkdir dir="${build}" />
         <mkdir dir="${build-webapp}" />
         <mkdir dir="${build-webapp}/infusion" />
+        <mkdir dir="${build-webapp}/engage-client" />
+        <mkdir dir="${build-java}" />
         <mkdir dir="${dist}" />
         <mkdir dir="${src-dist}" />
         <mkdir dir="${licenses}" />
@@ -32,6 +34,25 @@
         </copy>
     </target>
     
+    <target name="engageClientBuild">
+        <copy todir="${build-webapp}/engage-client/components">
+            <fileset dir="${engage-client}/components"></fileset>
+        </copy>        
+    </target>
+
+    <target name="engageServerBuild">
+        <copy todir="${build-webapp}/engage-server">
+            <fileset dir="${src}/webapp">
+                <include name="kettle/*" />
+                <include name="artifactDemo/*" />
+                <include name="WEB-INF/*" />
+            </fileset>
+        </copy>        
+        <copy todir="${build-java}">
+            <fileset dir="${src}/java"></fileset>
+        </copy> 
+    </target>
+    
     <target name="copyToBundles">        
         <copy todir="${src-dist}">
             <fileset dir="${build}" />
@@ -42,7 +63,56 @@
         </copy>
     </target>
 
-    <target name="releaseBuild" depends="clean, init, infusionBuild, copyToBundles" 
+    <!-- Copies the files required to build a war file -->
+    <target name="copyWARFiles">        
+      <copy todir="${build}/war" >
+        <fileset dir="${dist}"></fileset>
+        <fileset dir="${base-dir}">
+            <include name="pom.xml" />
+        </fileset>
+      </copy>
+    </target>
+    
+    <!-- Builds the WAR file using Maven 2 and copies it to the distribution folder. identical to infusion build-->
+    <target name="buildWAR">
+      <condition property="isWindows">
+        <os family="windows" />
+      </condition>
+      <antcall target="invokeMavenForWAR"/>
+      <antcall target="invokeMavenForWARWindows"/>
+      <echo>Copying war file ...</echo>
+      <copy todir="${dist}">
+          <fileset dir="${build}/war/target">
+              <include name="${warfile}" />
+          </fileset>
+      </copy>
+    </target>
+  
+    <!-- identical to infusion build -->
+    <target name="invokeMavenForWAR" unless="isWindows">
+      <echo>Building war file...</echo>
+      <apply executable="mvn" dir="${build}/war" parallel="true">
+          <fileset  dir=".">
+              <include name="pom.xml"/>
+          </fileset>
+          <arg value="install" />
+      </apply>
+    </target>
+  
+    <!-- identical to infusion build -->
+    <target name="invokeMavenForWARWindows" if="isWindows">
+      <apply executable="cmd" dir="${build}/war" parallel="true" vmlauncher="false">
+          <fileset  dir=".">
+              <include name="pom.xml"/>
+          </fileset>
+          <arg value="/c mvn.bat install" />
+      </apply>
+    </target>
+    
+    <target name="distWAR" depends="copyWARFiles, buildWAR">
+    </target>
+
+    <target name="releaseBuild" depends="clean, init, infusionBuild, engageClientBuild, engageServerBuild, copyToBundles, distWAR" 
         description="Builds and packages a release bundle of Engage.">
     </target>
         
