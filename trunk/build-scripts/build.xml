@@ -41,7 +41,7 @@
     </target>
 
     <target name="engageServerBuild">
-        <copy todir="${build-webapp}/engage-server">
+        <copy todir="${build-webapp}">
             <fileset dir="${src}/webapp">
                 <include name="kettle/*" />
                 <include name="artifactDemo/*" />

@@ -5,7 +5,9 @@ These are the things it still needs to do:
   1. Remove engage non-production stuff (i.e. mapping, kettle-demo, etc.)
   2. Minify engage-client
   3. Build WAR with Maven, resolving all dependencies
-  4. zip the packages
+  4. fix the paths so that the war will work
+  5. test the WAR
+  6. zip the packages
 
 These are tidy up tasks that still need to be done:
   1. put in a complete description in the ant file for how to run it
