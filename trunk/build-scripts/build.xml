@@ -17,7 +17,7 @@
         <mkdir dir="${build}" />
         <mkdir dir="${build-webapp}" />
         <mkdir dir="${build-webapp}/infusion" />
-        <mkdir dir="${build-webapp}/engage-client" />
+        <mkdir dir="${build-webapp}/engage" />
         <mkdir dir="${build-java}" />
         <mkdir dir="${dist}" />
         <mkdir dir="${src-dist}" />
@@ -35,7 +35,7 @@
     </target>
     
     <target name="engageClientBuild">
-        <copy todir="${build-webapp}/engage-client/components">
+        <copy todir="${build-webapp}/engage/components">
             <fileset dir="${engage-client}/components"></fileset>
         </copy>        
     </target>
@@ -43,11 +43,13 @@
     <target name="engageServerBuild">
         <copy todir="${build-webapp}">
             <fileset dir="${src}/webapp">
-                <include name="kettle/*" />
-                <include name="artifactDemo/*" />
-                <include name="WEB-INF/*" />
+                <include name="kettle/**" />
+                <include name="artifactDemo/**" />
+                <include name="WEB-INF/**" />
+                <exclude name="**/Kettle*Includes.json" />
             </fileset>
-        </copy>        
+        </copy>
+        <copy tofile="${build-webapp}/kettle/KettleIncludes.json" file="${src}/webapp/kettle/KettleStandaloneIncludes.json" />
         <copy todir="${build-java}">
             <fileset dir="${src}/java"></fileset>
         </copy> 

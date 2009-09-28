@@ -1,0 +1,18 @@
+
+  [
+   "js/env.js",
+   "../infusion/lib/jquery/core/js/jquery.js",
+   "../infusion/lib/jquery/ui/js/ui.core.js",
+   "../infusion/lib/fastXmlPull/js/fastXmlPull.js",
+   "../infusion/lib/json/js/json2.js",
+   "../infusion/framework/core/js/Fluid.js",
+   "../infusion/framework/renderer/js/fluidRenderer.js",
+   "../infusion/framework/renderer/js/fluidParser.js",
+   "../engage/components/artifact/js/artifact.js",
+   "../engage/components/artifact/js/csRenderer.js",
+   "js/env2.js",
+   "js/contentTypes.js",
+   "js/kettle.js",
+   "js/servletJSGI.js"
+   "../artifactDemo/js/artifactDemo.js",
+  ]
