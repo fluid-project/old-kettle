@@ -35,6 +35,24 @@
       </init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		  <servlet-name>BrowseServlet</servlet-name>
+		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
+      <init-param>
+          <param-name>kettleConfigLocation</param-name>
+          <param-value>/browseDemo/BrowseDemo.json</param-value>
+      </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+    	<servlet>
+		  <servlet-name>BrowseCouchServlet</servlet-name>
+		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
+      <init-param>
+          <param-name>kettleConfigLocation</param-name>
+          <param-value>/browseDemo/BrowseCouchDemo.json</param-value>
+      </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 	<!-- URL to your app default view will be http://server/appname/rsf/ -->
 	<!--
@@ -48,8 +66,16 @@
 	    <url-pattern>/</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+	    <servlet-name>BrowseServlet</servlet-name>
+	    <url-pattern>/browse</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
 	    <servlet-name>CouchServlet</servlet-name>
 	    <url-pattern>/couch</url-pattern>
+	</servlet-mapping>
+    	<servlet-mapping>
+	    <servlet-name>BrowseCouchServlet</servlet-name>
+	    <url-pattern>/browsecouch</url-pattern>
 	</servlet-mapping>
 
 </web-app>
