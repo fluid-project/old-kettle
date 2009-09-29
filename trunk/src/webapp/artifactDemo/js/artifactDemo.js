@@ -30,20 +30,12 @@ var fluid = fluid || fluid_1_2;
     		switch (databaseName) {
     			case "mmi":
     				return function (imageString) {
-    		    		return {
-    		    			attrs: {
-    		    				src: imageString.substring(imageString.indexOf("src='") + 5, 
-    		    						imageString.indexOf(".jpg'") + 4) 
-    		    			}
-    		    		};
+    		    		return imageString.substring(imageString.indexOf("src='") + 5, 
+    		    						imageString.indexOf(".jpg'") + 4);
     				};
     			case "mccord":
     				return function (imagefile) {
-    					return {
-    		    			attrs: {
-    		    				src: imagefile[imagefile.length - 2].nodetext
-    		    			}
-    		    		};
+    					return imagefile[imagefile.length - 2].nodetext;
     				};
     			default:
     				break;
@@ -54,7 +46,7 @@ var fluid = fluid || fluid_1_2;
     		modelURL: "http://titan.atrc.utoronto.ca:5984/" + 
     				  databaseName + 
     				  "/_fti/lucene/all?include_docs=true&q=",
-    		specURL: "../../../../engage/components/artifact/spec/" + databaseName + ".json",
+    		specURL: "../../../../engage/components/artifact/spec/" + databaseName + "DataSpec.json",
     		getImageURL: rootImageURLHandler(databaseName),
 			styles: {
 				artNameHeadingInList: "fl-text-bold"
@@ -76,19 +68,12 @@ var fluid = fluid || fluid_1_2;
 			success: wrapGetDoc,
 			dataType: "json"
 		});
-    	
-		switch (databaseName) {
-			case "mmi":
-				handler.options.toRender.descriptionModel = 
-					handler.options.toRender.model.Description;
-				break;
-			case "mccord":
-				handler.options.toRender.descriptionModel = 
-					handler.options.toRender.model.artefacts.artefact.descriptions.description_museum;
-				break;
-			default:
-				break;
-		}
+		
+		handler.options.toRender = {
+    		model: handler.options.model,
+    		cutpoints: handler.buildCutpoints(),
+    		tree: handler.buildComponentTree()
+	    };
 		
     	return [200, {"Content-Type":"text/plain"}, JSON.stringify(handler.options.toRender)];
     };
