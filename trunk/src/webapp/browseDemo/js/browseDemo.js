@@ -21,6 +21,7 @@ fluid.browseDemo = fluid.browseDemo || {};
 
 fluid.browseDemo.assembleData = function (env) {
     var returnValue;
+    var modelSpec;
     
 	var ampIndex = env.QUERY_STRING.indexOf("&");    	
 	var databaseName = env.QUERY_STRING.substring(1, ampIndex);
@@ -41,40 +42,60 @@ fluid.browseDemo.assembleData = function (env) {
     };
 
     var replaceSpace = function (text) {
+        if(typeof text !== "string") {
+            text = "";
+        }
         return text.replace(/\s/ig, "%20");
     };
-
-    var mapData = function (data) {
-        data = JSON.parse(data);
-        var obj = {
+    
+    var compileData = function (data, spec) {
+        var categoryText = fluid.model.getBeanValue(data.rows[0].doc, spec.category);
+        var model = {
             strings: {
-                title: queryString
+                title: categoryText
             },
-            useCabinet: true,
-            lists: [
-                {
-                    category: queryString,
-                    listOptions: {}
-                }
-            ]
+            useCabinet: false,
+            lists: [{
+                category: categoryText,
+                listOptions: {}
+            }]
         };
         
-        obj.lists[0].listOptions.links = fluid.transform(data.rows, function (object, index) {
-            var title = object.doc["Object Title"];
+        model.lists[0].listOptions.links = fluid.transform(data.rows, function (artifact) {
+            var base = artifact.doc;
             return {
-                target: "../artifact?" + databaseName + "&" + replaceSpace(title),
-                image: parseImageURL(object.doc["Media file"]),
-                title: title
+                target: "../artifact?" + databaseName + "&" + replaceSpace(fluid.model.getBeanValue(base, spec.linkTarget)),
+                image: parseImageURL(fluid.model.getBeanValue(base, spec.linkImage)),
+                title: fluid.model.getBeanValue(base, spec.linkTitle),
+                description: fluid.model.getBeanValue(base, spec.linkDescription)
             };
         });
         
-        return obj;
+        return JSON.stringify(model);
+
+    };
+    
+    var setSpec = function (spec) {
+        modelSpec = JSON.parse(spec);
+    };
+    
+    var getModelSpec = function (database, callback) {
+        var fileName = database + "DataSpec.json";
+        $.ajax({
+            url: "../../../../engage/components/browse/spec/" + fileName,
+            dataType: "json",
+            success: callback,
+            async: false,
+            error: function (a, b, e) {
+                errorCallback("Problem Loading " + fileName + ".\nError Message: " + e);
+            }
+        });    
     };
 
     var successCallback = function (data) {
-        var correctData = mapData(data);
-        correctData = JSON.stringify(correctData);
-        returnValue = [200, {"Content-Type":"text/plain"}, correctData];
+        data = JSON.parse(data);
+        getModelSpec(databaseName, setSpec);
+        returnValue = [200, {"Content-Type":"text/plain"}, compileData(data, modelSpec)];
     };
     
     var errorCallback = function (errorMessage) {
