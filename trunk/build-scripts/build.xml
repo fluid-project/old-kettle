@@ -40,6 +40,15 @@
         </copy>        
     </target>
 
+    <target name="fixPaths">
+        <replaceregexp match="${infusionRegExp}" replace="${infusionReplace}" flags="g">
+            <fileset dir="${build}" includes="**/*.html" />
+        </replaceregexp>
+        <replaceregexp match="${engageRegExp}" replace="${engageReplace}" flags="g">
+            <fileset dir="${build}" includes="**/*.html" />
+        </replaceregexp>
+    </target>
+     
     <target name="engageServerBuild">
         <copy todir="${build-webapp}">
             <fileset dir="${src}/webapp">
@@ -55,7 +64,7 @@
         </copy> 
     </target>
     
-    <target name="copyToBundles">        
+    <target name="copyToBundles" depends="fixPaths">        
         <copy todir="${src-dist}">
             <fileset dir="${build}" />
         </copy>
