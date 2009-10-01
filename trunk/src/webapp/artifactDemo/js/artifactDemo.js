@@ -30,10 +30,6 @@ var fluid = fluid || fluid_1_2;
     		return url;
     	};
     	
-    	var buildSpecURL = function (dbName) {
-    		return buildURL(["../../../../engage/framework/spec/", dbName, "DataSpec.json"]);
-    	};
-    	
     	var buildDataURL = function (dbName, query) {
     		return buildURL(["http://titan.atrc.utoronto.ca:5984/", dbName, 
     				"/_fti/lucene/all?include_docs=true&q=", query]); 
@@ -42,14 +38,12 @@ var fluid = fluid || fluid_1_2;
     	var ampIndex = env.QUERY_STRING.indexOf("&");    	
     	var databaseName = env.QUERY_STRING.substring(1, ampIndex);
     	var artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
-    	
-    	var handlers = fluid.engage.artifactHandlers();
-    	var spec = fluid.artifact.getSpec(buildSpecURL(databaseName));
+
 		var model = fluid.artifact.getData(buildDataURL(databaseName, artifactQuery));
 		
 		model = JSON.parse(model);
 		if (model.total_rows && model.total_rows > 0) {
-			model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model.rows[0].doc, spec, handlers.options));
+			model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model.rows[0].doc, databaseName));
 		}
 		else {
 			return [500, {"Content-Type":"text/plain"}, "Query returned nothing."];
