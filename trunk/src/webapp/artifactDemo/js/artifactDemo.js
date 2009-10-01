@@ -22,60 +22,44 @@ var fluid = fluid || fluid_1_2;
     
     fluid.artifactDemo.couch = function(env) {
     	
+    	var buildURL = function (parts) {
+    		var url = "";
+    		for (index in parts) {
+    			url += parts[index];
+    		}
+    		return url;
+    	};
+    	
+    	var buildSpecURL = function (dbName) {
+    		return buildURL(["../../../../engage/framework/spec/", dbName, "DataSpec.json"]);
+    	};
+    	
+    	var buildDataURL = function (dbName, query) {
+    		return buildURL(["http://titan.atrc.utoronto.ca:5984/", dbName, 
+    				"/_fti/lucene/all?include_docs=true&q=", query]); 
+    	};
+    	
     	var ampIndex = env.QUERY_STRING.indexOf("&");    	
     	var databaseName = env.QUERY_STRING.substring(1, ampIndex);
     	var artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
     	
-    	var rootImageURLHandler = function (databaseName) {
-    		switch (databaseName) {
-    			case "mmi":
-    				return function (imageString) {
-    		    		return imageString.substring(imageString.indexOf("src='") + 5, 
-    		    						imageString.indexOf(".jpg'") + 4);
-    				};
-    			case "mccord":
-    				return function (imagefile) {
-    					return imagefile[imagefile.length - 2].nodetext;
-    				};
-    			default:
-    				break;
-    		}
-    	};
-    	
-    	var handler = fluid.artifact.handler({
-    		modelURL: "http://titan.atrc.utoronto.ca:5984/" + 
-    				  databaseName + 
-    				  "/_fti/lucene/all?include_docs=true&q=",
-    		specURL: "../../../../engage/components/artifact/spec/" + databaseName + "DataSpec.json",
-    		getImageURL: rootImageURLHandler(databaseName),
-			styles: {
-				artNameHeadingInList: "fl-text-bold"
-			}
-    	});
-    	
-    	var wrapGetDoc = function (data, status) {
-    		data = JSON.parse(data);
-    		if (data.total_rows && data.total_rows > 0) {
-    			handler.getDoc(data.rows[0].doc, status);
-    		}
-    		else {
-    			return [200, {"Content-Type":"text/plain"}, "Query returned nothing."];
-    		}
-    	};
-    	
-		$.ajax({
-			url: handler.options.modelURL + artifactQuery, 
-			success: wrapGetDoc,
-			dataType: "json"
-		});
+    	var handlers = fluid.engage.artifactHandlers();
+    	var spec = fluid.artifact.getSpec(buildSpecURL(databaseName));
+		var model = fluid.artifact.getData(buildDataURL(databaseName, artifactQuery));
 		
-		handler.options.toRender = {
-    		model: handler.options.model,
-    		cutpoints: handler.buildCutpoints(),
-    		tree: handler.buildComponentTree()
-	    };
+		model = JSON.parse(model);
+		if (model.total_rows && model.total_rows > 0) {
+			model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model.rows[0].doc, spec, handlers.options));
+		}
+		else {
+			return [500, {"Content-Type":"text/plain"}, "Query returned nothing."];
+		}
 		
-    	return [200, {"Content-Type":"text/plain"}, JSON.stringify(handler.options.toRender)];
+		return [200, {"Content-Type":"text/plain"}, JSON.stringify({
+			model: model,
+            cutpoints: fluid.artifact.buildCutpoints(),
+    		tree: fluid.artifact.buildComponentTree(model)
+		})];
     };
     
     fluid.artifactDemo.initArtifactDemo = function(config) {
