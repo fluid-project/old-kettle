@@ -17,4 +17,5 @@
    "../kettleDemo/js/kettleJSGIDemo.js",
    "../kettleDemo/js/kettleCherryDemo.js", 
    "../artifactDemo/js/artifactDemo.js",
+   "../browseDemo/js/browseDemo.js"
   ]

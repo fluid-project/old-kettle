@@ -1,5 +1,5 @@
 {handlerFunction: "fluid.kettle.servlet.process",
-includes: "browseDemo/BrowseIncludes.json",
+includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 appFunction: "fluid.browseDemo.assembleData",
 debugMode: false
