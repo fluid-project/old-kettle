@@ -41,13 +41,7 @@ var fluid = fluid || fluid_1_2;
 
 		var model = fluid.artifact.getData(buildDataURL(databaseName, artifactQuery));
 		
-		model = JSON.parse(model);
-		if (model.total_rows && model.total_rows > 0) {
-			model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model.rows[0].doc, databaseName));
-		}
-		else {
-			return [500, {"Content-Type":"text/plain"}, "Query returned nothing."];
-		}
+		model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model, databaseName));
 		
 		return [200, {"Content-Type":"text/plain"}, JSON.stringify({
 			model: model,
