@@ -35,17 +35,27 @@
     </target>
     
     <target name="engageClientBuild">
-        <copy todir="${build-webapp}/engage/components">
-            <fileset dir="${engage-client}/components"></fileset>
+        <copy todir="${build-webapp}/engage">
+            <fileset dir="${engage-client}" includes="components/**, framework/**"></fileset>
         </copy>        
     </target>
 
     <target name="fixPaths">
-        <replaceregexp match="${infusionRegExp}" replace="${infusionReplace}" flags="g">
+        <replaceregexp match="${infusionHTMLRegExp}" replace="${infusionReplace}" flags="g">
             <fileset dir="${build}" includes="**/*.html" />
         </replaceregexp>
-        <replaceregexp match="${engageRegExp}" replace="${engageReplace}" flags="g">
+        <replaceregexp match="${infusionIncludesRegExp}" replace="${infusionReplace}" flags="g">
+            <fileset dir="${build}" includes="**/*Includes.json" />
+        </replaceregexp>
+        <replaceregexp match="${infusionMountRegExp}" replace="${infusionReplace}" flags="g">
+            <fileset dir="${build}" includes="**/*Demo.js" />
+        </replaceregexp>
+        
+        <replaceregexp match="${engageHTMLRegExp}" replace="${engageReplace}" flags="g">
             <fileset dir="${build}" includes="**/*.html" />
+        </replaceregexp>
+        <replaceregexp match="${engageJSRegExp}" replace="${engageReplace}" flags="g">
+            <fileset dir="${build}" includes="**/*Includes.json, **/*Demo.js" />
         </replaceregexp>
     </target>
      
@@ -54,11 +64,11 @@
             <fileset dir="${src}/webapp">
                 <include name="kettle/**" />
                 <include name="artifactDemo/**" />
+                <include name="browseDemo/**" />
+                <include name="kettleDemo/**" />
                 <include name="WEB-INF/**" />
-                <exclude name="**/Kettle*Includes.json" />
             </fileset>
         </copy>
-        <copy tofile="${build-webapp}/kettle/KettleIncludes.json" file="${src}/webapp/kettle/KettleStandaloneIncludes.json" />
         <copy todir="${build-java}">
             <fileset dir="${src}/java"></fileset>
         </copy> 
