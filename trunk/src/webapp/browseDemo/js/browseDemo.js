@@ -20,36 +20,33 @@ var fluid = fluid || fluid_1_2;
 fluid.browseDemo = fluid.browseDemo || {};
 
 fluid.browseDemo.assembleData = function (env) {
-    var returnValue;
-    var modelSpec;
-    
-	var ampIndex = env.QUERY_STRING.indexOf("&");    	
-	var databaseName = env.QUERY_STRING.substring(1, ampIndex);
-	var queryString = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
-    
-    var baseURL = "http://titan.atrc.utoronto.ca:5984/";
+    var baseDataURL = "http://titan.atrc.utoronto.ca:5984/";
     var baseQuery = "/_fti/lucene/by_collection_category?include_docs=true&q=";
-	
-    var compileURL = function (baseURL, baseQuery, database, query) {
-        return baseURL + database + baseQuery + query;
-    };
-
-    var parseImageURL = function (markup) {
-        var start = markup.indexOf("\'", markup.indexOf("img src")) + 1;
-        var end = markup.indexOf("\'", start);
+    var baseArtifactURL = "../artifact?";
+    var queryDelim = "&";
+    
+    var parseEnv = function (envString, delimiter) {
+        var obj = {};
+        var ampIndex = envString.QUERY_STRING.indexOf(delimiter);    	
         
-        return markup.slice(start, end);
-    };
-
-    var replaceSpace = function (text) {
-        if(typeof text !== "string") {
-            text = "";
-        }
-        return text.replace(/\s/ig, "%20");
+        obj.database = envString.QUERY_STRING.substring(1, ampIndex);
+        obj.query = envString.QUERY_STRING.substring(ampIndex + 1, envString.QUERY_STRING.length);
+        
+        return obj;
     };
     
-    var compileData = function (data, spec) {
-        var categoryText = fluid.model.getBeanValue(data.rows[0].doc, spec.category);
+    var parsedENV = parseEnv(env, queryDelim);
+    
+    var compileDatabaseURL = function (URLBase, queryBase, options) {
+        return URLBase + (options.database || "") + queryBase + (options.query || "");
+    };
+    
+    var compileTargetURL = function (URLBase, queryDelimiter, query, options) {
+        return URLBase + (options.database || "") + queryDelimiter + query; 
+    };
+    
+    var compileData = function (data) {
+        var categoryText = data[0].category;
         var model = {
             strings: {
                 title: categoryText
@@ -61,62 +58,64 @@ fluid.browseDemo.assembleData = function (env) {
             }]
         };
         
-        model.lists[0].listOptions.links = fluid.transform(data.rows, function (artifact) {
-            var base = artifact.doc;
+        model.lists[0].listOptions.links = fluid.transform(data, function (artifact) {
             return {
-                target: "../artifact?" + databaseName + "&" + replaceSpace(fluid.model.getBeanValue(base, spec.linkTarget)),
-                image: parseImageURL(fluid.model.getBeanValue(base, spec.linkImage)),
-                title: fluid.model.getBeanValue(base, spec.linkTitle),
-                description: fluid.model.getBeanValue(base, spec.linkDescription)
+                target: artifact.target,
+                image: artifact.linkImage,
+                title: artifact.linkTitle,
+                description: artifact.linkDescription
             };
         });
         
         return JSON.stringify(model);
-
     };
     
-    var setSpec = function (spec) {
-        modelSpec = JSON.parse(spec);
+    var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
+        fluid.log("XMLHttpRequest: " + XMLHttpRequest);
+        fluid.log("Status: " + textStatus);
+        fluid.log("Error: " + errorThrown);
+        returnValue = [500, {"Content-Type":"text/plain"}, errorThrown];
     };
-    
-    var getModelSpec = function (database, callback) {
-        var fileName = database + "DataSpec.json";
+        
+    var ajaxCall = function (url, success, error) {
         $.ajax({
-            url: "../../../../engage/components/browse/spec/" + fileName,
-            dataType: "json",
-            success: callback,
-            async: false,
-            error: function (a, b, e) {
-                errorCallback("Problem Loading " + fileName + ".\nError Message: " + e);
-            }
-        });    
-    };
-
-    var successCallback = function (data) {
-        data = JSON.parse(data);
-        getModelSpec(databaseName, setSpec);
-        returnValue = [200, {"Content-Type":"text/plain"}, compileData(data, modelSpec)];
-    };
-    
-    var errorCallback = function (errorMessage) {
-        returnValue = [500, {"Content-Type":"text/plain"}, errorMessage];
-    };
-    
-    var getData = function (callback) {
-        $.ajax({
-            url: compileURL(baseURL, baseQuery, databaseName, queryString),
-            dataType: "json",
-            asyn: false,
-            success: callback,
-            error: function (a, b, e) {
-                errorCallback("Error Message: " + e);
-            }
+           url: url,
+           dataType: "json",
+           asyn: false,
+           success: success,
+           error: error
         });
     };
     
-    getData(successCallback);
+    var getAjax = function (url, error) {
+        var data;
+        var success = function (returnedData) {
+            data = returnedData;
+        };
+        
+        ajaxCall(url, success,error);
+        
+        return JSON.parse(data);
+    };
     
-    return returnValue;
+    var getArtifactData = function (rawData, database) {
+        var dataRows = rawData.rows || [];
+        return fluid.transform(dataRows, function (row) {
+            var artifact = row.doc;
+            return fluid.engage.mapModel(artifact, database);
+        });
+    };
+  
+    var getData = function (baseURL, baseQuery, error, options) {
+        var url = compileDatabaseURL(baseURL, baseQuery, options);
+        var rawData = getAjax(url, error);
+        
+        var dataSet = getArtifactData(rawData, options.database);
+        
+        return compileData(dataset);
+    };
+    
+    return [200, {"Content-Type":"text/plain"}, getData(baseDataURL, baseQuery, errorCallback,parsedENV)];
 };
 
 fluid.browseDemo.initBrowseDemo = function(config) {
@@ -131,7 +130,7 @@ fluid.browseDemo.initBrowseDemo = function(config) {
                           target: "engage"}]});
         
         handler.registerProducer("browse", function(context, env) {
-        	return {"output": "THE CATT"};
+        	return {};
         });
         
         var rootMount = fluid.kettle.mountDirectory(baseDir, "browseDemo/");
