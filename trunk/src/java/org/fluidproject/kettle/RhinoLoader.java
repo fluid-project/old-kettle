@@ -42,8 +42,8 @@ public class RhinoLoader {
     public void loadFile(String filename) {
         Reader fr = null;
         try {
-            fr = new FileReader(filename);
             Context context = Context.enter();
+            fr = new FileReader(filename);
             context.evaluateReader(scope, fr, filename, 1, null);
             if (filename.endsWith("env.js") && docpath != null) {
                 envLoaded = true;
