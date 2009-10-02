@@ -4,11 +4,8 @@
   "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-
-	<!-- The declaration of your FacesServlet -->
-	<!--
 	<servlet>
-		  <servlet-name>KettleServlet</servlet-name>
+		  <servlet-name>KettleDemo</servlet-name>
 		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
       <init-param>
           <param-name>kettleConfigLocation</param-name>
@@ -16,7 +13,6 @@
       </init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	 -->
 	<servlet>
 		  <servlet-name>ArtifactServlet</servlet-name>
 		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
@@ -54,13 +50,10 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<!-- URL to your app default view will be http://server/appname/rsf/ -->
-	<!--
 	<servlet-mapping>
-	    <servlet-name>KettleServlet</servlet-name>
-	    <url-pattern>/</url-pattern>
+	    <servlet-name>KettleDemo</servlet-name>
+	    <url-pattern>/kettleDemo</url-pattern>
 	</servlet-mapping>
-	-->
 	<servlet-mapping>
 	    <servlet-name>ArtifactServlet</servlet-name>
 	    <url-pattern>/</url-pattern>

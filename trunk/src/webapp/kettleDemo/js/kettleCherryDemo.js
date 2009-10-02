@@ -24,10 +24,16 @@ var fluid = fluid || fluid_1_2;
         var app = fluid.kettle.makeKettleApp(config.get("appName"));
         var baseDir = config.get("baseDir");
         
-        var handler = fluid.kettle.renderHandler(
-        {baseDir: baseDir + "kettleDemo/",
-         renderOptions: [{source: "../../../../fluid-infusion/src/webapp",
-                          target: "fluid-infusion"}]});
+        var handler = fluid.kettle.renderHandler({
+            baseDir: baseDir + "kettleDemo/",
+            renderOptions: {
+                rebaseURLs: true,
+                rewriteUrlPrefixes: [{
+                    source: "../../../../fluid-infusion/src/webapp",
+                    target: "fluid-infusion"
+                }]
+            }
+         });
         
         handler.registerProducer("kettle", function(context, env) {
           return {"output": "THE CATT"}
