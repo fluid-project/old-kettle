@@ -27,10 +27,10 @@ var fluid = fluid || fluid_1_2;
         var handler = fluid.kettle.renderHandler({
             baseDir: baseDir + "kettleDemo/",
             renderOptions: {
-                rebaseURLs: true,
+                rebaseURLs: false,
                 rewriteUrlPrefixes: [{
                     source: "../../../../fluid-infusion/src/webapp",
-                    target: "fluid-infusion"
+                    target: "infusion"
                 }]
             }
          });
@@ -41,10 +41,10 @@ var fluid = fluid || fluid_1_2;
         
         var rootMount = fluid.kettle.mountDirectory(baseDir, "kettleDemo/");
         
-        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../fluid-infusion/src/webapp/");
+        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../infusion/src/webapp/");
         
         app.root["*"] = [handler, rootMount];
-        app.root["fluid-infusion"] = {
+        app.root["infusion"] = {
           "*": infusionMount
         };
         
