@@ -20,8 +20,10 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 * 
 */
-var fluid_1_2 = fluid_1_2 || {};
-var fluid = fluid || fluid_1_2;
+
+/*global jQuery, fluid*/
+
+var fluid = fluid || {};
 
 
 // Adapted from JackJS' servlet.js "handler" - original comment:
@@ -84,5 +86,5 @@ var fluid = fluid || fluid_1_2;
         Packages.org.fluidproject.kettle.ResourceUtil.sendResponse(response, body);
       }
 
-})(jQuery, fluid_1_2);
+})(jQuery, fluid);
     

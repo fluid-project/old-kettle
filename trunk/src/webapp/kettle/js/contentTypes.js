@@ -10,8 +10,9 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-var fluid_1_2 = fluid_1_2 || {};
-var fluid = fluid || fluid_1_2;
+/*global jQuery, fluid*/
+
+var fluid = fluid || {};
 
 (function ($, fluid) {
     fluid.kettle = fluid.kettle || {};
@@ -74,5 +75,5 @@ var fluid = fluid || fluid_1_2;
             contentTypeHeader: "text/css; charset=UTF-8",
         }
     }
-})(jQuery, fluid_1_2);
+})(jQuery, fluid);
   

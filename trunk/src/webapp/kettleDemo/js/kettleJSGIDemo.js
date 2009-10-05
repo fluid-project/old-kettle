@@ -12,10 +12,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
 */
 
 // Declare dependencies.
-/*global jQuery*/
+/*global jQuery, fluid*/
 
-var fluid_1_2 = fluid_1_2 || {};
-var fluid = fluid || fluid_1_2;
+var fluid = fluid || {};
 
 (function ($, fluid) {
     fluid.kettleDemo = fluid.kettleDemo || {};
@@ -24,4 +23,4 @@ var fluid = fluid || fluid_1_2;
         return [200,{"Content-Type":"text/plain"}, "THE KETTOL HAS LANDED!" ];
 }
     
-})(jQuery, fluid_1_2);
+})(jQuery, fluid);
