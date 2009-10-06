@@ -12,8 +12,9 @@
    "js/contentTypes.js",
    "js/kettle.js",
    "js/servletJSGI.js",
-   "../kettleDemo/js/kettleJSGIDemo.js",
-   "../kettleDemo/js/kettleCherryDemo.js", 
+   "../engage/js/EngageApp.js",
    "../artifactDemo/js/artifactDemo.js",
-   "../browseDemo/js/browseDemo.js"
+   "../browseDemo/js/browseDemo.js",
+   "../../../../engage/framework/js/Engage.js",
+   "../../../../engage/components/artifact/js/artifact.js"
   ]

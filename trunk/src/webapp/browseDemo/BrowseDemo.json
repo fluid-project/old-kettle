@@ -1,7 +1,0 @@
-{initFunction: "fluid.browseDemo.initBrowseDemo",
-handlerFunction: "fluid.kettle.servlet.process",
-includes: "kettle/KettleIncludes.json",
-includesPrefix: "kettle/",
-loaderFunction: "fluid.browseDemo.initBrowseDemo",
-debugMode: true
-}

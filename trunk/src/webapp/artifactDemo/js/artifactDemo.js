@@ -19,66 +19,62 @@ var fluid = fluid || {};
 	
     fluid.artifactDemo = fluid.artifactDemo || {};
     
-    fluid.artifactDemo.couch = function(env) {
-    	
-    	var buildURL = function (parts) {
-    		var url = "";
-    		for (index in parts) {
-    			url += parts[index];
-    		}
-    		return url;
-    	};
-    	
-    	var buildDataURL = function (dbName, query) {
-    		return buildURL(["http://titan.atrc.utoronto.ca:5984/", dbName, 
-    				"/_fti/lucene/all?include_docs=true&q=", query]); 
-    	};
-    	
-    	var ampIndex = env.QUERY_STRING.indexOf("&");    	
-    	var databaseName = env.QUERY_STRING.substring(1, ampIndex);
-    	var artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
+    fluid.artifactDemo.initArtifactDataFeed = function (config, app) {
+        var artifactDataHandler = function (context, env) {	
+            var buildURL = function (parts) {
+                var url = "";
+                for (index in parts) {
+                    url += parts[index];
+                }
+                return url;
+            };
+            
+            var buildDataURL = function (dbName, query) {
+                return buildURL(["http://titan.atrc.utoronto.ca:5984/", dbName, 
+                                 "/_fti/lucene/all?include_docs=true&q=", query]); 
+            };
 
-		var model = fluid.artifact.getData(buildDataURL(databaseName, artifactQuery));
-		
-		model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model, databaseName));
-		
-		return [200, {"Content-Type":"text/plain"}, JSON.stringify({
-			model: model,
-            cutpoints: fluid.artifact.buildCutpoints(),
-    		tree: fluid.artifact.buildComponentTree(model)
-		})];
+            var ampIndex = env.QUERY_STRING.indexOf("&");    	
+            var databaseName = env.QUERY_STRING.substring(0, ampIndex);
+            var artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
+            
+            var model = fluid.artifact.getData(buildDataURL(databaseName, artifactQuery));
+            
+            model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model, databaseName));
+            
+            return [200, {"Content-Type":"text/plain"}, JSON.stringify({
+                model: model,
+                cutpoints: fluid.artifact.buildCutpoints(),
+                tree: fluid.artifact.buildComponentTree(model)
+            })];
+        };
+        
+        fluid.engage.mountHandler(app, "artifactData", artifactDataHandler);
     };
     
-    fluid.artifactDemo.initArtifactDemo = function(config) {
-        var app = fluid.kettle.makeKettleApp(config.get("appName"));
+    fluid.artifactDemo.initArtifactDemo = function(config, app) {
         var baseDir = config.get("baseDir");
         
-        var handler = fluid.kettle.renderHandler(
-        {baseDir: baseDir + "artifactDemo/",
-         renderOptions: [{source: "../../../../infusion/",
-                          target: "infusion"},
-                         {source: "../../../../engage/",
-                          target: "engage"}]});
-        
-        handler.registerProducer("artifact", function(context, env) {
-        	return {"output": "THE CATT"};
+        var handler = fluid.kettle.renderHandler({
+            baseDir: baseDir + "artifactDemo/",
+            rebaseUrls: true,
+            renderOptions: {
+                rewriteUrlPrefixes: [{
+                    source: "../../../../infusion",
+                    target: "/infusion"
+                },
+                {
+                    source: "../../../../engage",
+                    target: "/engage"
+                }]
+            }
         });
         
-        var rootMount = fluid.kettle.mountDirectory(baseDir, "artifactDemo/");
-        
-        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../infusion/");
-        
-        var engageClientMount = fluid.kettle.mountDirectory(baseDir, "../../../engage/");
-        
-        app.root["*"] = [handler, rootMount];
-        app.root["infusion"] = {
-        	"*": infusionMount
-        };
-        app.root["engage"] = {
-        	"*": engageClientMount
-        };
-        
-        return app.app;
+        handler.registerProducer("artifact", function(context, env) {
+            return {};
+        });
+
+        fluid.engage.mountAcceptor(app, "artifactView", handler);
     };
     
 })(jQuery, fluid);

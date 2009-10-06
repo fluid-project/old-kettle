@@ -1,0 +1,13 @@
+{initFunction: "fluid.engage.initEngageApp",
+handlerFunction: "fluid.kettle.servlet.process",
+includes: "kettle/KettleIncludes.json",
+includesPrefix: "kettle/",
+loaderFunction: "fluid.engage.initEngageApp",
+initServices: [
+    "fluid.artifactDemo.initArtifactDemo", 
+    "fluid.artifactDemo.initArtifactDataFeed", 
+    "fluid.browseDemo.initBrowseDemo",
+    "fluid.browseDemo.initBrowseDataFeed"
+],
+debugMode: true
+}

@@ -1,7 +1,0 @@
-{initFunction: "fluid.artifactDemo.initArtifactDemo",
-handlerFunction: "fluid.kettle.servlet.process",
-includes: "kettle/KettleIncludes.json",
-includesPrefix: "kettle/",
-loaderFunction: "fluid.artifactDemo.initArtifactDemo",
-debugMode: false
-}
