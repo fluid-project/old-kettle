@@ -1,0 +1,52 @@
+<project name="FluidBuildUtils">
+    <description>
+        Utilities used by the Infusion and Engage builds
+    </description>
+
+    <target name="clean" description="Cleans up all build-related artifacts and products.">
+        <delete dir="${build}" />
+        <delete dir="${products}" />
+    </target>
+
+    <target name="init">
+        <mkdir dir="${products}" />
+        <mkdir dir="${build}" />
+        <mkdir dir="${dist}" />
+        <mkdir dir="${src-dist}" />
+        <mkdir dir="${licenses}" />
+    </target>
+
+    <target name="buildWAR">
+      <condition property="isWindows">
+        <os family="windows" />
+      </condition>
+      <antcall target="invokeMavenForWAR"/>
+      <antcall target="invokeMavenForWARWindows"/>
+      <echo>Copying war file ...</echo>
+      <copy todir="${dist}">
+          <fileset dir="${build}/war/target">
+              <include name="${warfile}" />
+          </fileset>
+      </copy>
+    </target>
+
+    <target name="invokeMavenForWAR" unless="isWindows">
+      <echo>Building war file...</echo>
+      <apply executable="mvn" dir="${build}/war" parallel="true">
+          <fileset  dir=".">
+              <include name="pom.xml"/>
+          </fileset>
+          <arg value="install" />
+      </apply>
+    </target>
+  
+    <target name="invokeMavenForWARWindows" if="isWindows">
+      <apply executable="cmd" dir="${build}/war" parallel="true" vmlauncher="false">
+          <fileset  dir=".">
+              <include name="pom.xml"/>
+          </fileset>
+          <arg value="/c mvn.bat install" />
+      </apply>
+    </target>
+
+</project>

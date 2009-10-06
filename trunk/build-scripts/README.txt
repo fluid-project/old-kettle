@@ -14,8 +14,6 @@ These are the things it still needs to do:
   
 These are tidy up tasks that still need to be done:
   1. put in a complete description in the ant file for how to run it
-  2. address repetition between infusion ant script and engage ant script using the 'import' ant task
-  3. as part of 2, provide lint support
-  4. fix the naming of the properties - they aren't all clear.
-  5. rename artifact demo to artifact
+  2. fix the naming of the properties - they aren't all clear.
+  3. rename artifact demo to artifact
   
