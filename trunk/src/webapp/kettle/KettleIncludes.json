@@ -15,6 +15,5 @@
    "../engage/js/EngageApp.js",
    "../artifactDemo/js/artifactDemo.js",
    "../browseDemo/js/browseDemo.js",
-   "../../../../engage/framework/js/Engage.js",
-   "../../../../engage/components/artifact/js/artifact.js"
+   "../../../../engage/framework/js/Engage.js"
   ]

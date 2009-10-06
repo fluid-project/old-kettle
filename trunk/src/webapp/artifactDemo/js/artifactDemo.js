@@ -29,6 +29,128 @@ var fluid = fluid || {};
                 return url;
             };
             
+            var artifactCleanUp = function (data) {
+        		if (data instanceof Array) {
+        			for (var i = 0; i < data.length; i++) {
+        				if (data[i] instanceof Array || data[i] instanceof Object) {
+        					data[i] = artifactCleanUp(data[i]);
+        				}
+        				if (!data[i]) {
+        					if (data.length < 2) {
+        						return undefined;
+        					}
+        					else {
+        						data.splice(i, 1);
+        						i--;
+        					}
+        				}
+        			}
+        			if (data.length < 2) {
+        				data = data[0];
+        			}
+        		}
+        		else if (data instanceof Object) {
+        			for (var key in data) {
+        				if (data[key] instanceof Array || data[key] instanceof Object) {
+        					data[key] = artifactCleanUp(data[key]);
+        				}
+        				if (!data[key]) {
+        					delete data[key];
+        				}
+        			}
+        			//	if (size(data) < 1) return undefined;
+        		}
+        		return data;
+        	};
+        	
+        	var getData = function (modelURL) {
+        		var model = {}
+        		var successCallback = function (data, status) {
+        			try {
+        				data.charAt;
+        				data = JSON.parse(data);
+        			} catch (e) {				
+        			} finally {
+        				model = data;
+        				if (model.total_rows && model.total_rows > 0) {
+        					model = model.rows[0].doc;
+        				}
+        			}       
+                };        
+                $.ajax({
+        			url: modelURL, 
+        			success: successCallback,
+        			dataType: "json",
+        			async: false
+        		});
+                return model;
+        	};
+        	
+        	var buildCutpoints = function (){
+            	return [{
+            	 		id: "artifactTitle",
+            	 		selector: ".artifact-name"
+            	 	},
+            	 	{
+            	 		id: "artifactImage",
+            	 		selector: ".artifact-picture"
+            	 	},
+            	 	{
+            	 		id: "artifactTitle2",
+            	 		selector: ".artifact-descr-name"
+            	 	},
+            	 	{
+            	 		id: "artifactAuthor",
+            	 		selector: ".artifact-provenance"
+            	 	},
+            	 	{
+            	 		id: "artifactDate",
+            	 		selector: ".artifact-date"
+            	 	},
+            	 	{
+            	 		id: "artifactAccessionNumber",
+            	 		selector: ".artifact-accession-number"
+            	 	}
+            	];
+            };
+            
+            var buildComponentTree = function (model) {
+            	return {children: [
+        			{
+        				ID: "artifactTitle",
+        				valuebinding: "artifactTitle"
+        			},
+        			{
+        				ID: "artifactImage",
+        				decorators: [{
+        					attrs: {
+            					src: model.artifactImage
+            				}
+        				}]
+        			},
+        			{
+        				ID: "artifactTitle2",
+        				valuebinding: "artifactTitle",
+        				decorators: [{
+            				type: "addClass",
+            				classes: "fl-text-bold"
+        				}]
+        			},
+        			{
+        				ID: "artifactAuthor",
+        				valuebinding: "artifactAuthor"
+        			},
+        			{
+        				ID: "artifactDate",
+        				valuebinding: "artifactDate"
+        			},
+        			{
+        				ID: "artifactAccessionNumber",
+        				valuebinding: "artifactAccessionNumber"
+        			}
+            	]};
+            };
+            
             var buildDataURL = function (dbName, query) {
                 return buildURL(["http://titan.atrc.utoronto.ca:5984/", dbName, 
                                  "/_fti/lucene/all?include_docs=true&q=", query]); 
@@ -38,14 +160,16 @@ var fluid = fluid || {};
             var databaseName = env.QUERY_STRING.substring(0, ampIndex);
             var artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length);
             
-            var model = fluid.artifact.getData(buildDataURL(databaseName, artifactQuery));
+            var model = getData(buildDataURL(databaseName, artifactQuery));
             
-            model = fluid.artifact.artifactCleanUp(fluid.engage.mapModel(model, databaseName));
+            model = artifactCleanUp(fluid.engage.mapModel(model, databaseName));
             
             return [200, {"Content-Type":"text/plain"}, JSON.stringify({
-                model: model,
-                cutpoints: fluid.artifact.buildCutpoints(),
-                tree: fluid.artifact.buildComponentTree(model)
+            	toRender: {
+                	model: model,
+                	cutpoints: buildCutpoints(),
+                	tree: buildComponentTree(model)
+            	}
             })];
         };
         

@@ -30,7 +30,7 @@
         
 		<script type="text/javascript" src="../../../../engage/framework/js/Engage.js"></script>
         <script type="text/javascript" src="../../../../engage/components/artifact/js/artifact.js"></script>
-        <script type="text/javascript" src="../../../../engage/components/artifact/js/loadData.js"></script>
+        <script type="text/javascript" src="../../../../engage/framework/js/loadData.js"></script>
 		<script type="text/javascript" src="../../../../engage/components/tags/js/Tags.js"></script> 
         <script type="text/javascript" src="../../../../engage/components/browse/js/Cabinet.js"></script>
 		<script type="text/javascript" src="../../../../engage/components/description/js/Description.js"></script>
@@ -90,7 +90,7 @@
             </div>
         </div>
         <script type="text/javascript">
-            demo.loadJson(window.location);
+            fluid.engage.initComponent(window.location, "artifact", ".artifact-container");
         </script>
     </body>
 </html>
