@@ -31,7 +31,7 @@
         <script type="text/javascript" src="../../../../engage/components/browse/js/Cabinet.js"></script> 
         <script type="text/javascript" src="../../../../engage/components/browse/js/NavigationList.js"></script>
         <script type="text/javascript" src="../../../../engage/components/browse/js/Browse.js"></script> 
-        <script type="text/javascript" src="../../../../engage/components/browse/js/loadData.js"></script>
+        <script type="text/javascript" src="../../../../engage/framework/js/loadData.js"></script>
         
 	</head>
 	<body class="browse fl-theme-iphone">
@@ -64,7 +64,7 @@
         </div>
         
         <script type="text/javascript">
-            demo.loadJson(window.location, ".browse");
+            fluid.engage.initComponent(window.location, "fluid.browse", ".browse");
         </script>
 	</body>
 </html>

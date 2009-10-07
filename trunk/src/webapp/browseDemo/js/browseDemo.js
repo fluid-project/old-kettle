@@ -106,7 +106,7 @@ var getData = function (baseURL, baseQuery, error, options) {
     
     var dataSet = getArtifactData(rawData, options.database);
     
-    return compileData(dataset);
+    return compileData(dataSet);
 };
 
 fluid.browseDemo.initBrowseDataFeed = function (config, app) {
