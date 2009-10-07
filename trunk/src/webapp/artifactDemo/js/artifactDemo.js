@@ -173,7 +173,8 @@ var fluid = fluid || {};
             })];
         };
         
-        fluid.engage.mountHandler(app, "artifactData", artifactDataHandler);
+        var acceptor = fluid.engage.makeAcceptorForResource("view", "json", artifactDataHandler);
+        fluid.engage.mountAcceptor(app, "artifacts", acceptor);
     };
     
     fluid.artifactDemo.initArtifactDemo = function(config, app) {
@@ -194,11 +195,11 @@ var fluid = fluid || {};
             }
         });
         
-        handler.registerProducer("Artifact", function(context, env) {
+        handler.registerProducer("view", function(context, env) {
             return {};
         });
 
-        fluid.engage.mountAcceptor(app, "artifactView", handler);
+        fluid.engage.mountAcceptor(app, "artifacts", handler);
     };
     
 })(jQuery, fluid);

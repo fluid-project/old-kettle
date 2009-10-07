@@ -2,7 +2,20 @@ fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function () {
-	
+    
+    fluid.engage.makeAcceptorForResource = function (atSegment, extension, handler) {
+        return {
+            accept: function (segment, relPath, pathInfo) {
+                if (segment === atSegment && pathInfo.extension === extension) {
+                    return {
+                        handle: handler
+                    };
+                }
+                return null;
+            }
+        };
+    };
+    
 	fluid.engage.mountHandler = function (onApp, atSegment, handler) {
 		fluid.engage.mountAcceptor(onApp, atSegment, {
 			accept: function (segment, relPath, pathInfo) {
@@ -13,6 +26,13 @@ fluid.engage = fluid.engage || {};
 		});
 	};
 	
+	var mergeAcceptorAtSegment = function (onApp, segment, acceptor) {
+	    onApp.root[segment] = onApp.root[segment] || {};
+	    var urlTable = onApp.root[segment];
+	    urlTable["*"] = urlTable["*"] || [];
+	    urlTable["*"].push(acceptor);
+	};
+	
 	fluid.engage.mountAcceptor = function (onApp, atSegment, acceptor) {
 		var acceptorMap = atSegment;
 		if (typeof atSegment === "string") {
@@ -21,9 +41,7 @@ fluid.engage = fluid.engage || {};
 		}
 
 		for (var segment in acceptorMap) {
-			onApp.root[segment] = {
-				"*": acceptorMap[segment]
-			};
+		    mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
 		}
 	};
 	

@@ -18,7 +18,7 @@ fluid.browseDemo = fluid.browseDemo || {};
 
 var baseDataURL = "http://titan.atrc.utoronto.ca:5984/";
 var baseQuery = "/_fti/lucene/by_collection_category?include_docs=true&q=";
-var baseArtifactURL = "../../artifactView/Artifact?";
+var baseArtifactURL = "../../artifacts/view.html?";
 var queryDelim = "&";
 
 var parseEnv = function (envString, delimiter) {
@@ -115,7 +115,8 @@ fluid.browseDemo.initBrowseDataFeed = function (config, app) {
         return [200, {"Content-Type":"text/plain"}, getData(baseDataURL, baseQuery, errorCallback,parsedENV)];
     };
 
-    fluid.engage.mountHandler(app, "artifactBrowseData", browseDataHandler);
+    var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", browseDataHandler);
+    fluid.engage.mountAcceptor(app, "artifacts", acceptor);
 };
 
 
@@ -137,10 +138,10 @@ fluid.browseDemo.initBrowseDemo = function(config, app) {
         	}
         });
         
-        handler.registerProducer("Browse", function(context, env) {
+        handler.registerProducer("browse", function(context, env) {
         	return {};
         });
         
-        fluid.engage.mountAcceptor(app, "artifactBrowse", handler);
+        fluid.engage.mountAcceptor(app, "artifacts", handler);
     };
 })(jQuery);
