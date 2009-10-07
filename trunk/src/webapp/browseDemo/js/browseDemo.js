@@ -18,7 +18,7 @@ fluid.browseDemo = fluid.browseDemo || {};
 
 var baseDataURL = "http://titan.atrc.utoronto.ca:5984/";
 var baseQuery = "/_fti/lucene/by_collection_category?include_docs=true&q=";
-var baseArtifactURL = "../artifact?";
+var baseArtifactURL = "../../artifactView/Artifact?";
 var queryDelim = "&";
 
 var parseEnv = function (envString, delimiter) {
@@ -35,11 +35,11 @@ var compileDatabaseURL = function (URLBase, queryBase, options) {
     return URLBase + (options.database || "") + queryBase + (options.query || "");
 };
 
-var compileTargetURL = function (URLBase, queryDelimiter, query, options) {
-    return URLBase + (options.database || "") + queryDelimiter + query; 
+var compileTargetURL = function (URLBase, queryDelimiter, query, database) {
+    return URLBase + (database || "") + queryDelimiter + query; 
 };
 
-var compileData = function (data) {
+var compileData = function (data, dbName) {
     var categoryText = data[0].category;
     var model = {
         strings: {
@@ -54,7 +54,7 @@ var compileData = function (data) {
     
     model.lists[0].listOptions.links = fluid.transform(data, function (artifact) {
         return {
-            target: artifact.target,
+            target: compileTargetURL(baseArtifactURL, queryDelim, artifact.linkTarget, dbName),
             image: artifact.linkImage,
             title: artifact.linkTitle,
             description: artifact.linkDescription
@@ -106,7 +106,7 @@ var getData = function (baseURL, baseQuery, error, options) {
     
     var dataSet = getArtifactData(rawData, options.database);
     
-    return compileData(dataSet);
+    return compileData(dataSet, options.database);
 };
 
 fluid.browseDemo.initBrowseDataFeed = function (config, app) {
