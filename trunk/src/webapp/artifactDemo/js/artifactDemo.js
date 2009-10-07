@@ -179,18 +179,18 @@ fluid.artifactView = fluid.artifactView || {};
         
         var handler = fluid.kettle.renderHandler({
             baseDir: baseDir + "../../../engage" + "/components/artifact/html/",
-            rebaseUrls: true,
             renderOptions: {
+                rebaseURLs: false,
                 rewriteUrlPrefixes: [{
                     source: "../../../../infusion",
-                    target: "/infusion"
+                    target: "../infusion"
                 },
                 {
                     source: "../../../../engage",
-                    target: "/engage"
+                    target: "../engage"
                 }]
             }
-        });
+        }); 
         
         handler.registerProducer("view", function (context, env) {
             return {};
