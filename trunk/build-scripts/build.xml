@@ -24,46 +24,30 @@
     </target>
     
     <target name="engageClientBuild">
-        <copy todir="${build-webapp}/engage">
+        <copy todir="${build-webapp}/engage-client">
             <fileset dir="${engage-client}" includes="components/**, framework/**"></fileset>
         </copy>        
-    </target>
-
-    <target name="fixPaths">
-        <replaceregexp match="${infusionHTMLRegExp}" replace="${infusionReplace}" flags="g">
-            <fileset dir="${build}" includes="**/*.html" />
-        </replaceregexp>
-        <replaceregexp match="${infusionIncludesRegExp}" replace="${infusionReplace}" flags="g">
-            <fileset dir="${build}" includes="**/*Includes.json" />
-        </replaceregexp>
-        <replaceregexp match="${infusionMountRegExp}" replace="${infusionReplace}" flags="g">
-            <fileset dir="${build}" includes="**/*Demo.js" />
-        </replaceregexp>
-        
-        <replaceregexp match="${engageHTMLRegExp}" replace="${engageReplace}" flags="g">
-            <fileset dir="${build}" includes="**/*.html" />
-        </replaceregexp>
-        <replaceregexp match="${engageJSRegExp}" replace="${engageReplace}" flags="g">
-            <fileset dir="${build}" includes="**/*Includes.json, **/*Demo.js" />
-        </replaceregexp>
     </target>
      
     <target name="engageServerBuild">
         <copy todir="${build-webapp}">
             <fileset dir="${src}/webapp">
                 <include name="kettle/**" />
+                <include name="engage/**" />
                 <include name="artifactDemo/**" />
                 <include name="browseDemo/**" />
                 <include name="kettleDemo/**" />
                 <include name="WEB-INF/**" />
+                <exclude name="**/Kettle*Includes.json" />
             </fileset>
         </copy>
+        <copy tofile="${build-webapp}/kettle/KettleIncludes.json" file="${src}/webapp/kettle/KettleStandaloneIncludes.json" />
         <copy todir="${build-java}">
             <fileset dir="${src}/java"></fileset>
         </copy> 
     </target>
     
-    <target name="copyToBundles" depends="fixPaths">        
+    <target name="copyToBundles">        
         <copy todir="${src-dist}">
             <fileset dir="${build}" />
         </copy>
