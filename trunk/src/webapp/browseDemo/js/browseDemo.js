@@ -123,7 +123,7 @@ fluid.browseDemo.initBrowseDemo = function(config, app) {
         var baseDir = config.get("baseDir");
         
         var handler = fluid.kettle.renderHandler({
-        	baseDir: baseDir + "browseDemo/",
+        	baseDir: baseDir + "../../../engage" + "/components/browse/html/",
         	renderOptions: {
                 rebaseURLs: false,
                 rewriteUrlPrefixes: [{
@@ -137,7 +137,7 @@ fluid.browseDemo.initBrowseDemo = function(config, app) {
         	}
         });
         
-        handler.registerProducer("browse", function(context, env) {
+        handler.registerProducer("Browse", function(context, env) {
         	return {};
         });
         

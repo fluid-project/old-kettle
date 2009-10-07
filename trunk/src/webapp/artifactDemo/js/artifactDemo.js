@@ -180,7 +180,7 @@ var fluid = fluid || {};
         var baseDir = config.get("baseDir");
         
         var handler = fluid.kettle.renderHandler({
-            baseDir: baseDir + "artifactDemo/",
+            baseDir: baseDir + "../../../engage" + "/components/artifact/html/",
             rebaseUrls: true,
             renderOptions: {
                 rewriteUrlPrefixes: [{
@@ -194,7 +194,7 @@ var fluid = fluid || {};
             }
         });
         
-        handler.registerProducer("artifact", function(context, env) {
+        handler.registerProducer("Artifact", function(context, env) {
             return {};
         });
 
