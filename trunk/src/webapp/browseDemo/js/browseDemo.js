@@ -129,11 +129,11 @@ fluid.browseDemo.initBrowseDemo = function(config, app) {
                 rebaseURLs: false,
                 rewriteUrlPrefixes: [{
                     source: "../../../../infusion",
-                    target: "/infusion"
+                    target: "../infusion"
                 },
                 {
                     source: "../../../../engage",
-                    target: "/engage"
+                    target: "../engage"
                 }]
         	}
         });
