@@ -16,8 +16,6 @@ fluid.browseDemo = fluid.browseDemo || {};
 
 (function ($) {
 
-var baseDataURL = "http://titan.atrc.utoronto.ca:5984/";
-var baseQuery = "/_fti/lucene/by_collection_category?include_docs=true&q=";
 var baseArtifactURL = "../../artifacts/view.html?";
 var queryDelim = "&";
 
@@ -31,8 +29,9 @@ var parseEnv = function (envString, delimiter) {
     return obj;
 };
 
-var compileDatabaseURL = function (URLBase, queryBase, options) {
-    return URLBase + (options.database || "") + queryBase + (options.query || "");
+var compileDatabaseURL = function (parsedENV, config) {
+    return fluid.stringTemplate(config.queryURLTemplate, 
+    		{dbName: parsedENV.database || "", view: config.views.byCollectionCategory, query: parsedENV.query || ""});
 };
 
 var compileTargetURL = function (URLBase, queryDelimiter, query, database) {
@@ -100,19 +99,19 @@ var getArtifactData = function (rawData, database) {
     });
 };
 
-var getData = function (baseURL, baseQuery, error, options) {
-    var url = compileDatabaseURL(baseURL, baseQuery, options);
+var getData = function (error, parsedENV, config) {
+    var url = compileDatabaseURL(parsedENV, config);
     var rawData = getAjax(url, error);
     
-    var dataSet = getArtifactData(rawData, options.database);
+    var dataSet = getArtifactData(rawData, parsedENV.database);
     
-    return compileData(dataSet, options.database);
+    return compileData(dataSet, parsedENV.database);
 };
 
 fluid.browseDemo.initBrowseDataFeed = function (config, app) {
     var browseDataHandler = function (env) {
         var parsedENV = parseEnv(env.env, queryDelim);
-        return [200, {"Content-Type":"text/plain"}, getData(baseDataURL, baseQuery, errorCallback,parsedENV)];
+        return [200, {"Content-Type":"text/plain"}, getData(errorCallback, parsedENV, config)];
     };
 
     var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", browseDataHandler);
@@ -128,23 +127,6 @@ fluid.browseDemo.initBrowseDemo = function(config, app) {
         source: "components/browse/html/",
         sourceMountRelative: "engage"
     });
-        /**
-        var handler = fluid.kettle.renderHandler({
-        	baseDir: baseDir + "../../../engage" + "/components/browse/html/",
-        	renderOptions: {
-                rebaseURLs: false,
-                rewriteUrlPrefixes: [{
-                    source: "../../../../infusion",
-                    target: "../infusion"
-                },
-                {
-                    source: "../../../../engage",
-                    target: "../engage"
-                }]
-        	}
-        });
-        fluid.engage.mountAcceptor(app, "artifacts", handler);
-        **/
         
         handler.registerProducer("browse", function(context, env) {
         	return {};

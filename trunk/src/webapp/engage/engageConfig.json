@@ -4,12 +4,17 @@ handlerFunction: "fluid.kettle.servlet.process",
 includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
+queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 initServices: [
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",
     "fluid.browseDemo.initBrowseDataFeed"
 ],
+views: {
+    all: "all",
+    byCollectionCategory: "by_collection_category"
+},
 mount: {
     infusion: {
         target: "infusion/",
