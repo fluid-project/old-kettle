@@ -121,8 +121,14 @@ fluid.browseDemo.initBrowseDataFeed = function (config, app) {
 
 
 fluid.browseDemo.initBrowseDemo = function(config, app) {
-        var baseDir = config.get("baseDir");
-        
+    var handler = fluid.engage.mountRenderHandler({
+        config: config,
+        app: app,
+        target: "artifacts/",
+        source: "components/browse/html/",
+        sourceMountRelative: "engage"
+    });
+        /**
         var handler = fluid.kettle.renderHandler({
         	baseDir: baseDir + "../../../engage" + "/components/browse/html/",
         	renderOptions: {
@@ -137,11 +143,12 @@ fluid.browseDemo.initBrowseDemo = function(config, app) {
                 }]
         	}
         });
+        fluid.engage.mountAcceptor(app, "artifacts", handler);
+        **/
         
         handler.registerProducer("browse", function(context, env) {
         	return {};
         });
         
-        fluid.engage.mountAcceptor(app, "artifacts", handler);
     };
 })(jQuery);

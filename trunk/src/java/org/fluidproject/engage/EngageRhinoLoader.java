@@ -19,7 +19,7 @@ public class EngageRhinoLoader {
         RhinoLoader loader = new RhinoLoader(args.length > 0 && args[0].equals("debug"));
 
         loader.setDocument("src/webapp/mapping/html/mapping.html");
-        loader.loadJSONFiles("src/webapp/mapping/html/", "src/java/org/fluidproject/engage/XMLtoJSONincludes.json");
+        loader.loadJSONFiles("", "src/webapp/mapping/html/", "src/java/org/fluidproject/engage/XMLtoJSONincludes.json", null);
         loader.evaluateString("fluid.dom.evalScripts()");
         
       }

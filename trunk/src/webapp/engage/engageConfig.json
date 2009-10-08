@@ -1,4 +1,5 @@
-{initFunction: "fluid.engage.initEngageApp",
+{
+initFunction: "fluid.engage.initEngageApp",
 handlerFunction: "fluid.kettle.servlet.process",
 includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
@@ -9,5 +10,15 @@ initServices: [
     "fluid.browseDemo.initBrowseDemo",
     "fluid.browseDemo.initBrowseDataFeed"
 ],
+mount: {
+    infusion: {
+        target: "infusion/",
+        source: "../../../infusion/"
+        },
+    engage: {
+        target: "engage/",
+        source: "../../../engage/"
+        }
+    },
 debugMode: true
 }

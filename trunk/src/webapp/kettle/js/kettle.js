@@ -31,7 +31,7 @@ var fluid = fluid || {};
         }
     }
     
-    function paramsToMap(queryString) {
+    fluid.kettle.paramsToMap = function(queryString) {
         var togo = {}
         var segs = queryString.split("&");
         for (var i = 0; i < segs; ++ i) {
@@ -44,9 +44,8 @@ var fluid = fluid || {};
         return togo;
     }
     
-    fluid.kettle.parseUrlState = function(env) {
+    fluid.kettle.parsePathInfo = function(pathInfo) {
         var togo = {};
-        var pathInfo = env["PATH_INFO"];
         var segs = pathInfo.split("/");
         if (segs.length > 0) {
             if (!segs[0]) {
@@ -59,9 +58,14 @@ var fluid = fluid || {};
                 segs[top] = segs[top].substring(0, dotpos);
             }
         }
-        
         togo.pathInfo = segs;
-        togo.params = paramsToMap(env["QUERY_STRING"]);
+        return togo;
+    };
+        
+    
+    fluid.kettle.parseUrlState = function(env) {
+        var togo = fluid.kettle.parsePathInfo(env["PATH_INFO"]);
+        togo.params = fluid.kettle.paramsToMap(env["QUERY_STRING"]);
         return togo;
     };
 
@@ -238,7 +242,7 @@ var fluid = fluid || {};
         }
         return [404, "", ""];
     };
-      
+    
     fluid.kettle.appRegistry = {};
       
     fluid.kettle.makeKettleApp = function(appName) {

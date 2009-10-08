@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import uk.org.ponder.errorutil.ConfigurationException;
 import uk.org.ponder.json.support.DeJSONalizer;
 import uk.org.ponder.saxalizer.SAXalizerMappingContext;
 import uk.org.ponder.streamutil.StreamCloseUtil;
@@ -21,7 +22,12 @@ import uk.org.ponder.streamutil.StreamCopyUtil;
 import uk.org.ponder.util.UniversalRuntimeException;
 
 public class ResourceUtil {
-
+    public static boolean booleanValue(Object totest) {
+        if (totest == null) return false;
+        if (totest instanceof Boolean) return ((Boolean)totest).booleanValue();
+        else return totest.equals("true");
+    }
+    
     static Object readJson(String filename, Object root) {
         try {
             FileInputStream fis = new FileInputStream(filename);
@@ -40,6 +46,20 @@ public class ResourceUtil {
         finally {
             
         }
+    }
+    
+    public static String resolveIncludePath(String context, String path, String prefix, Map mounts) {
+        if (path.startsWith("$")) {
+            int fsp = path.indexOf("/");
+            String mountKey = path.substring(1, fsp);
+            if (mounts == null || mounts.get(mountKey) == null) {
+                throw UniversalRuntimeException.accumulate(new ConfigurationException(), "Include path " 
+                        + path + " requests mount with unknown key " + mountKey);
+            }
+            Map mount = (Map) mounts.get(mountKey);
+            return context + mount.get("source") + path.substring(fsp + 1);
+        }
+        else return context + prefix + path;
     }
     
     public static String pathToFileUrl(String path) {

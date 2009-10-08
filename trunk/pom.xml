@@ -26,6 +26,11 @@
       <url>http://www2.caret.cam.ac.uk/maven2</url>
     </repository>
     <repository>
+      <id>Fluid-Maven2</id>
+      <name>Fluid Maven 2 Repository</name>
+      <url>http://developer.jasig.org/repo/content/repositories/fluid-m2</url>
+    </repository>
+    <repository>
       <id>CARET-Maven2-dev</id>
       <name>CARET Maven 2 Development Repository</name>
       <url>http://www2.caret.cam.ac.uk/maven2dev</url>
@@ -39,7 +44,7 @@
     <dependency>
       <groupId>uk.org.ponder</groupId>
       <artifactId>ponderutilcore</artifactId>
-      <version>1.2.4</version>
+      <version>1.2.4A</version>
       <type>jar</type>
     </dependency>
     <dependency>

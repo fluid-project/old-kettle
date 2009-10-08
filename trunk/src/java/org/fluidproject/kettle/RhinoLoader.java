@@ -5,6 +5,7 @@ package org.fluidproject.kettle;
 
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.Map;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -110,10 +111,11 @@ public class RhinoLoader {
         }
     }
 
-    public void loadJSONFiles(String prefix, String path) {
-        String[] files = ResourceUtil.loadJsonArray(path);
+    public void loadJSONFiles(String context, String path, String prefix, Map mounts) {
+        String[] files = ResourceUtil.loadJsonArray(context + path);
         for (int i = 0; i < files.length; ++i) {
-            loadFile(prefix + files[i]);
+            String resolved = ResourceUtil.resolveIncludePath(context, files[i], prefix, mounts);
+            loadFile(resolved);
         }
         markLoaded();
     }

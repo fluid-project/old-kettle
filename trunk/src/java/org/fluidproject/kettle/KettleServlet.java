@@ -46,13 +46,12 @@ public class KettleServlet extends HttpServlet {
         assertKeys(kettlePath, kettleConfig, new String[] {"includes", "handlerFunction"});
         String contextPath = context.getRealPath("/") + "/";
         kettleConfig.put("baseDir", contextPath);
-// Bug 1 - DeJSON does not recognise boolean
-        loader = new RhinoLoader(kettleConfig.get("debugMode").equals("true"));
+        loader = new RhinoLoader(ResourceUtil.booleanValue(kettleConfig.get("debugMode")));
         String includes = (String) kettleConfig.get("includes");
         String includesPrefix = (String) kettleConfig.get("includesPrefix");
         if (includesPrefix == null) includesPrefix = "";
         loader.setDocument(ResourceUtil.pathToFileUrl(contextPath + "kettle/root.xml"));
-        loader.loadJSONFiles(contextPath + includesPrefix, contextPath + includes);
+        loader.loadJSONFiles(contextPath, includes, includesPrefix, (Map) kettleConfig.get("mount"));
 
         // load Servlet handler "process" method
         handler = loader.getFunction(kettleConfig.get("handlerFunction"));

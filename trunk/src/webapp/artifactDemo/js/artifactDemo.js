@@ -175,28 +175,35 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     fluid.artifactView.initMarkupFeed = function (config, app) {
-        var baseDir = config.get("baseDir");
+        var handler = fluid.engage.mountRenderHandler({
+            config: config,
+            app: app,
+            target: "artifacts/",
+            source: "components/artifact/html/",
+            sourceMountRelative: "engage"
+        });
         
-        var handler = fluid.kettle.renderHandler({
-            baseDir: baseDir + "../../../engage" + "/components/artifact/html/",
+/**        var handler = fluid.kettle.renderHandler({
+            baseDir: baseDir + "../../../engage/" + "components/artifact/html/",
             renderOptions: {
                 rebaseURLs: false,
                 rewriteUrlPrefixes: [{
-                    source: "../../../../infusion",
-                    target: "../infusion"
+                    source: "../../../../infusion/",
+                    target: "../infusion/"
                 },
                 {
-                    source: "../../../../engage",
-                    target: "../engage"
+                    source: "../../../../engage/",
+                    target: "../engage/"
                 }]
             }
         }); 
+        fluid.engage.mountAcceptor(app, "artifacts", handler); **/
         
         handler.registerProducer("view", function (context, env) {
             return {};
         });
 
-        fluid.engage.mountAcceptor(app, "artifacts", handler);
+
     };
     
 })(jQuery);
