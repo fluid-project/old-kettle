@@ -18,11 +18,13 @@ views: {
 mount: {
     infusion: {
         target: "infusion/",
-        source: "../../../infusion/src/webapp/"
+        source: "infusion/",
+        rewriteSource: "../../../infusion/src/webapp/"
         },
     engage: {
-        target: "engage/",
-        source: "../../../engage/"
+        target: "engage-client/",
+        source: "engage-client/", 
+        rewriteSource: "../../../engage/"
         }
     },
 debugMode: true

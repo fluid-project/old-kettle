@@ -38,10 +38,10 @@
                 <include name="browseDemo/**" />
                 <include name="kettleDemo/**" />
                 <include name="WEB-INF/**" />
-                <exclude name="**/Kettle*Includes.json" />
+                <exclude name="**/engage*Config.json" />
             </fileset>
         </copy>
-        <copy tofile="${build-webapp}/kettle/KettleIncludes.json" file="${src}/webapp/kettle/KettleStandaloneIncludes.json" />
+        <copy tofile="${build-webapp}/engage/engageConfig.json" file="${src}/webapp/engage/engageStandaloneConfig.json" />
         <copy todir="${build-java}">
             <fileset dir="${src}/java"></fileset>
         </copy> 
