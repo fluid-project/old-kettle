@@ -31,7 +31,7 @@
      
     <target name="engageServerBuild">
         <copy todir="${build-webapp}">
-            <fileset dir="${src}/webapp">
+            <fileset dir="${src-webapp}">
                 <include name="kettle/**" />
                 <include name="engage/**" />
                 <include name="artifactDemo/**" />
@@ -41,9 +41,9 @@
                 <exclude name="**/engage*Config.json" />
             </fileset>
         </copy>
-        <copy tofile="${build-webapp}/engage/engageConfig.json" file="${src}/webapp/engage/engageStandaloneConfig.json" />
+        <copy tofile="${build-webapp}/engage/engageConfig.json" file="${src-webapp}/engage/engageStandaloneConfig.json" />
         <copy todir="${build-java}">
-            <fileset dir="${src}/java"></fileset>
+            <fileset dir="${src-java}"></fileset>
         </copy> 
     </target>
     
