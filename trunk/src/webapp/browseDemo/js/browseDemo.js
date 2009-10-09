@@ -16,7 +16,7 @@ fluid.browseDemo = fluid.browseDemo || {};
 
 (function ($) {
 
-var baseArtifactURL = "../../artifacts/view.html?";
+var baseArtifactURL = "view.html?";
 var queryDelim = "&";
 
 var parseEnv = function (envString, delimiter) {
