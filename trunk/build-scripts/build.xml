@@ -85,7 +85,19 @@
       </copy>
     </target>
         
-    <target name="distWAR" depends="copyWARFiles, buildWAR"></target>
+    <target name="distWAR" depends="copyWARFiles">
+      <antcall target="buildWAR">
+        <param name="fromdir" value="${build-source}" />
+        <param name="tofile" value="${products}/${warfile-src}" />
+        <param name="warfile" value="${warfile}" />
+      </antcall>
+
+      <antcall target="buildWAR">
+        <param name="fromdir" value="${build-mini}" />
+        <param name="tofile" value="${products}/${warfile}" />
+        <param name="warfile" value="${warfile}" />
+      </antcall>
+    </target>
 
     <target name="releaseBuild" depends="initDirs, infusionBuild, engageClientBuild, engageServerBuild, distWAR" 
         description="Builds and packages a release bundle of Engage.">
