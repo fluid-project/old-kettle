@@ -39,7 +39,8 @@ var compileTargetURL = function (URLBase, queryDelimiter, query, database) {
 };
 
 var compileData = function (data, dbName) {
-    var categoryText = data[0].category;
+	var categoryText = (typeof data[0].category === "string") ? 
+			data[0].category : $.makeArray(data[0].category).toString();
     var model = {
         strings: {
             title: categoryText

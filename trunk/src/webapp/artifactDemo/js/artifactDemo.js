@@ -111,6 +111,18 @@ fluid.artifactView = fluid.artifactView || {};
         return fluid.engage.mapModel(model, databaseName);
     };
     
+    var buildCategoryQuery = function (category) {
+    	if (typeof category === "string") {
+    		return category;
+    	}
+    	category = $.makeArray(category);
+    	var catString = category.pop();
+    	$.each(category, function (index, value) {
+    		catString += "AND" + value;
+    	});
+    	return catString;
+    };
+    
     fluid.artifactView.initDataFeed = function (config, app) {
         var artifactDataHandler = function (context, env) {	
             var query = env.QUERY_STRING,
@@ -118,7 +130,7 @@ fluid.artifactView = fluid.artifactView || {};
                 databaseName = query.substring(0, ampIndex),
                 artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length),
                 model = fetchAndNormalizeModel(databaseName, artifactQuery, config),
-                relatedArtifacts = "browse.html?" + databaseName + "&" + model.category;
+                relatedArtifacts = "browse.html?" + databaseName + "&" + buildCategoryQuery(model.category);
             
             return [200, {"Content-Type": "text/plain"}, JSON.stringify({
                 toRender: {
