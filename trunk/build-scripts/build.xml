@@ -16,51 +16,68 @@
     <target name="infusionBuild">
         <ant dir="${infusion-scripts}" target="customBuild" inheritAll="false" />
         
-        <copy todir="${build-webapp}/infusion" >
+        <copy todir="${build}/mini/src/webapp/infusion" >
             <fileset dir="${infusion-dist}">
+                <exclude name="**/*.war" />
+            </fileset>
+        </copy>
+        
+        <copy todir="${build}/source/src/webapp/infusion" >
+            <fileset dir="${infusion-src-dist}">
                 <exclude name="**/*.war" />
             </fileset>
         </copy>
     </target>
     
     <target name="engageClientBuild">
-        <copy todir="${build-webapp}/engage-client">
+        <copy todir="${build}/source/src/webapp/engage-client">
             <fileset dir="${engage-client}" includes="components/**, framework/**"></fileset>
-        </copy>        
+        </copy>
+        
+        <copy todir="${build}/mini/src/webapp/engage-client">
+          <fileset dir="${engage-client}" includes="components/**, framework/**" excludes="**/*.js,**/*.css" />
+        </copy>
+
+      <antcall target="minify">
+        <param name="fromDir" value="${engage-client}" />
+        <param name="toDir" value="${build}/mini/src/webapp/engage-client" />
+        <param name="file-pattern" value="*.js" />
+        <param name="lineBreakArg" value="" />
+      </antcall>
+
+      <antcall target="minify">
+        <param name="fromDir" value="${engage-client}" />
+        <param name="toDir" value="${build}/mini/src/webapp/engage-client" />
+        <param name="file-pattern" value="*.css" />
+        <param name="lineBreakArg" value="--line-break 0" />
+      </antcall>
     </target>
      
     <target name="engageServerBuild">
-        <copy todir="${build-webapp}">
+        <copy todir="${build}/source/src/webapp">
             <fileset dir="${src-webapp}">
-                <include name="kettle/**" />
-                <include name="engage/**" />
-                <include name="artifactDemo/**" />
-                <include name="browseDemo/**" />
-                <include name="kettleDemo/**" />
-                <include name="WEB-INF/**" />
+                <exclude name="mapping/**" />
                 <exclude name="**/engage*Config.json" />
             </fileset>
         </copy>
-        <copy tofile="${build-webapp}/engage/engageConfig.json" file="${src-webapp}/engage/engageStandaloneConfig.json" />
-        <copy todir="${build-java}">
+        <copy tofile="${build}/source/src/webapp/engage/engageConfig.json" file="${src-webapp}/engage/engageStandaloneConfig.json" />
+        <copy todir="${build}/source/src/java">
             <fileset dir="${src-java}"></fileset>
+        </copy> 
+
+        <copy todir="${build}/mini">
+            <fileset dir="${build}/source"></fileset>
         </copy> 
     </target>
     
-    <target name="copyToBundles">        
-        <copy todir="${src-dist}">
-            <fileset dir="${build}" />
-        </copy>
-
-        <copy todir="${dist}">
-            <fileset dir="${build}" />
-        </copy>
-    </target>
-
     <!-- Copies the files required to build a war file -->
     <target name="copyWARFiles">        
-      <copy todir="${build}/war" >
-        <fileset dir="${dist}"></fileset>
+      <copy todir="${build}/source" >
+        <fileset dir="${base-dir}">
+            <include name="pom.xml" />
+        </fileset>
+      </copy>
+      <copy todir="${build}/mini" >
         <fileset dir="${base-dir}">
             <include name="pom.xml" />
         </fileset>
@@ -69,7 +86,7 @@
         
     <target name="distWAR" depends="copyWARFiles, buildWAR"></target>
 
-    <target name="releaseBuild" depends="initDirs, infusionBuild, engageClientBuild, engageServerBuild, copyToBundles, distWAR" 
+    <target name="releaseBuild" depends="initDirs, infusionBuild, engageClientBuild, engageServerBuild, distWAR" 
         description="Builds and packages a release bundle of Engage.">
     </target>
         
