@@ -40,14 +40,14 @@
         </copy>
 
       <antcall target="minify">
-        <param name="fromDir" value="${engage-client}" />
+        <param name="fromDir" value="${build-source-webapp}/engage-client" />
         <param name="toDir" value="${build-mini-webapp}/engage-client" />
         <param name="file-pattern" value="*.js" />
         <param name="lineBreakArg" value="" />
       </antcall>
 
       <antcall target="minify">
-        <param name="fromDir" value="${engage-client}" />
+        <param name="fromDir" value="${build-source-webapp}/engage-client" />
         <param name="toDir" value="${build-mini-webapp}/engage-client" />
         <param name="file-pattern" value="*.css" />
         <param name="lineBreakArg" value="--line-break 0" />
