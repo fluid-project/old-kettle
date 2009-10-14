@@ -1,24 +1,37 @@
 /**
-
-Copyright (c) 2009 Thomas Robinson <tlrobinson.net>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of 
+* Portions of this software are covered under the following license:
+*
+* Copyright (c) 2009 Thomas Robinson <tlrobinson.net>
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy of 
 * this software and associated documentation files (the “Software”), to deal in 
 * the Software without restriction, including without limitation the rights to 
 * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
 * of the Software, and to permit persons to whom the Software is furnished to 
 * do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all 
+*
+* The above copyright notice and this permission notice shall be included in all 
 * copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+*
+* THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
 * AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
 * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 * 
+* ------
+* 
+* Other portions, contributed by the Fluid community, are covered under the following license:
+* 
+* Copyright 2008-2009 University of Cambridge
+*
+* Licensed under the Educational Community License (ECL), Version 2.0 or the New
+* BSD license. You may not use this file except in compliance with one these
+* Licenses.
+*
+* You may obtain a copy of the ECL 2.0 License and BSD License at
+* https://source.fluidproject.org/svn/LICENSE.txt
 */
 
 /*global jQuery, fluid, Packages*/
@@ -26,13 +39,11 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 fluid = fluid || {};
 
 
-// Adapted from JackJS' servlet.js "handler" - original comment:
+// Adapted from JackJS' (http://jackjs.org/) servlet.js "handler" - original comment:
 
 // Similar in structure to Rack's Mongrel handler.
 // All generic Java servlet code should go in here.
 // Specific server code should go in separate handlers (i.e. jetty.js, etc)
-
-// original licence: MIT - at http://jackjs.org/ 
 
 
 (function ($, fluid) {
