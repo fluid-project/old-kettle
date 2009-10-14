@@ -10,9 +10,9 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://source.fluidproject.org/svn/LICENSE.txt
 */
 
-/*global jQuery, fluid*/
+/*global jQuery, fluid, java*/
 
-var fluid = fluid || {};
+fluid = fluid || {};
 
 (function ($, fluid) {
     fluid.kettle = fluid.kettle || {};
@@ -31,8 +31,8 @@ var fluid = fluid || {};
         }
     }
     
-    fluid.kettle.paramsToMap = function(queryString) {
-        var togo = {}
+    fluid.kettle.paramsToMap = function (queryString) {
+        var togo = {};
         var segs = queryString.split("&");
         for (var i = 0; i < segs; ++ i) {
             var seg = segs[i];
@@ -42,9 +42,9 @@ var fluid = fluid || {};
             push(togo, key, value);
         }
         return togo;
-    }
+    };
     
-    fluid.kettle.parsePathInfo = function(pathInfo) {
+    fluid.kettle.parsePathInfo = function (pathInfo) {
         var togo = {};
         var segs = pathInfo.split("/");
         if (segs.length > 0) {
@@ -63,9 +63,9 @@ var fluid = fluid || {};
     };
         
     
-    fluid.kettle.parseUrlState = function(env) {
-        var togo = fluid.kettle.parsePathInfo(env["PATH_INFO"]);
-        togo.params = fluid.kettle.paramsToMap(env["QUERY_STRING"]);
+    fluid.kettle.parseUrlState = function (env) {
+        var togo = fluid.kettle.parsePathInfo(env.PATH_INFO);
+        togo.params = fluid.kettle.paramsToMap(env.QUERY_STRING);
         return togo;
     };
 
@@ -83,7 +83,9 @@ var fluid = fluid || {};
     }
 
     function routeSegment(segment, root, parsed, index) {
-        if (!segment) {segment = "/"};
+        if (!segment) {
+            segment = "/";
+        }
         var exist = root[segment];
         if (exist) {
             return {route: exist};
@@ -104,7 +106,7 @@ var fluid = fluid || {};
     /** Version of jQuery.makeArray that handles the case where the argument is undefined **/
     
     fluid.makeArray = function (array) {
-       return $.makeArray(array === undefined? null: array);
+        return $.makeArray(array === undefined ? null: array);
     };
     
     fluid.defaults("fluid.kettle.renderHandler", {   
@@ -124,57 +126,62 @@ var fluid = fluid || {};
         }
         var absBase = baseDir + relDirPath;
         return {
-          accept: function(segment, relPath, pathInfo) {
-            var absPath = absBase + relPath;
-            var file = new java.io.File(absPath);
-            var exists = file.exists();
-            fluid.log("File " + absPath + " exists: " + exists);
-            return exists? {
-              handle: function (context, env) {
-                 return [200, fluid.kettle.contentTypeFromExtension(pathInfo.extension), file];
-              }
-            } : null;
-        }};
+            accept: function (segment, relPath, pathInfo) {
+                var absPath = absBase + relPath;
+                var file = new java.io.File(absPath);
+                var exists = file.exists();
+                fluid.log("File " + absPath + " exists: " + exists);
+                return exists ? {
+                        handle: function (context, env) {
+                            return [200, fluid.kettle.contentTypeFromExtension(pathInfo.extension), file];
+                        }
+                    } : null;
+            }
+        };
     };
     
     fluid.kettle.loadTemplate = function (href, options) {
         
         var resourceSpecs = {base: {
-                        href: href, cutpoints: options.cutpoints}
-                        };
-        fluid.fetchResources(resourceSpecs, function(){}); // synchronous server I/O
+                href: href, 
+                cutpoints: options.cutpoints
+            }
+        };
+        fluid.fetchResources(resourceSpecs, function () {}); // synchronous server I/O
         
         var togo = {resourceSpecs: resourceSpecs};
         if (!resourceSpecs.base.fetchError) {
             togo.templates = fluid.parseTemplates(resourceSpecs, ["base"], options);
         }
         else {
-          togo.fetchError = resourceSpecs.base.fetchError;
-          togo.fetchError.href = href;
+            togo.fetchError = resourceSpecs.base.fetchError;
+            togo.fetchError.href = href;
         }
         return togo;
-    }
+    };
     
     fluid.kettle.pathToFileURL = function (path) {
         return "file://" + (path.charAt(0) === '/' ? "" : "/") + path;
-    }
+    };
     
-    fluid.kettle.headerFromEntry = function(entry) {
-      return {"Content-type": entry.contentTypeHeader};
-    }
+    fluid.kettle.headerFromEntry = function (entry) {
+        return {"Content-type": entry.contentTypeHeader};
+    };
     
-    fluid.kettle.contentTypeFromExtension = function(extension) {
+    fluid.kettle.contentTypeFromExtension = function (extension) {
         var reg = fluid.kettle.contentTypeRegistry;
         for (var type in reg) {
-            var el = reg[type];
-            if (el.extension === extension) {
-                return fluid.kettle.headerFromEntry(el);
+            if (reg.hasOwnProperty(type)) {
+                var el = reg[type];
+                if (el.extension === extension) {
+                    return fluid.kettle.headerFromEntry(el);
+                }
             }
         }
         return "";
     };
     
-    fluid.kettle.renderHandler = function(options) {
+    fluid.kettle.renderHandler = function (options) {
         var that = fluid.initLittleComponent("fluid.kettle.renderHandler", options);
         
         var cache = {};
@@ -197,7 +204,7 @@ var fluid = fluid || {};
         }
         function segmentHandler(segment) {
             return {
-                handle: function(context, env) {
+                handle: function (context, env) {
                     var entry = fillCache(segment);
                     var tree = entry.producer(context, env);
                     var markup = fluid.renderTemplates(entry.templates, tree, that.options.renderOptions);
@@ -208,22 +215,22 @@ var fluid = fluid || {};
         }
         that.getContentType = function (segment) {
             return that.options.contentType;
-        }
-        that.accept = function(segment, relPath, parsed) {
+        };
+        that.accept = function (segment, relPath, parsed) {
             if (parsed.extension && parsed.extension !== that.options.templateExtension) {
                 return null;
             }
             fillCache(segment);
-            return cache[segment].templates? segmentHandler(segment): null;
-        }
-        that.registerProducer = function(segment, producer) {
+            return cache[segment].templates ? segmentHandler(segment): null;
+        };
+        that.registerProducer = function (segment, producer) {
             var entry = fillCache(segment);
             if (entry.fetchError) {
                 fluid.log("Producer registered without template - fetch errour " 
                 + entry.fetchError.status + ": " + entry.fetchError.textStatus);
             }
             entry.producer = producer;
-        }
+        };
         return that;
     };
 
@@ -234,10 +241,12 @@ var fluid = fluid || {};
             var seg = segs[i];
             var disposition = routeSegment(seg, root, context.urlState, i);
             if (disposition) {
-              if (disposition.handle) {
-                 return disposition.handle(context, env);
-              }
-              else root = disposition.route;
+                if (disposition.handle) {
+                    return disposition.handle(context, env);
+                }
+                else {
+                    root = disposition.route;
+                }
             }
         }
         return [404, "", ""];
@@ -245,15 +254,15 @@ var fluid = fluid || {};
     
     fluid.kettle.appRegistry = {};
       
-    fluid.kettle.makeKettleApp = function(appName) {
+    fluid.kettle.makeKettleApp = function (appName) {
         var that = {};
         that.root = {"*": []};
-        that.app = function(env) {
+        that.app = function (env) {
             var context = {env: env};
-            context.parsedUri = fluid.parseUri(env["REQUEST_URI"]);
+            context.parsedUri = fluid.parseUri(env.REQUEST_URI);
             context.urlState = fluid.kettle.parseUrlState(env);
             return fluid.kettle.routeApp(that, context, env);
-        }
+        };
         fluid.kettle.appRegistry[appName] = that;
         return that;
     };

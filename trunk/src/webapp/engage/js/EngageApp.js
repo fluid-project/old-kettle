@@ -1,3 +1,17 @@
+/*
+Copyright 2008-2009 University of Toronto
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://source.fluidproject.org/svn/LICENSE.txt
+*/
+
+// Declare dependencies.
+/*global jQuery, fluid*/
+
 fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
@@ -21,7 +35,7 @@ fluid.engage = fluid.engage || {};
             accept: function (segment, relPath, pathInfo) {
                 return {
                     handle: handler
-                }
+                };
             }
         });
     };
@@ -46,11 +60,13 @@ fluid.engage = fluid.engage || {};
         }
 
         for (var segment in acceptorMap) {
-            mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
+            if (acceptorMap.hasOwnProperty(segment)) {
+                mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
+            }            
         }
     };
     // temporary function required whilst we use Rhino
-    fluid.engage.endeaden = function(undead) {
+    fluid.engage.endeaden = function (undead) {
         var togo = undead;
         var clazz = String(undead.getClass().getName());
         if (clazz.charAt(0) === "[") {
@@ -61,39 +77,44 @@ fluid.engage = fluid.engage || {};
         }
         else if (clazz === "java.util.HashMap") {
             togo = {};
-            for (var i = undead.keySet().iterator(); i.hasNext();) {
-                var key = i.next();
+            for (var j = undead.keySet().iterator(); j.hasNext();) {
+                var key = j.next();
                 var value = undead.get(key);
                 togo[key] = fluid.engage.endeaden(value);
             }
         }
-        else togo = String(undead);
+        else {
+            togo = String(undead);
+        }
         return togo;
-    }
+    };
     
     fluid.engage.applyMountConfig = function (app, mounts, baseDir) {
         for (var key in mounts) {
-            var mount = mounts[key];
-            fluid.engage.mountAcceptor(app, mount.target, 
+            if (mounts.hasOwnProperty(key)) {
+	            var mount = mounts[key];
+	            fluid.engage.mountAcceptor(app, mount.target, 
                 fluid.kettle.mountDirectory(baseDir, mount.source));
+            }
         }
     };
     
     fluid.generate = function (n, generator) {
         var togo = [];
         for (var i = 0; i < n; ++ i) {
-            togo[i] = typeof(generator) === "function"?
+            togo[i] = typeof(generator) === "function" ?
                 generator.call(null, i) : generator;
         }
         return togo;       
     };
     
-    fluid.engage.renderHandlerConfig = function(options) {
+    fluid.engage.renderHandlerConfig = function (options) {
         var baseOptions = options.baseOptions || {};
         var source = options.source;
         var mounts = options.config.mount;
+        var mount;
         if (options.sourceMountRelative) {
-            var mount = mounts[options.sourceMountRelative];
+            mount = mounts[options.sourceMountRelative];
             source = mount.source + source;
         }
         var baseDir = options.config.baseDir + source;
@@ -103,12 +124,14 @@ fluid.engage = fluid.engage || {};
         
         var pref = [];
         for (var key in mounts) {
-            var mount = mounts[key];
-            var rewSource = mount.rewriteSource? mount.rewriteSource: mount.source;
-            pref[pref.length] = {
-                source: targetPrefix + rewSource,
-                target: targetPrefix + mount.target
-            };
+            if (mounts.hasOwnProperty(key)) {
+	            mount = mounts[key];
+	            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
+	            pref[pref.length] = {
+	                source: targetPrefix + rewSource,
+	                target: targetPrefix + mount.target
+	            };
+            }
         }
         var handlerOptions = {
             baseDir: baseDir,
@@ -119,21 +142,21 @@ fluid.engage = fluid.engage || {};
         };
         handlerOptions = jQuery.extend(baseOptions, handlerOptions);
         return handlerOptions;
-    }
+    };
     
-    fluid.engage.mountRenderHandler = function(options) {
+    fluid.engage.mountRenderHandler = function (options) {
         var handlerOptions = fluid.engage.renderHandlerConfig(options);
         var handler = fluid.kettle.renderHandler(handlerOptions);
         fluid.engage.mountAcceptor(options.app, options.target, handler);
         return handler;
-    }
+    };
     
     fluid.engage.initEngageApp = function (config) {
         config = fluid.engage.endeaden(config);
-        var app = fluid.kettle.makeKettleApp(config["appName"]);
-        var serviceInits = config["initServices"];
-        var baseDir = config["baseDir"];
-        var mounts = config["mount"];
+        var app = fluid.kettle.makeKettleApp(config.appName);
+        var serviceInits = config.initServices;
+        var baseDir = config.baseDir;
+        var mounts = config.mount;
         
         // Initialize each of the Engage app services registered in the config file.
         fluid.setLogging(true);

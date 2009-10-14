@@ -13,6 +13,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 // Declare dependencies.
 /*global jQuery, fluid*/
 
+fluid = fluid || {};
 fluid.artifactView = fluid.artifactView || {};
 
 (function ($) {
@@ -66,22 +67,14 @@ fluid.artifactView = fluid.artifactView || {};
     
     var buildDataURL = function (dbName, query, config) {
         return fluid.stringTemplate(config.queryURLTemplate, 
-        		{dbName: dbName || "", view: config.views.all, query: query || ""}); 
+            {dbName: dbName || "", view: config.views.all, query: query || ""}); 
     };
  
     var buildComponentTree = function (model) {
-        return {children: [
+        var tree = {children: [
             {
                 ID: "artifactTitle",
                 valuebinding: "artifactTitle"
-            },
-            {
-                ID: "artifactImage",
-                decorators: [{
-                    attrs: {
-                        src: model.artifactImage
-                    }
-                }]
             },
             {
                 ID: "artifactTitle2",
@@ -104,6 +97,13 @@ fluid.artifactView = fluid.artifactView || {};
                 valuebinding: "artifactAccessionNumber"
             }
         ]};
+        if (model.artifactImage) {
+            tree.children.push({
+                ID: "artifactImage",
+                target: model.artifactImage
+            });
+        }
+        return tree;
     };
 
     var fetchAndNormalizeModel = function (databaseName, artifactQuery, config) {
@@ -112,15 +112,15 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     var buildCategoryQuery = function (category) {
-    	if (typeof category === "string") {
-    		return category;
-    	}
-    	category = $.makeArray(category);
-    	var catString = category.pop();
-    	$.each(category, function (index, value) {
-    		catString += "AND" + value;
-    	});
-    	return catString;
+        if (typeof category === "string") {
+            return category;
+        }
+        category = $.makeArray(category);
+        var catString = category.pop();
+        $.each(category, function (index, value) {
+            catString += "AND" + value;
+        });
+        return catString;
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {

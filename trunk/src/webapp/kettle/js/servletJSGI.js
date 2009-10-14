@@ -21,9 +21,9 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * 
 */
 
-/*global jQuery, fluid*/
+/*global jQuery, fluid, Packages*/
 
-var fluid = fluid || {};
+fluid = fluid || {};
 
 
 // Adapted from JackJS' servlet.js "handler" - original comment:
@@ -39,52 +39,54 @@ var fluid = fluid || {};
     fluid.kettle = fluid.kettle || {};
     fluid.kettle.servlet = fluid.kettle.servlet || {};
 
-    fluid.kettle.servlet.process = function(app, request, response) {
-          var env = {};
-          
-          // copy HTTP headers over, converting where appropriate
-          for (var e = request.getHeaderNames(); e.hasMoreElements();)
-          {
-              var name = String(e.nextElement()),
-                  value = String(request.getHeader(name)), // FIXME: only gets the first of multiple
-                  key = name.replace("-", "_").toUpperCase();
+    fluid.kettle.servlet.process = function (app, request, response) {
+        var env = {};
+        var key;  
+        // copy HTTP headers over, converting where appropriate
+        for (var e = request.getHeaderNames(); e.hasMoreElements();) {
+            var name = String(e.nextElement()),
+                value = String(request.getHeader(name)); // FIXME: only gets the first of multiple
+            
+            key = name.replace("-", "_").toUpperCase();
               
-              if (key != "CONTENT_LENGTH" && key != "CONTENT_TYPE")
-                  key = "HTTP_" + key;
+            if (key !== "CONTENT_LENGTH" && key !== "CONTENT_TYPE") {
+                key = "HTTP_" + key;
+            }  
+            env[key] = value;
+        }
+          
+        env.SCRIPT_NAME          = String(request.getServletPath() || "");
+        env.PATH_INFO            = String(request.getRequestURI() || "");
+          
+        env.REQUEST_METHOD       = String(request.getMethod() || "");
+        env.SERVER_NAME          = String(request.getServerName() || "");
+        env.SERVER_PORT          = String(request.getServerPort() || "");
+        env.QUERY_STRING         = String(request.getQueryString() || "");
+        env.HTTP_VERSION         = String(request.getProtocol() || "");
+          
+        env.REMOTE_HOST          = String(request.getRemoteHost() || "");
+          
+        // not part of the formal spec
+        env.REQUEST_URI          = String(request.getRequestURL() || "");
               
-              env[key] = value;
-          }
+        // call the app
+        var result = app(env),
+            status = result[0], headers = result[1], body = result[2];
           
-          env["SCRIPT_NAME"]          = String(request.getServletPath() || "");
-          env["PATH_INFO"]            = String(request.getRequestURI() || "");
+        // set the status
+        response.setStatus(status);
           
-          env["REQUEST_METHOD"]       = String(request.getMethod() || "");
-          env["SERVER_NAME"]          = String(request.getServerName() || "");
-          env["SERVER_PORT"]          = String(request.getServerPort() || "");
-          env["QUERY_STRING"]         = String(request.getQueryString() || "");
-          env["HTTP_VERSION"]         = String(request.getProtocol() || "");
-          
-          env["REMOTE_HOST"]          = String(request.getRemoteHost() || "");
-          
-          // not part of the formal spec
-          env["REQUEST_URI"]          = String(request.getRequestURL() || "");
-              
-          // call the app
-          var result = app(env),
-              status = result[0], headers = result[1], body = result[2];
-          
-          // set the status
-          response.setStatus(status);
-          
-          // set the headers
-          for (var key in headers) {
-              fluid.transform(headers[key].split("\n"), function(value) {
-                  response.addHeader(key, value);
-              });
-          }
+        // set the headers
+        for (key in headers) {
+            if (headers.hasOwnProperty(key)) {
+                fluid.transform(headers[key].split("\n"), function (value) {
+                    response.addHeader(key, value);
+                });
+            }
+        }
       
         Packages.org.fluidproject.kettle.ResourceUtil.sendResponse(response, body);
-      }
+    };
 
 })(jQuery, fluid);
     
