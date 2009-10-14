@@ -8,14 +8,7 @@
         <delete dir="${products}" />
     </target>
 
-    <target name="init">
-        <mkdir dir="${products}" />
-        <mkdir dir="${build}" />
-        <mkdir dir="${dist}" />
-        <mkdir dir="${src-dist}" />
-        <mkdir dir="${licenses}" />
-    </target>
-
+    <!-- Changed slightly from the infusion target -->
     <target name="buildWAR">
       <condition property="isWindows">
         <os family="windows" />
@@ -23,11 +16,12 @@
       <antcall target="invokeMavenForWAR"/>
       <antcall target="invokeMavenForWARWindows"/>
       <echo>Copying war file ...</echo>
-      <copy todir="${dist}">
-          <fileset dir="${build}/war/target">
+      <copy todir="${products}">
+          <fileset dir="${build-mini}/target">
               <include name="${warfile}" />
           </fileset>
       </copy>
+      <copy tofile="${products}/fluid-engage-${engage_version}-src.war" file="${build-source}/target/${warfile}" />
     </target>
 
     <!-- This needs to be refactored to remove repetition and allow reuse with Infusion -->

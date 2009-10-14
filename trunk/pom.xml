@@ -5,7 +5,7 @@
                       http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>fluid-kettle</artifactId>
+  <artifactId>fluid-engage</artifactId>
   <groupId>org.fluidproject</groupId>
   <version>0.1-SNAPSHOT</version>
 

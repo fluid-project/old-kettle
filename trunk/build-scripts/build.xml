@@ -8,21 +8,22 @@
     <property file="build.properties"/>
     <import file="buildutils.xml"/>
 
-    <target name="initDirs" depends="clean, init">
-        <mkdir dir="${build-webapp}" />
-        <mkdir dir="${build-java}" />
+    <target name="initDirs" depends="clean">
+        <mkdir dir="${products}" />
+        <mkdir dir="${build-mini}" />
+        <mkdir dir="${build-source}" />
     </target>
     
     <target name="infusionBuild">
         <ant dir="${infusion-scripts}" target="customBuild" inheritAll="false" />
         
-        <copy todir="${build}/mini/src/webapp/infusion" >
+        <copy todir="${build-mini-webapp}/infusion" >
             <fileset dir="${infusion-dist}">
                 <exclude name="**/*.war" />
             </fileset>
         </copy>
         
-        <copy todir="${build}/source/src/webapp/infusion" >
+        <copy todir="${build-source-webapp}/infusion" >
             <fileset dir="${infusion-src-dist}">
                 <exclude name="**/*.war" />
             </fileset>
@@ -30,54 +31,54 @@
     </target>
     
     <target name="engageClientBuild">
-        <copy todir="${build}/source/src/webapp/engage-client">
+        <copy todir="${build-source-webapp}/engage-client">
             <fileset dir="${engage-client}" includes="components/**, framework/**"></fileset>
         </copy>
         
-        <copy todir="${build}/mini/src/webapp/engage-client">
+        <copy todir="${build-mini-webapp}/engage-client">
           <fileset dir="${engage-client}" includes="components/**, framework/**" excludes="**/*.js,**/*.css" />
         </copy>
 
       <antcall target="minify">
         <param name="fromDir" value="${engage-client}" />
-        <param name="toDir" value="${build}/mini/src/webapp/engage-client" />
+        <param name="toDir" value="${build-mini-webapp}/engage-client" />
         <param name="file-pattern" value="*.js" />
         <param name="lineBreakArg" value="" />
       </antcall>
 
       <antcall target="minify">
         <param name="fromDir" value="${engage-client}" />
-        <param name="toDir" value="${build}/mini/src/webapp/engage-client" />
+        <param name="toDir" value="${build-mini-webapp}/engage-client" />
         <param name="file-pattern" value="*.css" />
         <param name="lineBreakArg" value="--line-break 0" />
       </antcall>
     </target>
      
     <target name="engageServerBuild">
-        <copy todir="${build}/source/src/webapp">
-            <fileset dir="${src-webapp}">
+        <copy todir="${build-source-webapp}">
+            <fileset dir="${engage-webapp}">
                 <exclude name="mapping/**" />
                 <exclude name="**/engage*Config.json" />
             </fileset>
         </copy>
-        <copy tofile="${build}/source/src/webapp/engage/engageConfig.json" file="${src-webapp}/engage/engageStandaloneConfig.json" />
-        <copy todir="${build}/source/src/java">
-            <fileset dir="${src-java}"></fileset>
+        <copy tofile="${build-source-webapp}/engage/engageConfig.json" file="${engage-webapp}/engage/engageStandaloneConfig.json" />
+        <copy todir="${build-source}/src/java">
+            <fileset dir="${engage-java}"></fileset>
         </copy> 
 
-        <copy todir="${build}/mini">
-            <fileset dir="${build}/source"></fileset>
+        <copy todir="${build-mini}">
+            <fileset dir="${build-source}"></fileset>
         </copy> 
     </target>
     
     <!-- Copies the files required to build a war file -->
     <target name="copyWARFiles">        
-      <copy todir="${build}/source" >
+      <copy todir="${build-source}" >
         <fileset dir="${base-dir}">
             <include name="pom.xml" />
         </fileset>
       </copy>
-      <copy todir="${build}/mini" >
+      <copy todir="${build-mini}" >
         <fileset dir="${base-dir}">
             <include name="pom.xml" />
         </fileset>
