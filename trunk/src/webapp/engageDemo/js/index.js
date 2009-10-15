@@ -16,6 +16,6 @@ var demo = demo || {};
 demo.updateAmpersands = function () {
 	jQuery("li > a").each(function (i, value) {
 		var link = jQuery(value).attr("href");
-		jQuery(value).attr({"href": link.replace(/%26/g, "&")})
+		jQuery(value).attr({"href": link.replace(/%26/g, "&")});
 	});
 };
