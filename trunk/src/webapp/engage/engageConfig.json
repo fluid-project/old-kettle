@@ -9,7 +9,8 @@ initServices: [
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",
-    "fluid.browseDemo.initBrowseDataFeed"
+    "fluid.browseDemo.initBrowseDataFeed",
+    "fluid.engageDemo.initEngageDemo"
 ],
 views: {
     all: "all",
@@ -23,7 +24,11 @@ mount: {
     engage: {
         target: "engage/",
         source: "../../../engage/"
-        }
+        },
+	engageDemo: {
+		target: "engageDemo/",
+		source: "engageDemo/"
+		}	
     },
 debugMode: true
 }
