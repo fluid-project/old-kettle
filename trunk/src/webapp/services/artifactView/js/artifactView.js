@@ -151,7 +151,7 @@ fluid.artifactView = fluid.artifactView || {};
             config: config,
             app: app,
             target: "artifacts/",
-            source: "components/artifact/html/",
+            source: "components/artifactView/html/",
             sourceMountRelative: "engage"
         });
         
