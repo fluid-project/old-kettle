@@ -10,7 +10,9 @@ initServices: [
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",
     "fluid.browseDemo.initBrowseDataFeed",
-    "fluid.engageDemo.initEngageDemo"
+    "fluid.engageDemo.initEngageDemo",
+    "fluid.kettleDemo.initCherryDemo",
+    "fluid.kettleDemo.initJSGIHandlerDemo"
 ],
 views: {
     all: "all",
@@ -29,7 +31,12 @@ mount: {
         target: "engageDemo/",
         source: "engageDemo/",
         rewriteSource: "../engageDemo/"
+      },
+    kettleDemo: {
+        target: "kettleDemo/",
+        source: "kettleDemo/",
+        rewriteSource: "../kettleDemo/"
       }
-    },
+    }
 debugMode: true
 }

@@ -17,36 +17,21 @@ fluid = fluid || {};
 
 (function ($, fluid) {
     fluid.kettleDemo = fluid.kettleDemo || {};
-    
-    fluid.kettleDemo.initCherryDemo = function (config) {
-        var app = fluid.kettle.makeKettleApp(config.get("appName"));
-        var baseDir = config.get("baseDir");
-        
-        var handler = fluid.kettle.renderHandler({
-            baseDir: baseDir + "kettleDemo/",
-            renderOptions: {
-                rebaseURLs: false,
-                rewriteUrlPrefixes: [{
-                    source: "../../../../fluid-infusion/src/webapp",
-                    target: "infusion"
-                }]
-            }
+
+    fluid.kettleDemo.initCherryDemo = function (config, app) {
+        var handler = fluid.engage.mountRenderHandler({
+            config: config,
+            app: app,
+            target: "kettleDemo/",
+            source: "html/",
+            sourceMountRelative: "kettleDemo"
         });
         
         handler.registerProducer("kettle", function (context, env) {
-            return {"output": "THE CATT"};
+            return {
+                "output": "The CATTT"
+            };
         });
-        
-        var rootMount = fluid.kettle.mountDirectory(baseDir, "kettleDemo/");
-        
-        var infusionMount = fluid.kettle.mountDirectory(baseDir, "../../../infusion/src/webapp/");
-        
-        app.root["*"] = [handler, rootMount];
-        app.root.infusion = {
-            "*": infusionMount
-        };
-        
-        return app.app;
     };
     
 })(jQuery, fluid);

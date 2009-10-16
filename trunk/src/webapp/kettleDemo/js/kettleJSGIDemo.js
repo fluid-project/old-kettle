@@ -18,8 +18,10 @@ fluid = fluid || {};
 (function ($, fluid) {
     fluid.kettleDemo = fluid.kettleDemo || {};
     
-    fluid.kettleDemo.app = function (env) {
-        return [200, {"Content-Type": "text/plain"}, "THE KETTOL HAS LANDED!"];
+    fluid.kettleDemo.initJSGIHandlerDemo = function (config, app) {
+        var handler = function (context, env) {
+            return [200, {"Content-Type": "text/plain"}, "THE KETTOL HAS LANDED!"];
+        };
+        fluid.engage.mountHandler(app, "kettleJSGIDemo/", handler);
     };
-    
 })(jQuery, fluid);
