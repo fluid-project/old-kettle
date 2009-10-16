@@ -1,7 +1,7 @@
 Fluid is available under either the terms of the New BSD license or the
 Educational Community License, Version 2.0. As a recipient of Fluid, you may
 choose which license to receive this code under (except as noted in per-module
-LICENSE files). All modules are Copyright 2007 University of Toronto except
+LICENSE files). All modules are Copyright 2009 University of Toronto except
 where noted otherwise in the code itself, or if the modules reside in a separate
 directory, they may contain explicit declarations of copyright in both the
 LICENSE file in the directory in which they reside and in the code itself. No
@@ -12,7 +12,7 @@ The text of the ECL and BSD licenses is reproduced below.
 
 Educational Community License, Version 2.0
 *************************************
-Copyright 2007 University of Toronto
+Copyright 2009 University of Toronto
 
 Educational Community License, Version 2.0, April 2007
 
@@ -196,7 +196,7 @@ END OF TERMS AND CONDITIONS FOR ECL 2.0
 The New BSD license
 **********************
 
-Copyright 2007 University of Toronto.
+Copyright 2009 University of Toronto.
 
 All rights reserved.
 
