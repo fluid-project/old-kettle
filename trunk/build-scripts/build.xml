@@ -57,7 +57,6 @@
     <target name="engageServerBuild">
         <copy todir="${build-source-webapp}">
             <fileset dir="${engage-webapp}">
-                <exclude name="mapping/**" />
                 <exclude name="**/engage*Config.json" />
             </fileset>
         </copy>
