@@ -13,8 +13,8 @@
    "js/kettle.js",
    "js/servletJSGI.js",
    "../engage/js/EngageApp.js",
-   "../artifactDemo/js/artifactDemo.js",
-   "../browseDemo/js/browseDemo.js",
+   "../services/artifactDemo/js/artifactDemo.js",
+   "../services/browseDemo/js/browseDemo.js",
    "../engageDemo/js/engageDemo.js",
    "$engage/framework/js/Engage.js"
   ]
