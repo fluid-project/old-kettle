@@ -73,25 +73,12 @@
     
     <!-- Copies the files required to build a war file -->
     <target name="copyWARFiles">        
-      <copy todir="${build-source}" >
+      <copy todir="${todir}" >
         <fileset dir="${base-dir}">
             <include name="pom.xml" />
         </fileset>
       </copy>
-      <copy todir="${build-source}/licenses" flatten="true">
-        <fileset dir="${base-dir}">
-            <include name="**/*LICENSE.txt" />
-            <exclude name="${build}" />
-            <exclude name="${products}" />
-        </fileset>
-      </copy>
-
-      <copy todir="${build-mini}" >
-        <fileset dir="${base-dir}">
-            <include name="pom.xml" />
-        </fileset>
-      </copy>
-      <copy todir="${build-mini}/licenses" flatten="true">
+      <copy todir="${todir}/licenses" flatten="true">
         <fileset dir="${base-dir}">
             <include name="**/*LICENSE.txt" />
             <exclude name="${build}" />
@@ -100,13 +87,19 @@
       </copy>
     </target>
         
-    <target name="distWAR" depends="copyWARFiles">
+    <target name="distWAR">
+      <antcall target="copyWARFiles">
+        <param name="todir" value="${build-source}" />
+      </antcall>
       <antcall target="buildWAR">
         <param name="fromdir" value="${build-source}" />
         <param name="tofile" value="${products}/${warfile-src}" />
         <param name="warfile" value="${warfile}" />
       </antcall>
 
+      <antcall target="copyWARFiles">
+        <param name="todir" value="${build-mini}" />
+      </antcall>
       <antcall target="buildWAR">
         <param name="fromdir" value="${build-mini}" />
         <param name="tofile" value="${products}/${warfile}" />
