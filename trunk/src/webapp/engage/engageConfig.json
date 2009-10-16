@@ -29,13 +29,13 @@ mount: {
         },
     engageDemo: {
         target: "engageDemo/",
-        source: "engageDemo/",
-        rewriteSource: "../engageDemo/"
+        source: "services/engageDemo/",
+        rewriteSource: "../../engageDemo/"
       },
     kettleDemo: {
         target: "kettleDemo/",
-        source: "kettleDemo/",
-        rewriteSource: "../kettleDemo/"
+        source: "services/kettleDemo/",
+        rewriteSource: "../../services/kettleDemo/"
       }
     }
 debugMode: true

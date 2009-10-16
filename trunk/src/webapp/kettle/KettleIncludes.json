@@ -17,6 +17,6 @@
    "../services/browse/js/browse.js",
    "../services/engageDemo/js/engageDemo.js",
    "$engage/framework/js/Engage.js",
-   "../kettleDemo/js/kettleCherryDemo.js",
-   "../kettleDemo/js/kettleJSGIDemo.js"
+   "../services/kettleDemo/js/kettleCherryDemo.js",
+   "../services/kettleDemo/js/kettleJSGIDemo.js"
   ]
