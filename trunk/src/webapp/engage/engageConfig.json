@@ -22,8 +22,8 @@ mount: {
         source: "../../../infusion/src/webapp/"
         },
     engage: {
-        target: "engage/",
-        source: "../../../engage-client/"
+        target: "engage-core/",
+        source: "../../../engage-core/"
         },
     engageDemo: {
         target: "engageDemo/",

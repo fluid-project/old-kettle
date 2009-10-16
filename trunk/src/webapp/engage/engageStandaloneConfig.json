@@ -23,9 +23,9 @@ mount: {
         rewriteSource: "../../../infusion/src/webapp/"
         },
     engage: {
-        target: "engage-client/",
-        source: "engage-client/", 
-        rewriteSource: "../../../engage/"
+        target: "engage-core/",
+        source: "engage-core/", 
+        rewriteSource: "../../../engage-core/"
         },
     engageDemo: {
         target: "engageDemo/",

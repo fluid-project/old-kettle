@@ -31,24 +31,24 @@
     </target>
     
     <target name="engageClientBuild">
-        <copy todir="${build-source-webapp}/engage-client">
+        <copy todir="${build-source-webapp}/engage-core">
             <fileset dir="${engage-client}" includes="components/**, framework/**"></fileset>
         </copy>
         
-        <copy todir="${build-mini-webapp}/engage-client">
+        <copy todir="${build-mini-webapp}/engage-core">
           <fileset dir="${engage-client}" includes="components/**, framework/**" excludes="**/*.js,**/*.css" />
         </copy>
 
       <antcall target="minify">
-        <param name="fromDir" value="${build-source-webapp}/engage-client" />
-        <param name="toDir" value="${build-mini-webapp}/engage-client" />
+        <param name="fromDir" value="${build-source-webapp}/engage-core" />
+        <param name="toDir" value="${build-mini-webapp}/engage-core" />
         <param name="file-pattern" value="*.js" />
         <param name="lineBreakArg" value="" />
       </antcall>
 
       <antcall target="minify">
-        <param name="fromDir" value="${build-source-webapp}/engage-client" />
-        <param name="toDir" value="${build-mini-webapp}/engage-client" />
+        <param name="fromDir" value="${build-source-webapp}/engage-core" />
+        <param name="toDir" value="${build-mini-webapp}/engage-core" />
         <param name="file-pattern" value="*.css" />
         <param name="lineBreakArg" value="--line-break 0" />
       </antcall>

@@ -6,3 +6,7 @@ These are the things it still needs to do:
   2. ensure everything in the new directory structure that should be shipped is included
 
 Note: We still need to address repetition between Infusion and Engage builds: FLUID-3243
+
+
+
+rename 'engageClient' to 'engageCore'
