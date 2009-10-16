@@ -10,7 +10,7 @@ initServices: [
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",
     "fluid.browseDemo.initBrowseDataFeed",
-    "fluid.engageDemo.initEngageDemo"	
+    "fluid.engageDemo.initEngageDemo"    
 ],
 views: {
     all: "all",
@@ -27,10 +27,11 @@ mount: {
         source: "engage-client/", 
         rewriteSource: "../../../engage/"
         },
-	engageDemo: {
-		target: "engageDemo/",
-		source: "engageDemo/"
-		}
+    engageDemo: {
+        target: "engageDemo/",
+        source: "engageDemo/",
+        rewriteSource: "../engageDemo/"
+        }
     },
 debugMode: false
 }

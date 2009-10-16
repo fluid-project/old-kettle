@@ -23,12 +23,13 @@ mount: {
         },
     engage: {
         target: "engage/",
-        source: "../../../engage/"
+        source: "../../../engage-client/"
         },
-	engageDemo: {
-		target: "engageDemo/",
-		source: "engageDemo/"
-		}	
+    engageDemo: {
+        target: "engageDemo/",
+        source: "engageDemo/",
+        rewriteSource: "../engageDemo/"
+      }
     },
 debugMode: true
 }

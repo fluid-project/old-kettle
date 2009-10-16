@@ -122,22 +122,24 @@ fluid.engage = fluid.engage || {};
         var targetDepth = fluid.kettle.parsePathInfo(options.target).pathInfo.length;
         var targetPrefix = fluid.generate(targetDepth - 1, "../").join("");
         
-        var pref = [];
+        var prefs = [];
         for (var key in mounts) {
             if (mounts.hasOwnProperty(key)) {
 	            mount = mounts[key];
 	            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
-	            pref[pref.length] = {
-	                source: targetPrefix + rewSource,
-	                target: targetPrefix + mount.target
-	            };
+	            var pref = {
+                  source: targetPrefix + rewSource,
+                  target: targetPrefix + mount.target
+              };
+	            prefs[prefs.length] = pref;
+	            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
             }
         }
         var handlerOptions = {
             baseDir: baseDir,
             renderOptions: {
                 rebaseURLs: false,
-                rewriteUrlPrefixes: pref
+                rewriteUrlPrefixes: prefs
             }
         };
         handlerOptions = jQuery.extend(baseOptions, handlerOptions);
