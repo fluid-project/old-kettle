@@ -24,7 +24,7 @@
 * 
 * Other portions, contributed by the Fluid community, are covered under the following license:
 * 
-* Copyright 2008-2009 University of Cambridge
+* Copyright 2009 University of Cambridge
 *
 * Licensed under the Educational Community License (ECL), Version 2.0 or the New
 * BSD license. You may not use this file except in compliance with one these
