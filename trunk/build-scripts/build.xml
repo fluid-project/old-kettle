@@ -30,13 +30,13 @@
         </copy>
     </target>
     
-    <target name="engageClientBuild">
+    <target name="engageCoreBuild">
         <copy todir="${build-source-webapp}/engage-core">
-            <fileset dir="${engage-client}" includes="components/**, framework/**"></fileset>
+            <fileset dir="${engage-core}"></fileset>
         </copy>
         
         <copy todir="${build-mini-webapp}/engage-core">
-          <fileset dir="${engage-client}" includes="components/**, framework/**" excludes="**/*.js,**/*.css" />
+          <fileset dir="${engage-core}" excludes="**/*.js,**/*.css" />
         </copy>
 
       <antcall target="minify">
@@ -78,9 +78,24 @@
             <include name="pom.xml" />
         </fileset>
       </copy>
+      <copy todir="${build-source}/licenses" flatten="true">
+        <fileset dir="${base-dir}">
+            <include name="**/*LICENSE.txt" />
+            <exclude name="${build}" />
+            <exclude name="${products}" />
+        </fileset>
+      </copy>
+
       <copy todir="${build-mini}" >
         <fileset dir="${base-dir}">
             <include name="pom.xml" />
+        </fileset>
+      </copy>
+      <copy todir="${build-mini}/licenses" flatten="true">
+        <fileset dir="${base-dir}">
+            <include name="**/*LICENSE.txt" />
+            <exclude name="${build}" />
+            <exclude name="${products}" />
         </fileset>
       </copy>
     </target>
@@ -99,7 +114,7 @@
       </antcall>
     </target>
 
-    <target name="releaseBuild" depends="initDirs, infusionBuild, engageClientBuild, engageServerBuild, distWAR" 
+    <target name="releaseBuild" depends="initDirs, infusionBuild, engageCoreBuild, engageServerBuild, distWAR" 
         description="Builds and packages a release bundle of Engage.">
     </target>
         
