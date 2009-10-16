@@ -15,7 +15,7 @@
    "../engage/js/EngageApp.js",
    "../services/artifactView/js/artifactView.js",
    "../services/browse/js/browse.js",
-   "../engageDemo/js/engageDemo.js",
+   "../services/engageDemo/js/engageDemo.js",
    "$engage/framework/js/Engage.js",
    "../kettleDemo/js/kettleCherryDemo.js",
    "../kettleDemo/js/kettleJSGIDemo.js"

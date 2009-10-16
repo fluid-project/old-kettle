@@ -29,8 +29,8 @@ mount: {
         },
     engageDemo: {
         target: "engageDemo/",
-        source: "engageDemo/",
-        rewriteSource: "../engageDemo/"
+        source: "services/engageDemo/",
+        rewriteSource: "../../services/engageDemo/"
         }
     },
 debugMode: false
