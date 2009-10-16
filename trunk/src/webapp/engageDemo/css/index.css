@@ -29,3 +29,9 @@ p a {
 	clear: left;
 	margin-bottom: 4px;            
 }
+
+p.alert {
+	color: #FFFFFF;
+	padding: 0px 4px 0px 4px;
+	background-color: #DF4203;
+}
