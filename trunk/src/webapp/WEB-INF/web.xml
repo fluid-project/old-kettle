@@ -9,7 +9,7 @@
 		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
       <init-param>
           <param-name>kettleConfigLocation</param-name>
-          <param-value>/engage/engageConfig.json</param-value>
+          <param-value>/application/engageConfig.json</param-value>
       </init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

@@ -12,7 +12,7 @@
    "js/contentTypes.js",
    "js/kettle.js",
    "js/servletJSGI.js",
-   "../engage/js/EngageApp.js",
+   "../application/js/EngageApp.js",
    "../services/artifactView/js/artifactView.js",
    "../services/browse/js/browse.js",
    "../services/engageDemo/js/engageDemo.js",
