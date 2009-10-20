@@ -31,6 +31,11 @@
       <url>http://developer.jasig.org/repo/content/repositories/fluid-m2</url>
     </repository>
     <repository>
+      <id>3rd-party</id>
+      <name>jasig 3rd party Maven 2 Repository</name>
+      <url>http://developer.jasig.org/repo/content/repositories/3rd-party</url>
+    </repository>
+    <repository>
       <id>CARET-Maven2-dev</id>
       <name>CARET Maven 2 Development Repository</name>
       <url>http://www2.caret.cam.ac.uk/maven2dev</url>
@@ -50,7 +55,7 @@
     <dependency>
       <groupId>rhino</groupId>
       <artifactId>js</artifactId>
-      <version>1.7R2</version>
+      <version>1.7R3pre</version>
       <type>jar</type>
     </dependency>
     <dependency>
@@ -149,3 +154,4 @@
   </build>
 
 </project>
+
