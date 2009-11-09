@@ -21,11 +21,11 @@ views: {
 mount: {
     infusion: {
         target: "infusion/",
-        source: "../../../infusion/src/webapp/"
+        source: "../../../../fluid-infusion/src/webapp/"
         },
     engage: {
         target: "engage-core/",
-        source: "../../../engage-core/"
+        source: "../../../../fluid-engage-core/"
         },
     engageDemo: {
         target: "engageDemo/",
