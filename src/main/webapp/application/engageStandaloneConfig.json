@@ -18,14 +18,14 @@ views: {
 },
 mount: {
     infusion: {
-        target: "infusion/",
-        source: "infusion/",
-        rewriteSource: "../../../infusion/src/webapp/"
+        target: "fluid-infusion/",
+        source: "fluid-infusion/",
+        rewriteSource: "../../../fluid-infusion/src/webapp/"
         },
     engage: {
-        target: "engage-core/",
-        source: "engage-core/", 
-        rewriteSource: "../../../engage-core/"
+        target: "fluid-engage-core/",
+        source: "fluid-engage-core/", 
+        rewriteSource: "../../../fluid-engage-core/"
         },
     engageDemo: {
         target: "engageDemo/",
