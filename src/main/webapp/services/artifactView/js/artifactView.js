@@ -65,9 +65,9 @@ fluid.artifactView = fluid.artifactView || {};
         return model;
     };
     
-    var buildDataURL = function (dbName, query, config) {
+    var buildDataURL = function (params, config) {
         return fluid.stringTemplate(config.queryURLTemplate, 
-            {dbName: dbName || "", view: config.views.all, query: query || ""}); 
+            {dbName: params.db || "", view: config.views.all, query: params.q || ""}); 
     };
  
     var buildComponentTree = function (model) {
@@ -106,9 +106,9 @@ fluid.artifactView = fluid.artifactView || {};
         return tree;
     };
 
-    var fetchAndNormalizeModel = function (databaseName, artifactQuery, config) {
-        var model = getData(buildDataURL(databaseName, artifactQuery, config));
-        return fluid.engage.mapModel(model, databaseName);
+    var fetchAndNormalizeModel = function (params, config) {
+        var model = getData(buildDataURL(params, config));
+        return fluid.engage.mapModel(model, params.db);
     };
     
     var buildCategoryQuery = function (category) {
@@ -124,13 +124,15 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {
-        var artifactDataHandler = function (context, env) {	
-            var query = env.QUERY_STRING,
-                ampIndex = query.indexOf("&"),
-                databaseName = query.substring(0, ampIndex),
-                artifactQuery = env.QUERY_STRING.substring(ampIndex + 1, env.QUERY_STRING.length),
-                model = fetchAndNormalizeModel(databaseName, artifactQuery, config),
-                relatedArtifacts = "browse.html?" + databaseName + "&" + buildCategoryQuery(model.category);
+        var artifactDataHandler = function (env) {	
+            var urlBase = "browse.html?",
+                params = env.urlState.params,
+                model = fetchAndNormalizeModel(params, config),
+                relatedParams = params,
+                relatedArtifacts;
+            
+            relatedParams.q = buildCategoryQuery(model.category);
+            relatedArtifacts = urlBase + $.param(relatedParams); 
             
             return [200, {"Content-Type": "text/plain"}, JSON.stringify({
                 toRender: {

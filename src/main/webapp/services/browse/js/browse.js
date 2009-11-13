@@ -16,32 +16,21 @@ fluid = fluid || {};
 fluid.browseDemo = fluid.browseDemo || {};
 
 (function ($) {
-
-	var baseArtifactURL = "view.html?";
-	var queryDelim = "&";
-	
-	var parseEnv = function (envString, delimiter) {
-	    var obj = {};
-	    var ampIndex = envString.QUERY_STRING.indexOf(delimiter);
-	    
-	    obj.database = envString.QUERY_STRING.substring(0, ampIndex);
-	    obj.query = envString.QUERY_STRING.substring(ampIndex + 1, envString.QUERY_STRING.length);
-	    
-	    return obj;
-	};
-	
-	var compileDatabaseURL = function (parsedENV, config) {
+	var compileDatabaseURL = function (params, config) {
 	    return fluid.stringTemplate(config.queryURLTemplate, 
-            {dbName: parsedENV.database || "", view: config.views.byCollectionCategory, query: parsedENV.query || ""});
+            {dbName: params.db || "", view: config.views.byCollectionCategory, query: params.q || ""});
 	};
 	
-	var compileTargetURL = function (URLBase, queryDelimiter, query, database) {
-	    return URLBase + (database || "") + queryDelimiter + query; 
+	var compileTargetURL = function (URLBase, params) {
+	    return URLBase + "?" + $.param(params); 
 	};
 	
 	var compileData = function (data, dbName) {
+        var baseArtifactURL = "view.html";
+        
 		var categoryText = (typeof data[0].category === "string") ? 
 				data[0].category : $.makeArray(data[0].category).toString();
+                
 	    var model = {
 	        strings: {
 	            title: categoryText
@@ -55,7 +44,10 @@ fluid.browseDemo = fluid.browseDemo || {};
 	    
 	    model.lists[0].listOptions.links = fluid.transform(data, function (artifact) {
 	        return {
-	            target: compileTargetURL(baseArtifactURL, queryDelim, artifact.linkTarget, dbName),
+	            target: compileTargetURL(baseArtifactURL, {
+                    q: artifact.linkTarget,
+                    db: dbName
+                }),
 	            image: artifact.linkImage,
 	            title: artifact.linkTitle,
 	            description: artifact.linkDescription
@@ -101,19 +93,19 @@ fluid.browseDemo = fluid.browseDemo || {};
 	    });
 	};
 	
-	var getData = function (error, parsedENV, config) {
-	    var url = compileDatabaseURL(parsedENV, config);
+	var getData = function (error, params, config) {
+	    var url = compileDatabaseURL(params, config);
+        var db = params.db;
 	    var rawData = getAjax(url, error);
 	    
-	    var dataSet = getArtifactData(rawData, parsedENV.database);
+	    var dataSet = getArtifactData(rawData, db);
 	    
-	    return compileData(dataSet, parsedENV.database);
+	    return compileData(dataSet, db);
 	};
 	
 	fluid.browseDemo.initBrowseDataFeed = function (config, app) {
 	    var browseDataHandler = function (env) {
-	        var parsedENV = parseEnv(env.env, queryDelim);
-	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, parsedENV, config)];
+	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
 	    };
 	
 	    var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", browseDataHandler);
