@@ -37,6 +37,6 @@ mount: {
         source: "services/kettleDemo/",
         rewriteSource: "../../services/kettleDemo/"
       }
-    }
+    },
 debugMode: true
 }
