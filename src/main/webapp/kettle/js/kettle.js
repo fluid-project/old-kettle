@@ -33,7 +33,7 @@ fluid = fluid || {};
     fluid.kettle.paramsToMap = function (queryString) {
         var togo = {};
         var segs = queryString.split("&");
-        for (var i = 0; i < segs; ++ i) {
+        for (var i = 0; i < segs.length; ++ i) {
             var seg = segs[i];
             var eqpos = seg.indexOf("=");
             var key = seg.substring(0, eqpos);
