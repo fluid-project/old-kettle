@@ -90,6 +90,9 @@
       <antcall target="copyWARFiles">
         <param name="todir" value="${build-source}" />
       </antcall>
+   	  <copy todir="${build-source-webapp}/javaSources">
+        <fileset dir="${engage-java}"></fileset>
+      </copy>
       <antcall target="buildWAR">
         <param name="fromdir" value="${build-source}" />
         <param name="tofile" value="${products}/${warfile-src}" />
