@@ -6,7 +6,7 @@
     </description>
 
     <property file="build.properties"/>
-    <import file="buildutils.xml"/>
+    <import file="${infusion-scripts}/buildutils.xml"/>
 
     <target name="initDirs" depends="clean">
         <mkdir dir="${products}" />
