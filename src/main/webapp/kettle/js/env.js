@@ -689,12 +689,21 @@ var window = this;
 					var connection = url.openConnection();
 					
 					connection.setRequestMethod( self.method );
+					connection.setDoOutput(true); // PATCH: Sveto/AMB
 					
 					// Add headers to Java connection
 					for (var header in self.headers)
 						connection.addRequestProperty(header, self.headers[header]);
 				
-					connection.connect();
+          // PATCH: Sveto/AMB               
+          text = new java.lang.String( data || "" );          
+          if (text.length() > 0) {
+              var bytes = text.getBytes("UTF-8");
+              connection.setRequestProperty("Content-Length", bytes.length);
+              // Write content to the connection's stream
+              var out = connection.getOutputStream();
+              Packages.org.fluidproject.kettle.ResourceUtil.copyBytes(bytes, out);
+          }
 					
 					// Stick the response headers into responseHeaders
 					for (var i = 0; ; i++) { 
@@ -717,21 +726,14 @@ var window = this;
 						stream = (contentEncoding.equalsIgnoreCase("gzip") || contentEncoding.equalsIgnoreCase("decompress") )?
        							new java.util.zip.GZIPInputStream(connection.getInputStream()) :
        							connection.getInputStream(),
-						baos = new java.io.ByteArrayOutputStream(),
-       						buffer = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 1024),
-						length,
-						responseXML = null;
-
-					while ((length = stream.read(buffer)) != -1) {
-						baos.write(buffer, 0, length);
-					}
-
-					baos.close();
-					stream.close();
+						baos = new java.io.ByteArrayOutputStream();
+						
+          Packages.org.fluidproject.kettle.ResourceUtil.copyStream(stream, baos);
 
 					self.responseText = java.nio.charset.Charset.forName(contentEncoding)
 						.decode(java.nio.ByteBuffer.wrap(baos.toByteArray())).toString();
 					
+					var responseXML = null;
 					self.__defineGetter__("responseXML", function(){
 						return responseXML;
 					});
@@ -759,6 +761,7 @@ var window = this;
 			  }
 			  catch (e) {
 			    // PATCH: AMB
+			    console.debug("Received exception " + e + " message " + e.message);
 			    //self.readyState = 4;
 			    //self.errorThrown = e;
 			    self.textStatus = e.message;

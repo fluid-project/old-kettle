@@ -29,6 +29,12 @@ import uk.org.ponder.streamutil.StreamCloseUtil;
 import uk.org.ponder.streamutil.StreamCopyUtil;
 import uk.org.ponder.util.UniversalRuntimeException;
 
+/**
+ * A class of utilities useful for dealing with data streams and JSON values in the 
+ * Kettle environment. This is a temporary piece of infrastructure pending the
+ * abandonment of a Java-based Javascript environment. 
+ */
+
 public class ResourceUtil {
     public static boolean booleanValue(Object totest) {
         if (totest == null) return false;
@@ -96,12 +102,36 @@ public class ResourceUtil {
         }
         catch (Exception e) {
             System.err.print("Error writing response: " + e.getMessage());
+            e.printStackTrace(System.err);
         }
         finally {
             StreamCloseUtil.closeOutputStream(os);
         }
     }
-
+    
+    /** Copy an input to output stream using a fixed-sized buffer, and guarantee to close
+     * both streams.
+     */
+    public static void copyStream(InputStream is, OutputStream os) {
+        StreamCopyUtil.inputToOutput(is, os, true, true, null);
+    }
+    
+    /** Copy a String to output using UTF-8, guarantees to close the stream. Exceptions
+     * will be propagated.
+     */
+    
+    public static void copyBytes(byte[] bytes, OutputStream os) {
+        try {
+            os.write(bytes);
+        }
+        catch (Exception e) {
+            throw UniversalRuntimeException.accumulate(e, "Error copying to output");
+        }
+        finally {
+            StreamCloseUtil.closeOutputStream(os);
+        }
+    }
+    
     public static void sendFile(File tosend, OutputStream os) {
         try {
             InputStream is = new FileInputStream(tosend);
