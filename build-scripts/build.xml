@@ -18,13 +18,17 @@
         <ant dir="${infusion-scripts}" target="customBuild" inheritAll="false" />
         
         <copy todir="${build-mini-webapp}/infusion" >
-            <fileset dir="${infusion-dist}">
+            <fileset dir="${infusion-assembled}">
                 <exclude name="**/*.war" />
             </fileset>
         </copy>
         
+    	<ant dir="${infusion-scripts}" target="customBuild" inheritAll="false">
+              <property name="noMinify" value="true" />
+        </ant>
+    	
         <copy todir="${build-source-webapp}/fluid-infusion" >
-            <fileset dir="${infusion-src-dist}">
+            <fileset dir="${infusion-assembled}">
                 <exclude name="**/*.war" />
             </fileset>
         </copy>
@@ -39,19 +43,11 @@
           <fileset dir="${engage-core}" excludes="**/*.js,**/*.css" />
         </copy>
 
-      <antcall target="minify">
+      <antcall target="minifyJsAndCss">
         <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
         <param name="toDir" value="${build-mini-webapp}/fluid-engage-core" />
-        <param name="file-pattern" value="*.js" />
-        <param name="lineBreakArg" value="" />
       </antcall>
 
-      <antcall target="minify">
-        <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
-        <param name="toDir" value="${build-mini-webapp}/fluid-engage-core" />
-        <param name="file-pattern" value="*.css" />
-        <param name="lineBreakArg" value="--line-break 0" />
-      </antcall>
     </target>
      
     <target name="engageServerBuild">
@@ -94,18 +90,18 @@
         <fileset dir="${engage-java}"></fileset>
       </copy>
       <antcall target="buildWAR">
-        <param name="fromdir" value="${build-source}" />
-        <param name="tofile" value="${products}/${warfile-src}" />
-        <param name="warfile" value="${warfile}" />
+        <param name="fromDir" value="${build-source}" />
+        <param name="toFile" value="${products}/${warfile-src}" />
+        <param name="warFile" value="${warfile}" />
       </antcall>
 
       <antcall target="copyWARFiles">
         <param name="todir" value="${build-mini}" />
       </antcall>
       <antcall target="buildWAR">
-        <param name="fromdir" value="${build-mini}" />
-        <param name="tofile" value="${products}/${warfile}" />
-        <param name="warfile" value="${warfile}" />
+        <param name="fromDir" value="${build-mini}" />
+        <param name="toFile" value="${products}/${warfile}" />
+        <param name="warFile" value="${warfile}" />
       </antcall>
     </target>
 
