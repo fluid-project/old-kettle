@@ -1,6 +1,6 @@
 /*
 Copyright 2009 University of Cambridge
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -12,6 +12,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 fluid.artifactView = fluid.artifactView || {};
@@ -93,8 +94,5 @@ fluid.artifactView = fluid.artifactView || {};
         handler.registerProducer("view", function (context, env) {
             return {};
         });
-
-
     };
-    
 })(jQuery);
