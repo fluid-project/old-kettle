@@ -17,33 +17,6 @@ fluid = fluid || {};
 fluid.artifactView = fluid.artifactView || {};
 
 (function ($) {
-
-    var artifactViewCutpoints = [
-        {
-            id: "artifactTitle",
-            selector: ".artifact-name"
-        },
-        {
-            id: "artifactImage",
-            selector: ".artifact-picture"
-        },
-        {
-            id: "artifactTitle2",
-            selector: ".artifact-descr-name"
-        },
-        {
-            id: "artifactAuthor",
-            selector: ".artifact-provenance"
-        },
-        {
-            id: "artifactDate",
-            selector: ".artifact-date"
-        },
-        {
-            id: "artifactAccessionNumber",
-            selector: ".artifact-accession-number"
-        }
-    ];
     
     var getData = function (modelURL) {
         var model = {};
@@ -68,42 +41,6 @@ fluid.artifactView = fluid.artifactView || {};
     var buildDataURL = function (params, config) {
         return fluid.stringTemplate(config.queryURLTemplate, 
             {dbName: params.db || "", view: config.views.all, query: params.q || ""}); 
-    };
- 
-    var buildComponentTree = function (model) {
-        var tree = {children: [
-            {
-                ID: "artifactTitle",
-                valuebinding: "artifactTitle"
-            },
-            {
-                ID: "artifactTitle2",
-                valuebinding: "artifactTitle",
-                decorators: [{
-                    type: "addClass",
-                    classes: "fl-text-bold"
-                }]
-            },
-            {
-                ID: "artifactAuthor",
-                valuebinding: "artifactAuthor"
-            },
-            {
-                ID: "artifactDate",
-                valuebinding: "artifactDate"
-            },
-            {
-                ID: "artifactAccessionNumber",
-                valuebinding: "artifactAccessionNumber"
-            }
-        ]};
-        if (model.artifactImage) {
-            tree.children.push({
-                ID: "artifactImage",
-                target: model.artifactImage
-            });
-        }
-        return tree;
     };
 
     var fetchAndNormalizeModel = function (params, config) {
@@ -135,12 +72,8 @@ fluid.artifactView = fluid.artifactView || {};
             relatedArtifacts = urlBase + $.param(relatedParams); 
             
             return [200, {"Content-Type": "text/plain"}, JSON.stringify({
-                toRender: {
-                    model: model,
-                    cutpoints: artifactViewCutpoints,
-                    tree: buildComponentTree(model),
-                    relatedArtifacts: relatedArtifacts
-                }
+                artifact: model,
+                relatedArtifacts: relatedArtifacts
             })];
         };
         
