@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fluidproject.engage.xml.XPPJSONGenerator;
+
 import uk.org.ponder.json.support.JSONProvider;
 import uk.org.ponder.saxalizer.SAXalizerMappingContext;
 

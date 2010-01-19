@@ -1,7 +1,7 @@
 /*
  * Created on 17 Jan 2010
  */
-package org.fluidproject.engage;
+package org.fluidproject.engage.xml;
 
 import java.util.List;
 

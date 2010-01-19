@@ -1,7 +1,7 @@
 /*
  * Created on 12 Jun 2009
  */
-package org.fluidproject.engage;
+package org.fluidproject.engage.xml;
 
 import java.io.FileInputStream;
 
