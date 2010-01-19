@@ -30,25 +30,24 @@ fluid.browseDemo = fluid.browseDemo || {};
         
 		var categoryText = (typeof data[0].category === "string") ? 
 				data[0].category : $.makeArray(data[0].category).toString();
-                
+             
 	    var model = {
-	        strings: {
-	            title: categoryText
-	        },
-	        useCabinet: false,
-	        lists: [{
-	            category: categoryText,
-	            listOptions: {}
-	        }]
+	        categories: [
+	            {
+	                name: categoryText,
+	                artifacts: []
+	            }
+	        ]
 	    };
 	    
-	    model.lists[0].listOptions.links = fluid.transform(data, function (artifact) {
+	    // TODO: Address the issue here that we're hard baking the data feed to a single category
+	    model.categories[0].artifacts = fluid.transform(data, function (artifact) {
 	        return {
-	            target: compileTargetURL(baseArtifactURL, {
+	            url: compileTargetURL(baseArtifactURL, {
                     q: artifact.linkTarget,
                     db: dbName
                 }),
-	            image: artifact.linkImage,
+	            imageUrl: artifact.linkImage,
 	            title: artifact.linkTitle,
 	            description: artifact.linkDescription
 	        };
