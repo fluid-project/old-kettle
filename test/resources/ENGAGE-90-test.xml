@@ -1,0 +1,15 @@
+<imagesfiles>
+    <search_link global="no">
+      <href>/scripts/search_results.php?Lang=1&amp;keyword=20092</href>
+    </search_link>
+    <search_link global="yes">
+      <href>/scripts/search_results.php?Lang=1&amp;keyword=20092&amp;userid</href>
+    </search_link>
+    <imagefile id="664223" format="mini" label="Square" height="74" width="74" filesize="5" sizeunit="kB">http://www.mccord-museum.qc.ca/ThumbView/M996.10.62.jpg</imagefile>
+    <imagefile id="778288" format="small" label="Thumbnail" height="114" width="112" filesize="7" sizeunit="kB">http://www.mccord-museum.qc.ca/ListView/M996.10.62.jpg</imagefile>
+    <imagefile id="778288" format="carrousel" label="Thumbnail" height="85" width="83" filesize="7" sizeunit="kB">http://www.mccord-museum.qc.ca/ListView/M996.10.62.jpg</imagefile>
+    <imagefile id="910533" format="medium" label="Medium" height="385" width="379" filesize="60" sizeunit="kB">http://www.mccord-museum.qc.ca/ObjView/M996.10.62.jpg</imagefile>
+    <imagefile id="910533" format="album" label="Medium" height="200" width="196" filesize="60" sizeunit="kB">http://www.mccord-museum.qc.ca/ObjView/M996.10.62.jpg</imagefile>
+    <imagefile id="1042776" format="large" label="Large" height="768" width="757" filesize="64" sizeunit="kB">http://www.mccord-museum.qc.ca/largeimages/M996.10.62.jpg</imagefile>
+    <imagefile id="1440929" format="zoomify" label="" height="" width="" filesize="" sizeunit="">http://wozniak.wsg.mcgill.ca/zoomify/BATCH_PPD_14/M996.10.62</imagefile>
+</imagesfiles>
