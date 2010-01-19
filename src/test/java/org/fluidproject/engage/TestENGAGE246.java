@@ -3,7 +3,7 @@
  */
 package org.fluidproject.engage;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,19 +17,20 @@ import junit.framework.TestCase;
 public class TestENGAGE246 extends TestCase {
     public static final String[] files = { "ENGAGE-246-test.xml", };
 
-    public static final String dir = "bin/testdata/artifacts/";
-
     public static final int reps = 1000;
 
+    public InputStream getResource(String name) {
+        return getClass().getResourceAsStream("/" + name);
+    }
+    
     public void testEngage246() throws Exception {
         JSONProvider provider = new JSONProvider();
         provider.setMappingContext(new SAXalizerMappingContext());
-        String configname = dir + "ENGAGE-246-config.json";
-        FileInputStream confis = new FileInputStream(configname);
+        InputStream confis = getResource("ENGAGE-246-config.json");
         List patterns = (List) provider.readObject(new ArrayList(), confis);
+        confis.close();
         
-        String filename = dir + files[0];
-        FileInputStream fis = new FileInputStream(filename);
+        InputStream fis = getResource(files[0]);
         XPPJSONGenerator gen = new XPPJSONGenerator(patterns);
         gen.parseStream(fis);
         fis.close();
