@@ -97,12 +97,13 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                 buildCategory("Upcoming Exhibitions", upcomingExhibitions)
             ]
         };        
-        return JSON.stringify(model);
+        return model;
     };
     
     fluid.exhibitionService.initExhibitionsDataFeed = function (config, app) {
         var exhibitionsDataHandler = function (env) {
-            return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params.db, config)];
+            var data = JSON.stringify(getData(errorCallback, env.urlState.params.db, config));
+            return [200, {"Content-Type": "text/plain"}, data];
         };
     
         var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", exhibitionsDataHandler);
@@ -124,9 +125,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         });
             
         handler.registerProducer("browse", function (context, env) {
-            var data = getData(errorCallback, context.urlState.params.db, config);
             var options = {
-                model: JSON.parse(data),
+                model: getData(errorCallback, context.urlState.params.db, config),
                 useCabinet: true,
                 // TODO: This string needs to be internationalized
                 title: "Exhibitions"
