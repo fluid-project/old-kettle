@@ -220,7 +220,7 @@ fluid = fluid || {};
                 return null;
             }
             fillCache(segment);
-            return cache[segment].templates ? segmentHandler(segment): null;
+            return cache[segment].templates && cache[segment].producer? segmentHandler(segment): null;
         };
         that.registerProducer = function (segment, producer) {
             var entry = fillCache(segment);
