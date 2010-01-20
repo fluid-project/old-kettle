@@ -1,5 +1,5 @@
 /*
-Copyright 2009 University of Toronto
+Copyright 2009-2010 University of Toronto
 Copyright 2009 University of Cambridge
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -12,6 +12,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 // Declare dependencies.
 /*global jQuery, fluid*/
+"use strict";
 
 fluid = fluid || {};
 fluid.engage = fluid.engage || {};
@@ -129,19 +130,20 @@ fluid.engage = fluid.engage || {};
 	            mount = mounts[key];
 	            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
 	            var pref = {
-                  source: targetPrefix + rewSource,
-                  target: targetPrefix + mount.target
-              };
+                    source: targetPrefix + rewSource,
+                    target: targetPrefix + mount.target
+                };
 	            prefs[prefs.length] = pref;
 	            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
             }
         }
+        var renderOptions = baseOptions.renderOptions || {};
+        renderOptions.rebaseURLs = false;
+        renderOptions.rewriteUrlPrefixes = prefs;
+        
         var handlerOptions = {
             baseDir: baseDir,
-            renderOptions: {
-                rebaseURLs: false,
-                rewriteUrlPrefixes: prefs
-            }
+            renderOptions: renderOptions
         };
         handlerOptions = jQuery.extend(baseOptions, handlerOptions);
         return handlerOptions;

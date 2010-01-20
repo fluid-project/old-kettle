@@ -115,7 +115,12 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             app: app,
             target: "exhibitions/",
             source: "components/browse/html/",
-            sourceMountRelative: "engage"
+            sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
         });
             
         handler.registerProducer("browse", function (context, env) {
@@ -128,7 +133,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             };
 
             var args = [".flc-browse", options];
-            var initBlock = {ID: "flc-initBlock", functionname: "fluid.browse", 
+            var initBlock = {ID: "initBlock", functionname: "fluid.browse", 
                 "arguments": args};
             
             return initBlock;
