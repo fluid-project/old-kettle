@@ -45,10 +45,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 	
 	var buildCategory = function (categoryName, categoryList) {
 		return {
-			category: fluid.stringTemplate(categoryName + " (%num)", {num: categoryList.length}),
-			listOptions: {
-            	links: categoryList
-            }
+			name: fluid.stringTemplate(categoryName + " (%num)", {num: categoryList.length}),
+			artifacts: categoryList
 		};
 	};
 	
@@ -69,34 +67,31 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 		var data = fluid.transform(rawData.rows, function (value) {
 			return fluid.engage.mapModel(value, dbName);
 		});
+		
 		var currentExhibitions = $.map(data, function (value) {
 			return value.isCurrent === "yes" ? {
-				target: compileTargetURL(baseExhibitionURL, {
+				url: compileTargetURL(baseExhibitionURL, {
                     db: dbName,
                     title: value.title
                 }),
-				image: value.image,
+				imageUrl: value.image,
 				title: value.title,
 				description: value.displayDate === "Permanent exhibition" ? "Permanent" : "Through " + value.endDate
 			} : null;
 		});
 		var upcomingExhibitions = $.map(data, function (value) {
 			return value.isCurrent === "no" ? {
-				target: compileTargetURL(baseExhibitionURL, {
+				url: compileTargetURL(baseExhibitionURL, {
                     db: dbName,
                     title: value.title
                 }),
-				image: value.image,
+				imageUrl: value.image,
 				title: value.title,
 				description: value.displayDate
 			} : null;
 		});
 		var model = {
-	        strings: {
-	            title: "Exhibitions"
-	        },
-	        useCabinet: true,
-	        lists: [
+	        categories: [
 	        	buildCategory("Current Exhibitions", currentExhibitions), 
 	        	buildCategory("Upcoming Exhibitions", upcomingExhibitions)
 	        ]
@@ -113,6 +108,27 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 	    fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
 	};
 	
+	// does an ajax call and uses a closure to return the data passed to success
+	// TODO: this should be code reviewed and refactored
+	var fetchData = function (dataUrl) {
+		var theData = {};
+		
+        $.ajax({
+            url:  dataUrl,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                theData = data;
+            }
+        });
+        
+        return theData;
+	}
+
+	var getDataUrl = function (requestUrl, queryStr) {
+		return String(requestUrl).replace(".html", ".json") + "?" + queryStr;
+	};
+	
 	fluid.exhibitionService.initExhibitionsService = function (config, app) {
 	    var handler = fluid.engage.mountRenderHandler({
 	        config: config,
@@ -123,8 +139,21 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 	    });
 	        
         handler.registerProducer("browse", function (context, env) {
-            return {};
+         	var data = fetchData(getDataUrl(env.REQUEST_URI, env.QUERY_STRING));
+        	var options = {
+        			model: JSON.parse(data),
+        			useCabinet: true,
+        			// TODO: This string needs to be internationalized
+        			title: "Exhibitions"
+        	};
+
+        	var args = [".flc-browse", options];
+        	var initBlock = {ID: "flc-initBlock", functionname: "fluid.browse", 
+                "arguments": args};
+        	
+            return initBlock;
         });
 	        
-    };    
+    };
+    
 })(jQuery);
