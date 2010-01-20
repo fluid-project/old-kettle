@@ -50,19 +50,19 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 		};
 	};
 	
-	var compileDatabaseURL = function (params, config) {
+	var compileDatabaseURL = function (db, config) {
 		return fluid.stringTemplate(config.viewURLTemplate, 
-            {dbName: params.db + "_exhibitions" || "", view: config.views.exhibitions});
+            {dbName: db + "_exhibitions" || "", view: config.views.exhibitions});
 	};
 	
 	var compileTargetURL = function (URLBase, params) {
 		return URLBase + "?" + $.param(params);
 	};
 	
-	var getData = function (errorCallback, params, config) {
-		var url = compileDatabaseURL(params, config);
+	var getData = function (errorCallback, db, config) {
+		var url = compileDatabaseURL(db, config);
 		var rawData = getAjax(url, errorCallback);
-		var dbName = params.db + "_exhibitions";
+		var dbName = db + "_exhibitions";
 		var baseExhibitionURL = "view.html";
 		var data = fluid.transform(rawData.rows, function (value) {
 			return fluid.engage.mapModel(value, dbName);
@@ -101,34 +101,13 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 	
 	fluid.exhibitionService.initExhibitionsDataFeed = function (config, app) {
 	    var exhibitionsDataHandler = function (env) {
-	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params.db, config)];
 	    };
 	
 	    var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", exhibitionsDataHandler);
 	    fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
 	};
-	
-	// does an ajax call and uses a closure to return the data passed to success
-	// TODO: this should be code reviewed and refactored
-	var fetchData = function (dataUrl) {
-		var theData = {};
 		
-        $.ajax({
-            url:  dataUrl,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                theData = data;
-            }
-        });
-        
-        return theData;
-	}
-
-	var getDataUrl = function (requestUrl, queryStr) {
-		return String(requestUrl).replace(".html", ".json") + "?" + queryStr;
-	};
-	
 	fluid.exhibitionService.initExhibitionsService = function (config, app) {
 	    var handler = fluid.engage.mountRenderHandler({
 	        config: config,
@@ -139,7 +118,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 	    });
 	        
         handler.registerProducer("browse", function (context, env) {
-         	var data = fetchData(getDataUrl(env.REQUEST_URI, env.QUERY_STRING));
+            var data = getData(errorCallback, context.urlState.params.db, config);
         	var options = {
         			model: JSON.parse(data),
         			useCabinet: true,
