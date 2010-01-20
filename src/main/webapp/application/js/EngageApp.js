@@ -137,15 +137,15 @@ fluid.engage = fluid.engage || {};
 	            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
             }
         }
-        var renderOptions = baseOptions.renderOptions || {};
-        renderOptions.rebaseURLs = false;
-        renderOptions.rewriteUrlPrefixes = prefs;
         
         var handlerOptions = {
             baseDir: baseDir,
-            renderOptions: renderOptions
+            renderOptions: {
+                rebaseURLs: false,
+                rewriteUrlPrefixes: prefs
+            }
         };
-        handlerOptions = jQuery.extend(baseOptions, handlerOptions);
+        handlerOptions = jQuery.extend(true, baseOptions, handlerOptions);
         return handlerOptions;
     };
     
