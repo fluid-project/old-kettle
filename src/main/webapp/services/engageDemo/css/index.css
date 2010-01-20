@@ -1,40 +1,45 @@
-* { font-family: Arial, Helvetica, sans-serif; }        
+* { font-family: Arial, Helvetica, sans-serif; }
+
 h1 {line-height:1.3em; color: #DDDDDD; font-weight: normal; border-bottom: 1px dotted #444444; padding-bottom: 10px; margin:0px 0 10px; }
-      h1 strong {padding:3px; }
-      h1 p {margin:2px 0 0 0; }
+h1 strong {padding:3px; }
+h1 p {margin:2px 0 0 0; }
+
 h3 { color: #FFFFFF; margin:0; padding-top:10px;}
 i { color: #BBBBBB; font-style: normal; border-bottom: 1px dotted #AAAAAA; }
-      ul.fl-list-menu {
-          margin-top:20px;
-      }
-ul.fl-list-menu a {
-          color: #fff; 
-          text-decoration:underline; 
-          border-bottom: 1px solid #54A4DB; 
-          background: rgba(84, 164, 219, 0.3) url("../../engageDemo/images/chevron.png") no-repeat right center;
-      }
-      ul.fl-list-menu li:first-child a {
-          border-top: 1px solid #54A4DB; 
-      }
-strong {
-	color: #FFFFFF;
-	padding: 0px 4px 0px 4px;
-	background-color: #3FA9F5;
+
+ul.fl-list-menu {
+    margin-top:20px;
 }
-      p {
-          color:#fff;
-      }
+ul.fl-list-menu a {
+    color: #fff; 
+    text-decoration:underline; 
+    border-bottom: 1px solid #54A4DB; 
+    background: rgba(84, 164, 219, 0.3) url("../../engageDemo/images/chevron.png") no-repeat right center;
+}
+ul.fl-list-menu li:first-child a {
+    border-top: 1px solid #54A4DB; 
+}
+
+strong {
+    color: #FFFFFF;
+    padding: 0px 4px 0px 4px;
+    background-color: #3FA9F5;
+}
+
+p {
+    color:#fff;
+}
 p a {
-	display: block; 
-	float: left; 
-	clear: left;
-	margin-bottom: 4px;            
+    display: block; 
+    float: left; 
+    clear: left;
+    margin-bottom: 4px;            
 }
 
 p.alert {
-	color: #222222;
-	padding: 4px 10px;
-	background-color: #EEEEEE /*#EF5819*/ /*#DF4203*/;
+    color: #222222;
+    padding: 4px 10px;
+    background-color: #EEEEEE /*#EF5819*/ /*#DF4203*/;
     margin-right:-10px;
     margin-left:-10px;
     font-size: 0.8em;
