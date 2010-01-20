@@ -19,10 +19,13 @@ initServices: [
     "fluid.exhibitionService.initExhibitionsDataFeed",
     "fluid.exhibitionService.initExhibitionViewService",
     "fluid.exhibitionService.initExhibitionViewDataFeed",
+    "fluid.exhibitionService.initExhibitionAboutService",
+    "fluid.exhibitionService.initExhibitionAboutDataFeed",
     "fluid.catalogueService.initCatalogueService",
     "fluid.catalogueService.initCatalogueDataFeed",
     "fluid.catalogueService.initBrowseCatalogueService",
-    "fluid.catalogueService.initBrowseCatalogueDataFeed"    
+    "fluid.catalogueService.initBrowseCatalogueDataFeed"
+  
 ],
 views: {
     all: "all",

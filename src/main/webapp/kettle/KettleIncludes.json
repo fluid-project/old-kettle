@@ -16,6 +16,7 @@
    "../services/artifactView/js/artifactView.js",
    "../services/exhibition/js/exhibition.js",
    "../services/exhibitionView/js/exhibitionView.js",
+   "../services/exhibitionAbout/js/exhibitionAbout.js",
    "../services/catalogue/js/catalogue.js",
    "../services/browseCatalogue/js/browseCatalogue.js",
    "../services/browse/js/browse.js",
