@@ -13,6 +13,7 @@
    "js/kettle.js",
    "js/servletJSGI.js",
    "../application/js/EngageApp.js",
+   "../services/home/js/HomeService.js",
    "../services/artifactView/js/artifactView.js",
    "../services/exhibition/js/exhibition.js",
    "../services/exhibitionView/js/exhibitionView.js",

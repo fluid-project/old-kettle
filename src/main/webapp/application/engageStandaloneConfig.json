@@ -8,6 +8,7 @@ queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?
 viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
 viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
 initServices: [
+    "fluid.engage.initHomeService",
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",
