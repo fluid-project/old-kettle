@@ -24,8 +24,8 @@ initServices: [
     "fluid.catalogueService.initCatalogueService",
     "fluid.catalogueService.initCatalogueDataFeed",
     "fluid.catalogueService.initBrowseCatalogueService",
-    "fluid.catalogueService.initBrowseCatalogueDataFeed"
-  
+    "fluid.catalogueService.initBrowseCatalogueDataFeed",
+    "fluid.engage.initImportService"
 ],
 views: {
     all: "all",

@@ -21,6 +21,7 @@
    "../services/browseCatalogue/js/browseCatalogue.js",
    "../services/browse/js/browse.js",
    "../services/engageDemo/js/engageDemo.js",
+   "../services/import/js/import.js",
    "$engage/framework/js/Engage.js",
    "../services/kettleDemo/js/kettleCherryDemo.js",
    "../services/kettleDemo/js/kettleJSGIDemo.js"
