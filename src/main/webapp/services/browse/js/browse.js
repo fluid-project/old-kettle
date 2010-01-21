@@ -54,7 +54,7 @@ fluid.browseDemo = fluid.browseDemo || {};
 	        };
 	    });
 	    
-	    return JSON.stringify(model);
+	    return model;
 	};
 	
 	var errorCallback = function (XMLHttpRequest, textStatus, errorThrown) {
@@ -105,13 +105,22 @@ fluid.browseDemo = fluid.browseDemo || {};
 	
 	fluid.browseDemo.initBrowseDataFeed = function (config, app) {
 	    var browseDataHandler = function (env) {
-	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+	        return [200, {"Content-Type": "text/plain"}, JSON.stringify(getData(errorCallback, env.urlState.params, config))];
 	    };
 	
 	    var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", browseDataHandler);
 	    fluid.engage.mountAcceptor(app, "artifacts", acceptor);
 	};
 	
+	var afterMap = function (data) {
+        data.categories = $.map(data.categories, function (value) {
+            return {
+                name: value.name,
+                items: value.artifacts
+            };
+        });
+        return data;
+    };
 	
 	fluid.browseDemo.initBrowseDemo = function (config, app) {
 	    var handler = fluid.engage.mountRenderHandler({
@@ -119,11 +128,27 @@ fluid.browseDemo = fluid.browseDemo || {};
 	        app: app,
 	        target: "artifacts/",
 	        source: "components/browse/html/",
-	        sourceMountRelative: "engage"
+	        sourceMountRelative: "engage",
+	        baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
 	    });
 	        
         handler.registerProducer("browse", function (context, env) {
-            return {};
+            var data = getData(errorCallback, context.urlState.params, config);
+            var options = {
+                model: afterMap(data),
+                useCabinet: false,
+                // TODO: This string needs to be internationalized
+                title: "Browse"
+            };
+	        var args = [".flc-browse", options];
+            var initBlock = {ID: "initBlock", functionname: "fluid.browse", 
+                "arguments": args};
+            
+            return initBlock;
         });
 	        
     };

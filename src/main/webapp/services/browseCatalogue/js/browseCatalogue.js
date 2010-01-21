@@ -62,23 +62,37 @@ fluid.catalogueService = fluid.catalogueService || {};
         var data = fluid.engage.mapModel(rawData.rows[0], dbName);
         
         var model = {
+            exhibitionTitle: data.exhibitionTitle,
+            sectionSize: data.sectionSize,
             categories: [
                 {
-                    name: data.exhibitionTitle + " / " + data.sectionTitle,
+                    name: data.sectionTitle,
                     artifacts: data.sectionArtifacts
                 }
             ]
         };        
-        return JSON.stringify(model);
+        return model;
     };
     
     fluid.catalogueService.initBrowseCatalogueDataFeed = function (config, app) {
         var browseCatalogueDataHandler = function (env) {
-            return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+            return [200, {"Content-Type": "text/plain"}, JSON.stringify(getData(errorCallback, env.urlState.params, config))];
         };
     
         var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", browseCatalogueDataHandler);
         fluid.engage.mountAcceptor(app, "catalogue", acceptor);
+    };
+    
+    var afterMap = function (data) {
+        data.categories = $.map(data.categories, function (value) {
+            return {
+                name: fluid.stringTemplate("Viewing " + (value.name === "viewAll" ? "all objects" : '"' + value.name + '"') + " (%num total)", {num: data.sectionSize}),
+                items: value.artifacts
+            };
+        });
+        delete data.exhibitionTitle;
+        delete data.sectionSize;
+        return data;
     };
     
     fluid.catalogueService.initBrowseCatalogueService = function (config, app) {
@@ -87,11 +101,29 @@ fluid.catalogueService = fluid.catalogueService || {};
             app: app,
             target: "catalogue/",
             source: "components/browse/html/",
-            sourceMountRelative: "engage"
+            sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
         });
             
         handler.registerProducer("browse", function (context, env) {
-            return {};
+            var data = getData(errorCallback, context.urlState.params, config);
+            var title = data.exhibitionTitle;
+            data = afterMap(data);
+            var options = {
+                model: data,
+                useCabinet: false,
+                // TODO: This string needs to be internationalized
+                title: title
+            };
+	        var args = [".flc-browse", options];
+            var initBlock = {ID: "initBlock", functionname: "fluid.browse", 
+                "arguments": args};
+            
+            return initBlock;
         });
             
     };    

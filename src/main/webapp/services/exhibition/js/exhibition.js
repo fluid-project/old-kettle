@@ -46,8 +46,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     
     var buildCategory = function (categoryName, categoryList) {
         return {
-            name: fluid.stringTemplate(categoryName + " (%num)", {num: categoryList.length}),
-            artifacts: categoryList
+            name: categoryName ? fluid.stringTemplate(categoryName + " (%num)", {num: categoryList.length}) : "",
+            exhibitions: categoryList
         };
     };
     
@@ -65,6 +65,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         var rawData = getAjax(url, errorCallback);
         var dbName = db + "_exhibitions";
         var baseExhibitionURL = "view.html";
+        var baseUpcomingExhibitionURL = "about.html";
         var data = fluid.transform(rawData.rows, function (value) {
             return fluid.engage.mapModel(value, dbName);
         });
@@ -82,7 +83,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         });
         var upcomingExhibitions = $.map(data, function (value) {
             return value.isCurrent === "no" ? {
-                url: compileTargetURL(baseExhibitionURL, {
+                url: compileTargetURL(baseUpcomingExhibitionURL, {
                     db: dbName,
                     title: value.title
                 }),
@@ -93,7 +94,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         });
         var model = {
             categories: [
-                buildCategory("Current Exhibitions", currentExhibitions), 
+                buildCategory("", currentExhibitions), 
                 buildCategory("Upcoming Exhibitions", upcomingExhibitions)
             ]
         };        
@@ -108,6 +109,16 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     
         var acceptor = fluid.engage.makeAcceptorForResource("browse", "json", exhibitionsDataHandler);
         fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
+    };
+    
+    var afterMap = function (data) {
+        data.categories = $.map(data.categories, function (value) {
+            return {
+                name: value.name,
+                items: value.exhibitions
+            };
+        });
+        return data;
     };
         
     fluid.exhibitionService.initExhibitionsService = function (config, app) {
@@ -125,8 +136,9 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         });
             
         handler.registerProducer("browse", function (context, env) {
+	        var data = getData(errorCallback, context.urlState.params.db, config);
             var options = {
-                model: getData(errorCallback, context.urlState.params.db, config),
+                model: afterMap(data),
                 useCabinet: true,
                 // TODO: This string needs to be internationalized
                 title: "Exhibitions"
