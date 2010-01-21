@@ -5,16 +5,32 @@ includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
+viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
+viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
 initServices: [
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",
     "fluid.browseDemo.initBrowseDataFeed",
-    "fluid.engageDemo.initEngageDemo"    
+    "fluid.engageDemo.initEngageDemo",
+    "fluid.exhibitionService.initExhibitionsService",
+    "fluid.exhibitionService.initExhibitionsDataFeed",
+    "fluid.exhibitionService.initExhibitionViewService",
+    "fluid.exhibitionService.initExhibitionViewDataFeed",
+    "fluid.exhibitionService.initExhibitionAboutService",
+    "fluid.exhibitionService.initExhibitionAboutDataFeed",
+    "fluid.catalogueService.initCatalogueService",
+    "fluid.catalogueService.initCatalogueDataFeed",
+    "fluid.catalogueService.initBrowseCatalogueService",
+    "fluid.catalogueService.initBrowseCatalogueDataFeed" 
 ],
 views: {
     all: "all",
-    byCollectionCategory: "by_collection_category"
+    byCollectionCategory: "by_collection_category",
+    exhibitionByTitle: "_design/exhibitions/_view/view",
+    catalogueByTitle: "_design/catalogue/_view/view",
+    catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
+    exhibitions: "_design/exhibitions/_view/browse"
 },
 mount: {
     infusion: {
