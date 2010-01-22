@@ -28,6 +28,7 @@ fluid.engage = fluid.engage || {};
       });
           
         handler.registerProducer("import", function (context, env) {
+            fluid.log("Received request: " + env.REQUEST_METHOD);
             return {};
         });
   };
