@@ -139,16 +139,14 @@ fluid.browseDemo = fluid.browseDemo || {};
         handler.registerProducer("browse", function (context, env) {
             var data = getData(errorCallback, context.urlState.params, config);
             var options = {
-                model: afterMap(data),
-                useCabinet: false,
-                // TODO: This string needs to be internationalized
-                title: "Browse"
+                model: afterMap(data)
             };
-	        var args = [".flc-browse", options];
-            var initBlock = {ID: "initBlock", functionname: "fluid.browse", 
-                "arguments": args};
-            
-            return initBlock;
+
+            return {
+                ID: "initBlock", 
+                functionname: "fluid.browse", 
+                "arguments": [".flc-browse", options]
+            };
         });
 	        
     };

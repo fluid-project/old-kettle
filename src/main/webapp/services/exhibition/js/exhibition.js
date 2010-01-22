@@ -144,11 +144,11 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                 title: "Exhibitions"
             };
 
-            var args = [".flc-browse", options];
-            var initBlock = {ID: "initBlock", functionname: "fluid.browse", 
-                "arguments": args};
-            
-            return initBlock;
+            return {
+                ID: "initBlock", 
+                functionname: "fluid.browse", 
+                "arguments": [".flc-browse", options]
+            };
         });
             
     };

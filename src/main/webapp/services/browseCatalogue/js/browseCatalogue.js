@@ -112,18 +112,16 @@ fluid.catalogueService = fluid.catalogueService || {};
         handler.registerProducer("browse", function (context, env) {
             var data = getData(errorCallback, context.urlState.params, config);
             var title = data.exhibitionTitle;
-            data = afterMap(data);
             var options = {
-                model: data,
-                useCabinet: false,
-                // TODO: This string needs to be internationalized
+                model: afterMap(data),
                 title: title
             };
-	        var args = [".flc-browse", options];
-            var initBlock = {ID: "initBlock", functionname: "fluid.browse", 
-                "arguments": args};
             
-            return initBlock;
+            return {
+                ID: "initBlock", 
+                functionname: "fluid.browse", 
+                "arguments": [".flc-browse", options]
+            };
         });
             
     };    
