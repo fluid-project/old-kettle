@@ -58,48 +58,24 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 	var getData = function (errorCallback, params, config) {
 		var url = compileDatabaseURL(params, config);
 		var rawData = getAjax(url, errorCallback);
-		var baseCatalogueURL = "../catalogue/view.html";
 		var exhibitionData = fluid.engage.mapModel(rawData.rows[0], params.db + "_view");
-		exhibitionData.catalogueLink = compileTargetURL(baseCatalogueURL, {
-			db: params.db,
-			title: exhibitionData.title
-		});
-		var model = {
-			model: exhibitionData,
-			exhibitionCabinet: {
-				lists: [
-				    {
-	                    category: fluid.stringTemplate("Show Guest's book (%num comments)", {num: 5}),
-                        listOptions: {
-                            links: [{
-                                target: "#",
-                                title: "Comment",
-                                description: "Comment Content"
-                            }] 
-                        }
-                    }, {
-                        category: fluid.stringTemplate("Show Audio and Video (%num)", {num: 3}),
-                        listOptions: {
-                            links: [{
-                                target: "#",
-                                title: "Audio",
-                                description: "Audio Content"
-                            }] 
-                        }
-				    }
-				]
-			}
-		};
-		return JSON.stringify(model);
+		return exhibitionData;
 	};
 	
 	fluid.exhibitionService.initExhibitionViewDataFeed = function (config, app) {
 	    var exhibitionViewDataHandler = function (env) {
-	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+	        return [200, {"Content-Type": "text/plain"}, JSON.stringify(getData(errorCallback, env.urlState.params, config))];
 	    };
 	
 	    var acceptor = fluid.engage.makeAcceptorForResource("view", "json", exhibitionViewDataHandler);
 	    fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
+	};
+	
+	var buildLink = function (url, db, title) {
+		return compileTargetURL(url, {
+			db: db,
+			title: title
+		});
 	};
 	
 	fluid.exhibitionService.initExhibitionViewService = function (config, app) {
@@ -108,11 +84,27 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 	        app: app,
 	        target: "exhibitions/",
 	        source: "components/exhibition/html/",
-	        sourceMountRelative: "engage"
+	        sourceMountRelative: "engage",
+	        baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
 	    });
 	        
         handler.registerProducer("view", function (context, env) {
-            return {};
+            var params = context.urlState.params;
+			var data = getData(errorCallback, params, config);
+			data.catalogueLink = buildLink("../catalogue/view.html", params.db, data.title);
+			data.aboutLink = buildLink("about.html", params.db, data.title);
+			var options = {
+			    model: data
+			    // TODO: This string needs to be internationalized
+			};
+			var args = [".flc-exhibition-container", options];
+			var initBlock = {ID: "initBlock", functionname: "fluid.exhibition", 
+			    "arguments": args};			
+			return initBlock;
         });
 	        
     };    
