@@ -102,7 +102,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                 // TODO: This string needs to be internationalized
             };
             var args = [".flc-exhibition-container", options];
-            var initBlock = {ID: "initBlock", functionname: "fluid.exhibition", 
+            var initBlock = {ID: "initBlock", functionname: "fluid.engage.exhibitionView", 
                 "arguments": args};            
             return initBlock;
         });
