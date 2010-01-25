@@ -88,31 +88,33 @@ fluid.catalogueService = fluid.catalogueService || {};
             };
         });
     };
+    
+    var afterMap = function (data, params) {
+        var baseCatalogueURL = "browse.html";
+        
+		return {
+			title: data.title,
+            artifactsURL: compileTargetURL(baseCatalogueURL, {
+                db: params.db,
+                exhibition: data.title,
+                title: "viewAll"
+            }),
+            numberOfArtifacts: data.numberOfArtifacts,
+			themeData: compileTheme(data.themeData, data.title, params, baseCatalogueURL)
+		};
+    };
 	
 	var getData = function (errorCallback, params, config) {
 		var url = compileDatabaseURL(params, config);
 		var rawData = getAjax(url, errorCallback);
 		var dbName = params.db + "_catalogue";
-		var catalogueData = fluid.engage.mapModel(rawData.rows[0], dbName);
-		var baseCatalogueURL = "browse.html";
         
-		var model = {
-			title: catalogueData.title,
-            artifactsURL: compileTargetURL(baseCatalogueURL, {
-                db: params.db,
-                exhibition: catalogueData.title,
-                title: "viewAll"
-            }),
-            numberOfArtifacts: catalogueData.numberOfArtifacts,
-			themeData: compileTheme(catalogueData.themeData, catalogueData.title, params, baseCatalogueURL)
-		};
-        
-		return JSON.stringify({model: model});
+		return fluid.engage.mapModel(rawData.rows[0], dbName);
 	};
 	
 	fluid.catalogueService.initCatalogueDataFeed = function (config, app) {
 	    var catalogueDataHandler = function (env) {
-	        return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+	        return [200, {"Content-Type": "text/plain"}, JSON.stringify(getData(errorCallback, env.urlState.params, config))];
 	    };
 	
 	    var acceptor = fluid.engage.makeAcceptorForResource("view", "json", catalogueDataHandler);
@@ -125,12 +127,26 @@ fluid.catalogueService = fluid.catalogueService || {};
 	        app: app,
 	        target: "catalogue/",
 	        source: "components/catalogue/html/",
-	        sourceMountRelative: "engage"
+	        sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
 	    });
 	        
         handler.registerProducer("view", function (context, env) {
-            return {};
+            var params = context.urlState.params;
+            var data = getData(errorCallback, params, config);
+            var options = {
+                model: afterMap(data, params)
+            };
+            
+            return {
+                ID: "initBlock",
+                functionname: "fluid.catalogue",
+                "arguments": [".flc-catalogue-container", options]
+            };
         });
-	        
     };    
 })(jQuery);
