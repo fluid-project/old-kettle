@@ -81,7 +81,7 @@ fluid.catalogueService = fluid.catalogueService || {};
                 artifactsURL: compileTargetURL(baseURL, {
                     db: params.db,
                     exhibition: exhibitionTitle,
-                    title: "theme.title"
+                    title: theme.title
                 }),
                 numberOfArtifacts: theme.numberOfArtifacts,
                 artifacts: compileArtifacts(theme.artifacts, params)
