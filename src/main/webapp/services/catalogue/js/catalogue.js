@@ -54,55 +54,59 @@ fluid.catalogueService = fluid.catalogueService || {};
 	var compileTargetURL = function (URLBase, params) {
 		return URLBase + "?" + $.param(params);
 	};
-	
-	var buildSectionsLinks = function (sections, links, baseCatalogueURL, db, exhibition) {
-		return $.each(sections, function (index, value) {
-			links.push({
-				target: compileTargetURL(baseCatalogueURL, {
-                    db: db,
-                    exhibition: exhibition,
-                    title: value.sectionTitle
+    
+    var compileArtifacts = function (artifacts, params) {
+        var baseArtifactURL = "../artifacts/view.html";
+        var artifactsArray = [];
+        for (var i = 0; i < artifacts.length && i < 4; i++) {
+            var artifact = artifacts[i];
+            artifactsArray.push({
+                target: compileTargetURL(baseArtifactURL, {
+                    db: params.db.substring(0, params.db.indexOf("_")),
+                    q: artifact.target
                 }),
-				image: value.sectionImage,
-				title: fluid.stringTemplate(value.sectionTitle + " (%num objects)", {num: value.sectionSize}),
-				description: value.sectionIntroduction
-			});
-		});
-	};
-	
-	var buildSectionsList = function () {
-		return {
-			listOptions: {
-				links: []
-			}
-		};
-	};
+                image: artifact.image,
+                title: artifact.title,
+                description: artifact.description
+            });
+        }
+        return artifactsArray;
+    };
+    
+    var compileTheme = function (themes, exhibitionTitle, params, baseURL) {
+        baseURL = baseURL || "";
+        return fluid.transform(themes, function (theme) {
+            return {
+                title: theme.title,
+                artifactsURL: compileTargetURL(baseURL, {
+                    db: params.db,
+                    exhibition: exhibitionTitle,
+                    title: "theme.title"
+                }),
+                numberOfArtifacts: theme.numberOfArtifacts,
+                artifacts: compileArtifacts(theme.artifacts, params)
+            };
+        });
+    };
 	
 	var getData = function (errorCallback, params, config) {
 		var url = compileDatabaseURL(params, config);
 		var rawData = getAjax(url, errorCallback);
 		var dbName = params.db + "_catalogue";
 		var catalogueData = fluid.engage.mapModel(rawData.rows[0], dbName);
-		var sectionsList  = buildSectionsList();
 		var baseCatalogueURL = "browse.html";
-		sectionsList.listOptions.links.push({
-			target: compileTargetURL(baseCatalogueURL, {
+        
+		var model = {
+			title: catalogueData.title,
+            artifactsURL: compileTargetURL(baseCatalogueURL, {
                 db: params.db,
                 exhibition: catalogueData.title,
                 title: "viewAll"
             }),
-			image: "",
-			title: fluid.stringTemplate("View all (%num objects)", {num: catalogueData.viewAll})
-		});
-		buildSectionsLinks(catalogueData.sections, sectionsList.listOptions.links, baseCatalogueURL, params.db, catalogueData.title);
-		var model = {
-			strings: {
-				title: catalogueData.title
-			},
-			lists: [
-			    sectionsList
-			]
+            numberOfArtifacts: catalogueData.numberOfArtifacts,
+			themeData: compileTheme(catalogueData.themeData, catalogueData.title, params, baseCatalogueURL)
 		};
+        
 		return JSON.stringify({model: model});
 	};
 	
