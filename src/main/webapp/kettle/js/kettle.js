@@ -67,14 +67,35 @@ fluid = fluid || {};
         togo.params = fluid.kettle.paramsToMap(env.QUERY_STRING);
         return togo;
     };
-
-    function makeRelPath(parsed, index) {
+    
+    fluid.kettle.countDepth = function(pathInfo) {
+        var depth = 0;
+        for (var i = 0; i < pathInfo.length; ++ i) {
+            if (pathInfo[i] === "..") {
+                ++depth;
+            }
+            else {
+                break;
+            }
+        }
+        return depth;
+    };
+    
+    fluid.kettle.generateDepth = function(depth) {
+        return fluid.generate(depth, "../").join("");
+    };
+    
+    fluid.kettle.collapseSegs = function(segs, from) {
         var togo = "";
-        var segs = parsed.pathInfo;
-        for (var i = index; i < segs.length - 1; ++ i) {
+        for (var i = from; i < segs.length - 1; ++ i) {
             togo += segs[i] + "/";
         }
         togo += segs[segs.length - 1];
+        return togo;   
+    };
+
+    function makeRelPath(parsed, index) {
+        var togo = fluid.kettle.collapseSegs(parsed.pathInfo, index);
         if (parsed.extension) {
             togo += "." + parsed.extension;
         }
@@ -106,6 +127,15 @@ fluid = fluid || {};
     
     fluid.makeArray = function (array) {
         return $.makeArray(array === undefined ? null: array);
+    };
+    
+    fluid.generate = function (n, generator) {
+        var togo = [];
+        for (var i = 0; i < n; ++ i) {
+            togo[i] = typeof(generator) === "function" ?
+                generator.call(null, i) : generator;
+        }
+        return togo;       
     };
     
     fluid.defaults("fluid.kettle.renderHandler", {   

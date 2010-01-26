@@ -97,15 +97,6 @@ fluid.engage = fluid.engage || {};
         }
     };
     
-    fluid.generate = function (n, generator) {
-        var togo = [];
-        for (var i = 0; i < n; ++ i) {
-            togo[i] = typeof(generator) === "function" ?
-                generator.call(null, i) : generator;
-        }
-        return togo;       
-    };
-    
     fluid.engage.renderHandlerConfig = function (options) {
         var baseOptions = options.baseOptions || {};
         var source = options.source;
@@ -114,17 +105,23 @@ fluid.engage = fluid.engage || {};
             var mount = mounts[options.sourceMountRelative];
             source = mount.source + source;
         }
+        var wdDepth = options.config.workingDirDepth;
         var baseDir = options.config.baseDir + source;
-        // NB - current API can only support target depth of 1
+
+        // NB - current API can only support targt depth of 1
         var targetDepth = fluid.kettle.parsePathInfo(options.target).pathInfo.length;
-        var targetPrefix = fluid.generate(targetDepth - 1, "../").join("");
+        var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
         
         var prefs = [];
         for (var key in mounts) {
             var mount = mounts[key];
             var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
+            var parsedSource = fluid.kettle.parsePathInfo(rewSource);
+            var sourceDepth = fluid.kettle.countDepth(parsedSource.pathInfo);
+            var collapsedSource = fluid.kettle.collapseSegs(parsedSource.pathInfo, sourceDepth);
+            var sourcePrefix = fluid.kettle.generateDepth(wdDepth);
             var pref = {
-                source: targetPrefix + rewSource,
+                source: sourcePrefix + collapsedSource,
                 target: targetPrefix + mount.target
             };
             prefs[prefs.length] = pref;
