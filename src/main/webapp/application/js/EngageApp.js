@@ -62,9 +62,7 @@ fluid.engage = fluid.engage || {};
         }
 
         for (var segment in acceptorMap) {
-            if (acceptorMap.hasOwnProperty(segment)) {
-                mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
-            }            
+            mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
         }
     };
     // temporary function required whilst we use Rhino
@@ -93,11 +91,9 @@ fluid.engage = fluid.engage || {};
     
     fluid.engage.applyMountConfig = function (app, mounts, baseDir) {
         for (var key in mounts) {
-            if (mounts.hasOwnProperty(key)) {
-	            var mount = mounts[key];
-	            fluid.engage.mountAcceptor(app, mount.target, 
-                fluid.kettle.mountDirectory(baseDir, mount.source));
-            }
+            var mount = mounts[key];
+            fluid.engage.mountAcceptor(app, mount.target, 
+            fluid.kettle.mountDirectory(baseDir, mount.source));
         }
     };
     
@@ -114,9 +110,8 @@ fluid.engage = fluid.engage || {};
         var baseOptions = options.baseOptions || {};
         var source = options.source;
         var mounts = options.config.mount;
-        var mount;
         if (options.sourceMountRelative) {
-            mount = mounts[options.sourceMountRelative];
+            var mount = mounts[options.sourceMountRelative];
             source = mount.source + source;
         }
         var baseDir = options.config.baseDir + source;
@@ -126,16 +121,14 @@ fluid.engage = fluid.engage || {};
         
         var prefs = [];
         for (var key in mounts) {
-            if (mounts.hasOwnProperty(key)) {
-	            mount = mounts[key];
-	            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
-	            var pref = {
-                    source: targetPrefix + rewSource,
-                    target: targetPrefix + mount.target
-                };
-	            prefs[prefs.length] = pref;
-	            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
-            }
+            var mount = mounts[key];
+            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
+            var pref = {
+                source: targetPrefix + rewSource,
+                target: targetPrefix + mount.target
+            };
+            prefs[prefs.length] = pref;
+            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
         }
         
         var handlerOptions = {
