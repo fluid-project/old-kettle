@@ -65,9 +65,9 @@ fluid.catalogueService = fluid.catalogueService || {};
                     db: params.db.substring(0, params.db.indexOf("_")),
                     q: artifact.accessNumber
                 }),
-                artifactImage: artifact.artifactImage,
-                artifactTitle: artifact.artifactTitle,
-                artifactDescription: artifact.artifactDescription
+                imageURL: artifact.imageURL,
+                title: artifact.title,
+                description: artifact.description
             });
         }
         return artifactsArray;
@@ -77,13 +77,13 @@ fluid.catalogueService = fluid.catalogueService || {};
         baseURL = baseURL || "";
         return fluid.transform(themes, function (theme) {
             return {
-                themeTitle: theme.themeTitle,
-                themeArtifactsURL: compileTargetURL(baseURL, {
+                title: theme.title,
+                allArtifactsViewURL: compileTargetURL(baseURL, {
                     db: params.db,
                     exhibition: exhibitionTitle,
-                    title: theme.themeTitle
+                    title: theme.title
                 }),
-                numberOfArtifactsInTheme: theme.numberOfArtifactsInTheme,
+                numArtifacts: theme.numArtifacts,
                 artifacts: compileArtifacts(theme.artifacts, params)
             };
         });
@@ -93,14 +93,14 @@ fluid.catalogueService = fluid.catalogueService || {};
         var baseCatalogueURL = "browse.html";
         
 		return {
-			exhibitionTitle: data.exhibitionTitle,
-            exhibitionArtifactsURL: compileTargetURL(baseCatalogueURL, {
+			title: data.title,
+            allArtifactsViewURL: compileTargetURL(baseCatalogueURL, {
                 db: params.db,
-                exhibition: data.exhibitionTitle,
+                exhibition: data.title,
                 title: "viewAll"
             }),
-            numberOfArtifactsInExhibition: data.numberOfArtifactsInExhibition,
-			themes: compileTheme(data.themes, data.exhibitionTitle, params, baseCatalogueURL)
+            numArtifacts: data.numArtifacts,
+			themes: compileTheme(data.themes, data.title, params, baseCatalogueURL)
 		};
     };
 	
