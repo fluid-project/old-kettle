@@ -61,13 +61,13 @@ fluid.catalogueService = fluid.catalogueService || {};
         for (var i = 0; i < artifacts.length && i < 4; i++) {
             var artifact = artifacts[i];
             artifactsArray.push({
-                target: compileTargetURL(baseArtifactURL, {
+                artifactViewURL: compileTargetURL(baseArtifactURL, {
                     db: params.db.substring(0, params.db.indexOf("_")),
-                    q: artifact.target
+                    q: artifact.accessNumber
                 }),
-                image: artifact.image,
-                title: artifact.title,
-                description: artifact.description
+                artifactImage: artifact.artifactImage,
+                artifactTitle: artifact.artifactTitle,
+                artifactDescription: artifact.artifactDescription
             });
         }
         return artifactsArray;
@@ -77,13 +77,13 @@ fluid.catalogueService = fluid.catalogueService || {};
         baseURL = baseURL || "";
         return fluid.transform(themes, function (theme) {
             return {
-                title: theme.title,
-                artifactsURL: compileTargetURL(baseURL, {
+                themeTitle: theme.themeTitle,
+                themeArtifactsURL: compileTargetURL(baseURL, {
                     db: params.db,
                     exhibition: exhibitionTitle,
-                    title: theme.title
+                    title: theme.themeTitle
                 }),
-                numberOfArtifacts: theme.numberOfArtifacts,
+                numberOfArtifactsInTheme: theme.numberOfArtifactsInTheme,
                 artifacts: compileArtifacts(theme.artifacts, params)
             };
         });
@@ -93,14 +93,14 @@ fluid.catalogueService = fluid.catalogueService || {};
         var baseCatalogueURL = "browse.html";
         
 		return {
-			title: data.title,
-            artifactsURL: compileTargetURL(baseCatalogueURL, {
+			exhibitionTitle: data.exhibitionTitle,
+            exhibitionArtifactsURL: compileTargetURL(baseCatalogueURL, {
                 db: params.db,
-                exhibition: data.title,
+                exhibition: data.exhibitionTitle,
                 title: "viewAll"
             }),
-            numberOfArtifacts: data.numberOfArtifacts,
-			themeData: compileTheme(data.themeData, data.title, params, baseCatalogueURL)
+            numberOfArtifactsInExhibition: data.numberOfArtifactsInExhibition,
+			themes: compileTheme(data.themes, data.exhibitionTitle, params, baseCatalogueURL)
 		};
     };
 	
