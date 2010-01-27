@@ -15,7 +15,7 @@
    "../application/js/EngageApp.js",
    "../services/home/js/HomeService.js",
    "../services/artifactView/js/artifactView.js",
-   "../services/exhibition/js/exhibition.js",
+   "../services/exhibitionBrowse/js/exhibitionBrowse.js",
    "../services/exhibitionView/js/exhibitionView.js",
    "../services/exhibitionAbout/js/exhibitionAbout.js",
    "../services/catalogue/js/catalogue.js",

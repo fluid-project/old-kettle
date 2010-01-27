@@ -102,7 +102,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return model;
     };
     
-    fluid.exhibitionService.initExhibitionsDataFeed = function (config, app) {
+    fluid.exhibitionService.initExhibitionBrowseDataFeed = function (config, app) {
         var exhibitionsDataHandler = function (env) {
             var data = JSON.stringify(getData(errorCallback, env.urlState.params.db, config));
             return [200, {"Content-Type": "text/plain"}, data];
@@ -129,7 +129,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return data;
     };
         
-    fluid.exhibitionService.initExhibitionsService = function (config, app) {
+    fluid.exhibitionService.initExhibitionBrowseService = function (config, app) {
         var handler = fluid.engage.mountRenderHandler({
             config: config,
             app: app,
