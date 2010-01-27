@@ -114,21 +114,15 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     
     var afterMap = function (data, stringTemplates) {
         data.categories = fluid.transform(data.categories, function (category) {
-            var regExPattern = /\d/;
             return {
                 name: fluid.stringTemplate(stringTemplates[category.isCurrent ? "currentCategory" : "upcomingCategory"], {size: category.exhibitions.length}),
                 items: fluid.transform(category.exhibitions, function (exhibition) {
-                    var exhibitionData = {
+                    return {
                         url: exhibition.url,
                         imageUrl: exhibition.image,
-                        title: exhibition.title
+                        title: exhibition.title,
+                        description: exhibition.displayDate
                     };
-                    if (category.isCurrent) {
-                        exhibitionData.description = fluid.stringTemplate(stringTemplates[exhibition.displayDate.match(regExPattern) ? "temporaryDescription" : "permanentDescription"], {endDate: exhibition.endDate});
-                    } else {
-                        exhibitionData.description = exhibition.displayDate;
-                    }
-                    return exhibitionData;
                 })
             };
         });
@@ -154,8 +148,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             var strings = {
                 upcomingCategory: "Upcoming (%size)",
                 currentCategory: "",
-                temporaryDescription: "Through %endDate",
-                permanentDescription: "Permanent",
                 title: "Exhibtions"
             };
             strings = $.extend(true, strings, null/*insert MessageBundle here*/);
