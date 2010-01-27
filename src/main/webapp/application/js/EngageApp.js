@@ -101,38 +101,15 @@ fluid.engage = fluid.engage || {};
         var baseOptions = options.baseOptions || {};
         var source = options.source;
         var mounts = options.config.mount;
-        if (options.sourceMountRelative) {
-            var mount = mounts[options.sourceMountRelative];
-            source = mount.source + source;
-        }
-        var wdDepth = options.config.workingDirDepth;
-        var baseDir = options.config.baseDir + source;
-
-        // NB - current API can only support targt depth of 1
-        var targetDepth = fluid.kettle.parsePathInfo(options.target).pathInfo.length;
-        var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
-        
-        var prefs = [];
-        for (var key in mounts) {
-            var mount = mounts[key];
-            var rewSource = mount.rewriteSource ? mount.rewriteSource: mount.source;
-            var parsedSource = fluid.kettle.parsePathInfo(rewSource);
-            var sourceDepth = fluid.kettle.countDepth(parsedSource.pathInfo);
-            var collapsedSource = fluid.kettle.collapseSegs(parsedSource.pathInfo, sourceDepth);
-            var sourcePrefix = fluid.kettle.generateDepth(wdDepth);
-            var pref = {
-                source: sourcePrefix + collapsedSource,
-                target: targetPrefix + mount.target
-            };
-            prefs[prefs.length] = pref;
-            fluid.log("Rewriting source " + pref.source + " to target " + pref.target);
-        }
-        
+       
+        var baseDir = mounts[options.sourceMountRelative].absSource + options.source; 
+        var rewriter = fluid.kettle.makeUrlRewriter(options.config.mount, options);
+       
         var handlerOptions = {
             baseDir: baseDir,
             renderOptions: {
                 rebaseURLs: false,
-                rewriteUrlPrefixes: prefs
+                urlRewriter: rewriter
             }
         };
         handlerOptions = jQuery.extend(true, baseOptions, handlerOptions);
@@ -150,8 +127,10 @@ fluid.engage = fluid.engage || {};
         config = fluid.engage.endeaden(config);
         var app = fluid.kettle.makeKettleApp(config.appName);
         var serviceInits = config.initServices;
+        config.baseDir = fluid.kettle.slashiseUrl(config.baseDir);
         var baseDir = config.baseDir;
         var mounts = config.mount;
+        fluid.kettle.computeAbsMounts(mounts, baseDir);
         
         // Initialize each of the Engage app services registered in the config file.
         fluid.setLogging(true);

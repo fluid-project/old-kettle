@@ -3,7 +3,6 @@ initFunction: "fluid.engage.initEngageApp",
 handlerFunction: "fluid.kettle.servlet.process",
 includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
-workingDirDepth: 4,
 loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
@@ -48,13 +47,11 @@ mount: {
         },
     engageDemo: {
         target: "engageDemo/",
-        source: "services/engageDemo/",
-        rewriteSource: "../../../services/engageDemo/"
+        source: "services/engageDemo/"
       },
     kettleDemo: {
         target: "kettleDemo/",
-        source: "services/kettleDemo/",
-        rewriteSource: "../../../services/kettleDemo/"
+        source: "services/kettleDemo/"
       }
     },
 debugMode: true
