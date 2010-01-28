@@ -43,8 +43,9 @@ public class ResourceUtil {
     }
     
     static Object readJson(String filename, Object root) {
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream(filename);
+            fis = new FileInputStream(filename);
             DeJSONalizer de = new DeJSONalizer(SAXalizerMappingContext.instance(), fis);
             Object togo = de.readObject(root, null);
             if (togo.getClass() != root.getClass()) {
@@ -58,7 +59,7 @@ public class ResourceUtil {
                     "Error reading JSON file " + filename + " - invalid format");
         }
         finally {
-            
+            StreamCloseUtil.closeInputStream(fis);
         }
     }
     

@@ -63,7 +63,7 @@ fluid = fluid || {};
         
     
     fluid.kettle.parseUrlState = function (env) {
-        var togo = fluid.kettle.parsePathInfo(env.PATH_INFO);
+        var togo = fluid.kettle.parsePathInfo(env.SCRIPT_NAME);
         togo.params = fluid.kettle.paramsToMap(env.QUERY_STRING);
         return togo;
     };
@@ -96,10 +96,6 @@ fluid = fluid || {};
         fluid.transform(mounts, function(mount) {
             var absMount = baseDir + mount.source;
             mount.absSource = fluid.kettle.makeCanon(absMount);
-            if (mount.rewriteSource) {
-                var absRewriteMount = baseDir + mount.rewriteSource;
-                mount.absSourceRewrite = fluid.kettle.makeCanon(absRewriteMount);
-            }
         });
     };
     
@@ -112,7 +108,7 @@ fluid = fluid || {};
             var canon = fluid.kettle.makeCanon(self + url);
             for (var key in absMounts) {
                 var mount = absMounts[key];
-                var source = mount.absSourceRewrite? mount.absSourceRewrite: mount.absSource;
+                var source = mount.absSource;
                 if (canon.indexOf(source) === 0) {
                     var togo = targetPrefix + mount.target + canon.substring(source.length);
                     fluid.log("Rewriting url " + url + " to " + togo)
@@ -355,7 +351,7 @@ fluid = fluid || {};
         that.root = {"*": []};
         that.app = function (env) {
             var context = {env: env};
-            context.parsedUri = fluid.parseUri(env.REQUEST_URI);
+            context.parsedUri = fluid.parseUri(env.SCRIPT_NAME);
             context.urlState = fluid.kettle.parseUrlState(env);
             return fluid.kettle.routeApp(that, context, env);
         };

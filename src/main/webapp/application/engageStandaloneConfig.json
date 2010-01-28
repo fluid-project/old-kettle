@@ -36,17 +36,15 @@ views: {
 mount: {
     infusion: {
         target: "fluid-infusion/",
-        source: "fluid-infusion/",
-        rewriteSource: "../../../../fluid-infusion/src/webapp/"
+        source: "fluid-infusion/"
         },
     engage: {
         target: "fluid-engage-core/",
-        source: "fluid-engage-core/", 
-        rewriteSource: "../../../../fluid-engage-core/"
+        source: "fluid-engage-core/"
         },
     engageDemo: {
         target: "engageDemo/",
-        source: "services/engageDemo/",
+        source: "services/engageDemo/"
         }
     },
 debugMode: false
