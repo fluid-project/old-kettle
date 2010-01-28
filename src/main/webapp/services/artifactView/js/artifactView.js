@@ -62,7 +62,7 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {
-        var artifactDataHandler = function (env) {	
+        var artifactDataHandler = function (env) {
             var urlBase = "browse.html?",
                 params = env.urlState.params,
                 model = fetchAndNormalizeModel(params, config),

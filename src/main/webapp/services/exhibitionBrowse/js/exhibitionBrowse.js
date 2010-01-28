@@ -144,7 +144,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         });
             
         handler.registerProducer("browse", function (context, env) {
-	        var data = getData(errorCallback, context.urlState.params.db, config);
+            var data = getData(errorCallback, context.urlState.params.db, config);
             var strings = {
                 upcomingCategory: "Upcoming (%size)",
                 currentCategory: "",
