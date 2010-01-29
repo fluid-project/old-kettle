@@ -62,15 +62,12 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         var exhibitionData = fluid.engage.mapModel(rawData.rows[0], params.db + "_view");
         exhibitionData.displayDate = exhibitionData.displayDate === "Permanent exhibition" ? 
             "Permanent" : "Through " + exhibitionData.endDate;
-        var model = {
-            model: exhibitionData
-        };
-        return JSON.stringify(model);
+        return exhibitionData;
     };
     
     fluid.exhibitionService.initExhibitionAboutDataFeed = function (config, app) {
         var exhibitionAboutDataHandler = function (env) {
-            return [200, {"Content-Type": "text/plain"}, getData(errorCallback, env.urlState.params, config)];
+            return [200, {"Content-Type": "text/plain"}, JSON.stringify(getData(errorCallback, env.urlState.params, config))];
         };
     
         var acceptor = fluid.engage.makeAcceptorForResource("about", "json", exhibitionAboutDataHandler);
@@ -83,11 +80,24 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             app: app,
             target: "exhibitions/",
             source: "components/exhibition/html/",
-            sourceMountRelative: "engage"
+            sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
         });
             
         handler.registerProducer("about", function (context, env) {
-            return {};
+            var options = {
+                model: getData(errorCallback, context.urlState.params, config)
+            };
+
+            return {
+                ID: "initBlock",
+                functionname: "fluid.engage.exhibitionView",
+                "arguments": [".flc-exhibition-container", options]
+            };
         });
             
     };    
