@@ -79,7 +79,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     };
     
     fluid.exhibitionService.initExhibitionViewService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "exhibitions/",
@@ -90,17 +90,22 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("view", function (context, env) {
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
+            
             data.catalogueLink = buildLink("../catalogue/view.html", params.db, data.title);
             data.aboutLink = buildLink("about.html", params.db, data.title);
             var options = {
                 model: data
-                // TODO: This string needs to be internationalized
             };
+            if (strings) {
+                options.strings = strings;
+            }
             var args = [".flc-exhibition-container", options];
             var initBlock = {ID: "initBlock", functionname: "fluid.engage.exhibitionView", 
                 "arguments": args};            

@@ -112,12 +112,12 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
     };
     
-    var afterMap = function (data, stringTemplates) {
+    var afterMap = function (data) {
         data.categories = fluid.transform(data.categories, function (category) {
             return {
-                name: fluid.stringTemplate(stringTemplates[category.isCurrent ? "currentCategory" : "upcomingCategory"], {size: category.exhibitions.length}),
-                items: fluid.transform(category.exhibitions, function (exhibition) {
+                 items: fluid.transform(category.exhibitions, function (exhibition) {
                     return {
+                        isCurrent: exhibition.isCurrent,
                         url: exhibition.url,
                         imageUrl: exhibition.image,
                         title: exhibition.title,
@@ -128,9 +128,9 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         });
         return data;
     };
-        
+    
     fluid.exhibitionService.initExhibitionBrowseService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "exhibitions/",
@@ -141,22 +141,20 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("browse", function (context, env) {
-            var data = getData(errorCallback, context.urlState.params.db, config);
-            var strings = {
-                upcomingCategory: "Upcoming (%size)",
-                currentCategory: "",
-                title: "Exhibtions"
-            };
-            strings = $.extend(true, strings, null/*insert MessageBundle here*/);
+            var params = context.urlState.params;
+            var data = getData(errorCallback, params.db, config);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             var options = {
-                model: afterMap(data, strings),
-                useCabinet: true,
-                // TODO: This string needs to be internationalized
-                title: strings.title
+                model: afterMap(data),
+                useCabinet: true
             };
+            if (strings) {
+                options.strings = strings;
+            }
 
             return {
                 ID: "initBlock", 

@@ -99,9 +99,14 @@ fluid = fluid || {};
         });
     };
     
+    fluid.kettle.absoluteHandlerBase = function(absMounts, renderHandlerConfig) {
+        var rhc = renderHandlerConfig;
+        return absMounts[rhc.sourceMountRelative].absSource + rhc.source;
+    }
+    
     fluid.kettle.makeUrlRewriter = function (absMounts, renderHandlerConfig) {
         var rhc = renderHandlerConfig;
-        var self = absMounts[rhc.sourceMountRelative].absSource + rhc.source;
+        var self = fluid.kettle.absoluteHandlerBase(absMounts, rhc);
         var targetDepth = fluid.kettle.parsePathInfo(rhc.target).pathInfo.length;
         var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
         return function(url) {
@@ -250,6 +255,44 @@ fluid = fluid || {};
             togo.fetchError.href = href;
         }
         return togo;
+    };
+    
+    fluid.kettle.getData = function(url) {
+        var togo = {};
+        function success(responseText, textStatus) {
+            togo.data = JSON.parse(responseText);
+            togo.textStatus = textStatus;
+        }
+        function error(xhr, textStatus, errorThrown) {
+            fluid.log("Data fetch error - textStatus: " + textStatus);
+            fluid.log("ErrorThrown: " + errorThrown);
+            togo.textStatus = textStatus;
+            togo.errorThrown = errorThrown;
+        }
+        $.ajax({
+            url: url,
+            success: success,
+            error: error
+        });
+        return togo;
+    };
+    
+    fluid.kettle.getLocalData = function(renderHandlerConfig, localPath) {
+        var rhc = renderHandlerConfig;
+        var config = rhc.config; // IoC here
+        var absPath = fluid.kettle.absoluteHandlerBase(config.mount, rhc) + localPath;
+        var data = fluid.kettle.getData(fluid.kettle.pathToFileURL(absPath));
+        return data.data? data.data : null;
+    };
+    
+    fluid.kettle.getBundle = function(renderHandlerConfig, params) {
+        if (params.lang) {
+            return fluid.kettle.getLocalData(renderHandlerConfig, "../messages/messages_"+params.lang+".json");
+        }
+        else {
+            return null;
+        }
+ 
     };
     
     fluid.kettle.pathToFileURL = function (path) {
