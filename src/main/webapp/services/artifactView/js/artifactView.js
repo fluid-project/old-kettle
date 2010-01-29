@@ -44,11 +44,6 @@ fluid.artifactView = fluid.artifactView || {};
             {dbName: params.db || "", view: config.views.all, query: params.q || ""}); 
     };
 
-    var fetchAndNormalizeModel = function (params, config) {
-        var model = getData(buildDataURL(params, config));
-        return fluid.engage.mapModel(model, params.db);
-    };
-    
     var buildCategoryQuery = function (category) {
         if (typeof category === "string") {
             return category;
@@ -60,22 +55,21 @@ fluid.artifactView = fluid.artifactView || {};
         });
         return catString;
     };
+
+    var fetchAndNormalizeModel = function (params, config) {
+        var urlBase = "browse.html?";
+        var artifactModel = fluid.engage.mapModel(getData(buildDataURL(params, config)), params.db);            
+        params.q = buildCategoryQuery(artifactModel.category);
+        
+        return {
+            artifact: artifactModel,
+            relatedArtifacts: urlBase + $.param(params)
+        };
+    };
     
     fluid.artifactView.initDataFeed = function (config, app) {
-        var artifactDataHandler = function (env) {
-            var urlBase = "browse.html?",
-                params = env.urlState.params,
-                model = fetchAndNormalizeModel(params, config),
-                relatedParams = params,
-                relatedArtifacts;
-            
-            relatedParams.q = buildCategoryQuery(model.category);
-            relatedArtifacts = urlBase + $.param(relatedParams); 
-            
-            return [200, {"Content-Type": "text/plain"}, JSON.stringify({
-                artifact: model,
-                relatedArtifacts: relatedArtifacts
-            })];
+        var artifactDataHandler = function (env) {            
+            return [200, {"Content-Type": "text/plain"}, JSON.stringify(fetchAndNormalizeModel(env.urlState.params, config))];
         };
         
         var acceptor = fluid.engage.makeAcceptorForResource("view", "json", artifactDataHandler);
@@ -88,11 +82,24 @@ fluid.artifactView = fluid.artifactView || {};
             app: app,
             target: "artifacts/",
             source: "components/artifactView/html/",
-            sourceMountRelative: "engage"
+            sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
         });
         
         handler.registerProducer("view", function (context, env) {
-            return {};
+            var options = {
+                model: fetchAndNormalizeModel(context.urlState.params, config)
+            };
+
+            return {
+                ID: "initBlock", 
+                functionname: "fluid.engage.artifactView", 
+                "arguments": [".flc-artifact", options]
+            };
         });
     };
 })(jQuery);
