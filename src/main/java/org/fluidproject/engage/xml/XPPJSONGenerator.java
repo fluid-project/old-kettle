@@ -17,17 +17,27 @@ import uk.org.ponder.util.UniversalRuntimeException;
 
 public class XPPJSONGenerator {
 
-    public Map root = new HashMap();
+    public Map root;
     private MXParser parser;
     private TagPatternEntry[] entries;
 
-    public XPPJSONGenerator() {}
+    public XPPJSONGenerator() {
+        clear();
+    }
     
     public XPPJSONGenerator(List patterns) {
         this.entries = TagPatterns.compilePatterns(patterns); 
     }
     
+    public void clear() {
+        root = new HashMap();
+        stack = ListUtil.instance(root);
+        w.size = 0;
+        inMatch = false;
+    }
+    
     public void parseStream(InputStream xmlstream) {
+        clear();
         parser = new MXParser();
         try {
             // parser.setFeature(FEATURE_XML_ROUNDTRIP, true);
@@ -39,7 +49,6 @@ public class XPPJSONGenerator {
                 }
                 switch (token) {
                 case XmlPullParser.COMMENT:
-                    parser.next();
                     break;
                 case XmlPullParser.START_TAG:
                     boolean isempty = parser.isEmptyElementTag();
@@ -68,7 +77,7 @@ public class XPPJSONGenerator {
 
     private CharWrap w = new CharWrap();
 
-    private List stack = ListUtil.instance(root);
+    private List stack;
     private boolean inMatch = false;
 
     private void processTagStart(XmlPullParser parser, boolean isempty) {
