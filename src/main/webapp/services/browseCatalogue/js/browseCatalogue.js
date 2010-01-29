@@ -62,8 +62,7 @@ fluid.catalogueService = fluid.catalogueService || {};
         var data = fluid.engage.mapModel(rawData.rows[0], dbName);
         
         var model = {
-            exhibitionTitle: data.exhibitionTitle,
-            sectionSize: data.sectionSize,
+            title: data.exhibitionTitle,
             categories: [
                 {
                     name: data.sectionTitle,
@@ -86,17 +85,23 @@ fluid.catalogueService = fluid.catalogueService || {};
     var afterMap = function (data) {
         data.categories = $.map(data.categories, function (value) {
             return {
-                name: fluid.stringTemplate("Viewing " + (value.name === "viewAll" ? "all objects" : '"' + value.name + '"') + " (%num total)", {num: data.sectionSize}),
+                name: value.name,
                 items: value.artifacts
             };
-        });
-        delete data.exhibitionTitle;
-        delete data.sectionSize;
+        });        
+        data.title = "browseCatalogueTitle";
         return data;
     };
     
+    var addThemeTitles = function (strings, data) {
+        fluid.transform(data.categories, function (category) {
+            strings[category.name] = "Viewing " + (category.name === "viewAll" ? "all objects" : '"' + category.name + '"') + " (%size total)";
+        });
+        return strings;
+    };
+    
     fluid.catalogueService.initBrowseCatalogueService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "catalogue/",
@@ -107,16 +112,20 @@ fluid.catalogueService = fluid.catalogueService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("browse", function (context, env) {
-            var data = getData(errorCallback, context.urlState.params, config);
-            var title = data.exhibitionTitle;
-            var options = {
-                model: afterMap(data),
-                title: title
-            };
+            var params = context.urlState.params;
+            var data = getData(errorCallback, params, config);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params) || {};         
+            strings.browseCatalogueTitle = data.title
             
+            var options = {
+                strings: addThemeTitles(strings, data),
+                model: afterMap(data)
+            };
+
             return {
                 ID: "initBlock", 
                 functionname: "fluid.browse", 

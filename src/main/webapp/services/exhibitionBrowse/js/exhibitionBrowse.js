@@ -77,6 +77,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             $.each(exhibitions, function (i, exhibition) {
                 var exhibitionInfo = {
                     image: exhibition.image,
+                    isCurrent: exhibition.isCurrent,
                     title: exhibition.title,
                     url: compileTargetURL(exhibition.isCurrent ? baseExhibitionURL : baseUpcomingExhibitionURL, {
                         db: dbName,
@@ -115,7 +116,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var afterMap = function (data) {
         data.categories = fluid.transform(data.categories, function (category) {
             return {
-                 items: fluid.transform(category.exhibitions, function (exhibition) {
+                name: category.isCurrent ? "currentCategory" : "upcomingCategory",
+                items: fluid.transform(category.exhibitions, function (exhibition) {
                     return {
                         isCurrent: exhibition.isCurrent,
                         url: exhibition.url,
@@ -126,6 +128,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                 })
             };
         });
+        data.title = "title";
         return data;
     };
     
