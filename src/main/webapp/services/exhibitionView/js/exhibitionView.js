@@ -100,6 +100,20 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             
             data.catalogueLink = buildLink("../catalogue/view.html", params.db, data.title);
             data.aboutLink = buildLink("about.html", params.db, data.title);
+            
+            //////////////////////////////////////////////////////////////////////
+            // TODO:  Remove this hardcoded data as soon as we get real data!!!
+           data.cataloguePreview = [{
+                "media": true,
+                "title": "Thermometer",
+                "image": "http://helios.gsfc.nasa.gov/image_euv_press.jpg"
+            }, {
+                "title": "Barometer",
+                "image": "http://helios.gsfc.nasa.gov/image_euv_press.jpg"
+            }
+            ];
+            /////////////////////////////////////////////////////////////////////
+            
             var options = {
                 model: data
             };
