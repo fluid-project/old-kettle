@@ -119,11 +119,19 @@ fluid.browseDemo = fluid.browseDemo || {};
                 items: value.artifacts
             };
         });
+        data.title = "title";
         return data;
+    };
+
+    var addCatagoryTitles = function (strings, data) {
+        fluid.transform(data.categories, function (category) {
+            strings[category.name] = "Viewing " + category.name;
+        });
+        return strings;
     };
     
     fluid.browseDemo.initBrowseDemo = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "artifacts/",
@@ -134,12 +142,19 @@ fluid.browseDemo = fluid.browseDemo || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("browse", function (context, env) {
-            var data = getData(errorCallback, context.urlState.params, config);
+            var params = context.urlState.params;
+            var data = getData(errorCallback, params, config);
+            var strings = {
+                    title: data.title
+            };
+            
             var options = {
-                model: afterMap(data)
+                model: afterMap(data),
+                strings: addCatagoryTitles(strings, data)
             };
 
             return {
