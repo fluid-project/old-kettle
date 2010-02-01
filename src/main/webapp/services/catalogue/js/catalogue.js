@@ -122,7 +122,7 @@ fluid.catalogueService = fluid.catalogueService || {};
     };
     
     fluid.catalogueService.initCatalogueService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "catalogue/",
@@ -133,14 +133,19 @@ fluid.catalogueService = fluid.catalogueService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("view", function (context, env) {
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             var options = {
                 model: afterMap(data, params)
             };
+            if (strings) {
+                strings.options = strings;
+            }
             
             return {
                 ID: "initBlock",
