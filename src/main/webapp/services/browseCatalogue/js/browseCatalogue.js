@@ -119,7 +119,7 @@ fluid.catalogueService = fluid.catalogueService || {};
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
             var strings = fluid.kettle.getBundle(renderHandlerConfig, params) || {};         
-            strings.browseCatalogueTitle = data.title
+            strings.browseCatalogueTitle = data.title;
             
             var options = {
                 strings: addThemeTitles(strings, data),
