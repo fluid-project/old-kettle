@@ -72,7 +72,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     };
     
     fluid.exhibitionService.initExhibitionAboutService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "exhibitions/",
@@ -83,12 +83,18 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
             
         handler.registerProducer("about", function (context, env) {
+            var params = context.urlState.params;
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             var options = {
                 model: getData(errorCallback, context.urlState.params, config)
             };
+            if (strings) {
+                options.strings = strings;
+            }
 
             return {
                 ID: "initBlock",
