@@ -58,10 +58,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var getData = function (errorCallback, params, config) {
         var url = compileDatabaseURL(params, config);
         var rawData = getAjax(url, errorCallback);
-        var baseCatalogueURL = "../catalogue/view.html";
         var exhibitionData = fluid.engage.mapModel(rawData.rows[0], params.db + "_view");
-        exhibitionData.displayDate = exhibitionData.displayDate === "Permanent exhibition" ? 
-            "Permanent" : "Through " + exhibitionData.endDate;
         return exhibitionData;
     };
     
