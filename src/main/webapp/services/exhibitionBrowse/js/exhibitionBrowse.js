@@ -18,12 +18,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 
 (function ($) {
 
-    var compileDatabaseURL = function (db, config) {
-        return fluid.stringTemplate(config.viewURLTemplate, 
-            {dbName: db + "_exhibitions" || "", view: config.views.exhibitions});
-    };
-    
-
     fluid.engage.exhibitionDataSource = fluid.kettle.makeDataSource({
         source: {
           type: "fluid.kettle.couchDBSource",
