@@ -85,18 +85,17 @@ fluid.catalogueService = fluid.catalogueService || {};
     var afterMap = function (data) {
         data.categories = $.map(data.categories, function (value) {
             return {
-                name: value.name,
+                name: value.name, 
                 items: value.artifacts
             };
-        });        
-        data.title = "browseCatalogueTitle";
+        });
         return data;
     };
     
+    //This should be replaced with proper message bundles when they are ready
     var addThemeTitles = function (strings, data) {
-        fluid.transform(data.categories, function (category) {
-            strings[category.name] = "Viewing " + (category.name === "viewAll" ? "all objects" : '"' + category.name + '"') + " (%size total)";
-        });
+        strings.category = "Viewing %category (%size total)";
+        strings.noCategory = "Viewing all objects (%size total)";
         return strings;
     };
     
@@ -118,11 +117,18 @@ fluid.catalogueService = fluid.catalogueService || {};
         handler.registerProducer("browse", function (context, env) {
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
-            var strings = fluid.kettle.getBundle(renderHandlerConfig, params) || {};         
-            strings.browseCatalogueTitle = data.title;
+            
+            // TODO: We're hand-altering the configuration for getBundle(), since by default it assumes that all language bundles
+            // are located relative to the HTML template. In this case, however, we've got feeds using the same template but
+            // applying a different set of strings to it.
+            var strings = fluid.kettle.getBundle({
+                config: renderHandlerConfig.config,
+                source: "components/browseCatalogue/html/",
+                sourceMountRelative: "engage"
+            }, params) || {};
             
             var options = {
-                strings: addThemeTitles(strings, data),
+                strings: strings,
                 model: afterMap(data)
             };
 

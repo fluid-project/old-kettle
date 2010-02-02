@@ -119,7 +119,7 @@ fluid.browseDemo = fluid.browseDemo || {};
                 items: value.artifacts
             };
         });
-        data.title = "title";
+        data.title = "Artifacts";
         return data;
     };
 
@@ -149,7 +149,7 @@ fluid.browseDemo = fluid.browseDemo || {};
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
             var strings = {
-                    title: data.title
+                title: data.title
             };
             
             var options = {
