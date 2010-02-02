@@ -18,7 +18,7 @@ fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function () {
-    
+    // TODO: This fragile utility must be deprecated
     fluid.engage.makeAcceptorForResource = function (atSegment, extension, handler) {
         return {
             accept: function (segment, relPath, pathInfo) {
@@ -97,27 +97,8 @@ fluid.engage = fluid.engage || {};
         }
     };
     
-    fluid.engage.renderHandlerConfig = function (options) {
-        var baseOptions = options.baseOptions || {};
-        var source = options.source;
-        var mounts = options.config.mount;
-       
-        var baseDir = mounts[options.sourceMountRelative].absSource + options.source; 
-        var rewriter = fluid.kettle.makeUrlRewriter(options.config.mount, options);
-       
-        var handlerOptions = {
-            baseDir: baseDir,
-            renderOptions: {
-                rebaseURLs: false,
-                urlRewriter: rewriter
-            }
-        };
-        handlerOptions = jQuery.extend(true, baseOptions, handlerOptions);
-        return handlerOptions;
-    };
-    
     fluid.engage.mountRenderHandler = function (options) {
-        var handlerOptions = fluid.engage.renderHandlerConfig(options);
+        var handlerOptions = fluid.kettle.renderHandlerConfig(options);
         var handler = fluid.kettle.renderHandler(handlerOptions);
         fluid.engage.mountAcceptor(options.app, options.target, handler);
         return handler;
@@ -125,13 +106,13 @@ fluid.engage = fluid.engage || {};
     
     fluid.engage.initEngageApp = function (config) {
         config = fluid.engage.endeaden(config);
-        var app = fluid.kettle.makeKettleApp(config.appName);
-        var serviceInits = config.initServices;
+        var app = fluid.kettle.makeKettleApp(config);
         config.baseDir = fluid.kettle.slashiseUrl(config.baseDir);
         var baseDir = config.baseDir;
         var mounts = config.mount;
         fluid.kettle.computeAbsMounts(mounts, baseDir);
-        
+
+        var serviceInits = fluid.makeArray(config.initServices);        
         // Initialize each of the Engage app services registered in the config file.
         fluid.setLogging(true);
         for (var i = 0; i < serviceInits.length; i++) {
@@ -139,6 +120,8 @@ fluid.engage = fluid.engage || {};
             fluid.log("Initializing service " + initFn);
             fluid.invokeGlobalFunction(initFn, [config, app]);
         }
+        fluid.kettle.dequeueInvocations("fluid.engage.initEngageApp", {
+          config: config, app: app});  
         
         // Mount shared directory points.
         fluid.engage.applyMountConfig(app, mounts, baseDir);

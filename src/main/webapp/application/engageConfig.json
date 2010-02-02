@@ -16,8 +16,6 @@ initServices: [
     "fluid.engageDemo.initEngageDemo",
     "fluid.kettleDemo.initCherryDemo",
     "fluid.kettleDemo.initJSGIHandlerDemo",
-    "fluid.exhibitionService.initExhibitionBrowseService",
-    "fluid.exhibitionService.initExhibitionBrowseDataFeed",
     "fluid.exhibitionService.initExhibitionViewService",
     "fluid.exhibitionService.initExhibitionViewDataFeed",
     "fluid.exhibitionService.initExhibitionAboutService",

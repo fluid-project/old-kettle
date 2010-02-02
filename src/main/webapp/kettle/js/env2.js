@@ -41,5 +41,22 @@ fluid = fluid || {};
     };
     
     $.ajaxSettings.async = false;
+    
+    var rhinoThreadLocal; 
+    
+    fluid.rhinoThreadLocal = function() {
+        if (!rhinoThreadLocal) {
+            rhinoThreadLocal = new java.lang.ThreadLocal();
+        }
+        var togo = rhinoThreadLocal.get();
+        if (!togo) {
+            togo = {};
+            rhinoThreadLocal.set(togo);
+        }
+        return togo;
+    }
+    
+    fluid.threadLocal = fluid.rhinoThreadLocal;
+    
 })(jQuery, fluid);
     

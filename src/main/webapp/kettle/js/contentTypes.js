@@ -26,17 +26,14 @@ var fluid = fluid || {};
         },
         "HTML_FRAGMENT": {
             extension: "html",  
-            doctype: "",
             contentTypeHeader: "text/html; charset=UTF-8"
         },
         "XML": {
             extension:  "xml", 
-            doctype: "",
             contentTypeHeader: "application/xml; charset=UTF-8"
         },
         "JSON": {
             extension: "json",  
-            doctype: "",
             contentTypeHeader: "application/json; charset=UTF-8"
         },
         "XUL": {
@@ -65,13 +62,15 @@ var fluid = fluid || {};
         // http://www.bluehostforum.com/showthread.php?t=15913
         "JS": {
             extension: "js", 
-            doctype: "",
             contentTypeHeader: "application/x-javascript; charset=UTF-8"
         },
         "CSS": {
             extension: "css", 
-            doctype: "",
             contentTypeHeader: "text/css; charset=UTF-8"
+        },
+        "TXT": {
+            extension: "txt",
+            contentTypeHeader: "text/plain"            
         }
     };
 })(jQuery, fluid);

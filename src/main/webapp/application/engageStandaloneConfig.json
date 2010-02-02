@@ -14,8 +14,6 @@ initServices: [
     "fluid.browseDemo.initBrowseDemo",
     "fluid.browseDemo.initBrowseDataFeed",
     "fluid.engageDemo.initEngageDemo",
-    "fluid.exhibitionService.initExhibitionBrowseService",
-    "fluid.exhibitionService.initExhibitionBrowseDataFeed",
     "fluid.exhibitionService.initExhibitionViewService",
     "fluid.exhibitionService.initExhibitionViewDataFeed",
     "fluid.exhibitionService.initExhibitionAboutService",
