@@ -28,7 +28,10 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
             view: config.views.exhibitionByTitle, 
-            key: '"' + params.title + '"'
+            key: JSON.stringify({
+                title: params.title,
+                lang: params.lang
+            })
         });
     };
     
@@ -71,11 +74,28 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
     };
     
-    var buildLink = function (url, db, title) {
+    var buildLink = function (url, lang, db, title) {
         return compileTargetURL(url, {
             db: db,
-            title: title
+            title: title,
+            lang: lang
         });
+    };
+    
+    var afterMap = function (data, params) {
+        data.cataloguePreview = fluid.transform(data.cataloguePreview, function (artifact) {
+            return {
+                target: compileTargetURL("../artifacts/view.html", {
+                    db: params.db.slice(0, params.db.indexOf('_')),
+                    accessNumber: artifact.accessionNumber,
+                    lang: params.lang
+                }),
+                image: artifact.image,
+                media: artifact.media,
+                title: artifact.title
+            };
+        });
+        return data;
     };
     
     fluid.exhibitionService.initExhibitionViewService = function (config, app) {
@@ -98,24 +118,11 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             var data = getData(errorCallback, params, config);
             var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             
-            data.catalogueLink = buildLink("../catalogue/view.html", params.db, data.title);
-            data.aboutLink = buildLink("about.html", params.db, data.title);
-            
-            //////////////////////////////////////////////////////////////////////
-            // TODO:  Remove this hardcoded data as soon as we get real data!!!
-           data.cataloguePreview = [{
-                "media": true,
-                "title": "Thermometer",
-                "image": "http://helios.gsfc.nasa.gov/image_euv_press.jpg"
-            }, {
-                "title": "Barometer",
-                "image": "http://helios.gsfc.nasa.gov/image_euv_press.jpg"
-            }
-            ];
-            /////////////////////////////////////////////////////////////////////
+            data.catalogueLink = buildLink("../catalogue/view.html", params.lang, params.db, data.title);
+            data.aboutLink = buildLink("about.html", params.lang, params.db, data.title);
             
             var options = {
-                model: data
+                model: afterMap(data, params)
             };
             if (strings) {
                 options.strings = strings;

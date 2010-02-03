@@ -50,7 +50,8 @@ fluid.catalogueService = fluid.catalogueService || {};
             view: config.views.catalogueArtifacts, 
             key: JSON.stringify({
                 exhibitTitle: params.exhibition,
-                sectionTitle: params.title
+                sectionTitle: params.title,
+                lang: params.lang
             })
         });
     };
@@ -82,11 +83,32 @@ fluid.catalogueService = fluid.catalogueService || {};
         fluid.engage.mountAcceptor(app, "catalogue", acceptor);
     };
     
-    var afterMap = function (data) {
+    var compileTargetURL = function (URLBase, params) {
+        return URLBase + "?" + $.param(params);
+    };
+    
+    var compileArtifacts = function (artifacts, params) {
+        var baseArtifactURL = "../artifacts/view.html";
+        return fluid.transform(artifacts, function (artifact) {
+            return {
+                title: artifact.title,
+                imageUrl: artifact.imageUrl,
+                media: artifact.media,
+                description: artifact.description,
+                url: compileTargetURL(baseArtifactURL, {
+                    db: params.db.slice(0, params.db.indexOf('_')),
+                    accessNumber: artifact.accessionNumber,
+                    lang: params.lang
+                })
+            };
+        });
+    };
+    
+    var afterMap = function (data, params) {
         data.categories = $.map(data.categories, function (value) {
             return {
                 name: value.name, 
-                items: value.artifacts
+                items: compileArtifacts(value.artifacts, params)
             };
         });
         return data;
@@ -129,7 +151,7 @@ fluid.catalogueService = fluid.catalogueService || {};
             
             var options = {
                 strings: strings,
-                model: afterMap(data)
+                model: afterMap(data, params)
             };
 
             return {

@@ -28,7 +28,10 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
             view: config.views.exhibitionByTitle, 
-            key: '"' + params.title + '"'
+            key: JSON.stringify({
+                title: params.title,
+                lang: params.lang
+            })
         });
     };
     

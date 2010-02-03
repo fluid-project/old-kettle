@@ -4,9 +4,9 @@ handlerFunction: "fluid.kettle.servlet.process",
 includes: "kettle/KettleIncludes.json",
 includesPrefix: "kettle/",
 loaderFunction: "fluid.engage.initEngageApp",
-queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
-viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
-viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
+queryURLTemplate: "http://142.150.154.59:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
+viewURLTemplate: "http://142.150.154.59:5984/%dbName/%view",
+viewURLTemplateWithKey: "http://142.150.154.59:5984/%dbName/%view?key=%key",
 initServices: [
     "fluid.engage.initHomeService",
     "fluid.artifactView.initMarkupFeed", 
@@ -27,9 +27,10 @@ views: {
     all: "all",
     byCollectionCategory: "by_collection_category",
     exhibitionByTitle: "_design/exhibitions/_view/view",
-    catalogueByTitle: "_design/catalogue/_view/viewWithArtifacts",
-    catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
-    exhibitions: "_design/exhibitions/_view/browse"
+    catalogueByTitle: "_design/catalogue/_view/view",
+    catalogueArtifacts: "_design/catalogue/_view/browse",
+    exhibitions: "_design/exhibitions/_view/browse",
+    artifactByAccession: "_design/artifacts/_view/view"
 },
 mount: {
     infusion: {

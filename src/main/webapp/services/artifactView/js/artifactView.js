@@ -23,9 +23,9 @@ fluid.artifactView = fluid.artifactView || {};
         var model = {};
         
         var successCallback = function (data, status) {
-            model = JSON.parse(data);
+            model = JSON.parse(data.substring(0, data.length - 1));
             if (model.total_rows && model.total_rows > 0) {
-                model = model.rows[0].doc;
+                model = model.rows[0];
             }       
         };   
         
@@ -40,30 +40,21 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     var buildDataURL = function (params, config) {
-        return fluid.stringTemplate(config.queryURLTemplate, 
-            {dbName: params.db || "", view: config.views.all, query: params.q || ""}); 
-    };
-
-    var buildCategoryQuery = function (category) {
-        if (typeof category === "string") {
-            return category;
-        }
-        category = $.makeArray(category);
-        var catString = category.pop();
-        $.each(category, function (index, value) {
-            catString += "AND" + value;
-        });
-        return catString;
+        return fluid.stringTemplate(config.viewURLTemplateWithKey, {
+            dbName: params.db, 
+            view: config.views.artifactByAccession, 
+            key: JSON.stringify({
+                accessNumber: params.accessNumber,
+                lang: params.lang
+            })
+        }); 
     };
 
     var fetchAndNormalizeModel = function (params, config) {
         var urlBase = "browse.html?";
-        var artifactModel = fluid.engage.mapModel(getData(buildDataURL(params, config)), params.db);            
-        params.q = buildCategoryQuery(artifactModel.category);
-        
+        var artifactModel = fluid.engage.mapModel(getData(buildDataURL(params, config)), params.db);
         return {
-            artifact: artifactModel,
-            relatedArtifacts: urlBase + $.param(params)
+            artifact: artifactModel
         };
     };
     

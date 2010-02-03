@@ -23,10 +23,11 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             type: "fluid.kettle.couchDBSource",
             urlBuilder: {
                 funcName: "fluid.stringTemplate",
-                args: ["{config}.viewURLTemplate", 
+                args: ["{config}.viewURLTemplateWithKey", 
                 {
                     dbName: "${db}_exhibitions",
-                    view: "{config}.views.exhibitions" 
+                    view: "{config}.views.exhibitions",
+                    key: '"${lang}"'
                 }]
             }
         },
@@ -38,7 +39,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         url: "exhibitions/browse",
         contentType: "JSON",
         source: {funcName: "fluid.engage.exhibitionDataSource",
-            args: [{db: "{params}.db"}]
+            args: [{db: "{params}.db", lang: "{params}.db"}]
         }
     });
         
@@ -56,7 +57,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         producers: {
             "browse": function (context, renderHandlerConfig) {
                 var params = context.urlState.params;
-                var data = fluid.engage.exhibitionDataSource.get({db: params.db});
+                var data = fluid.engage.exhibitionDataSource.get({db: params.db, lang: params.lang});
                 if (!data.isError) {
                     // TODO: We're hand-altering the configuration for getBundle(), since by default it assumes that all language bundles
                     // are located relative to the HTML template. In this case, however, we've got feeds using the same template but
@@ -117,7 +118,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     title: exhibition.title,
                     url: compileTargetURL(exhibition.isCurrent ? baseExhibitionURL : baseUpcomingExhibitionURL, {
                         db: dbName,
-                        title: exhibition.title
+                        title: exhibition.title,
+                        lang: options.lang
                     }),
                     displayDate: exhibition.displayDate,
                     endDate: exhibition.endDate
