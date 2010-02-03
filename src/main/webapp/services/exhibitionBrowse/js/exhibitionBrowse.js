@@ -20,15 +20,15 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 
     fluid.engage.exhibitionDataSource = fluid.kettle.makeDataSource({
         source: {
-          type: "fluid.kettle.couchDBSource",
-          urlBuilder: {
-              funcName: "fluid.stringTemplate",
-              args: ["{config}.viewURLTemplate", 
+            type: "fluid.kettle.couchDBSource",
+            urlBuilder: {
+                funcName: "fluid.stringTemplate",
+                args: ["{config}.viewURLTemplate", 
                 {
-                  dbName: "${db}_exhibitions",
-                  view: "{config}.views.exhibitions" 
+                    dbName: "${db}_exhibitions",
+                    view: "{config}.views.exhibitions" 
                 }]
-          }
+            }
         },
         outputMapper: "fluid.engage.exhibitionMapper"
     });
@@ -38,8 +38,9 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         url: "exhibitions/browse",
         contentType: "JSON",
         source: {funcName: "fluid.engage.exhibitionDataSource",
-            args: [{db: "{params}.db"}]}
-        });
+            args: [{db: "{params}.db"}]
+        }
+    });
         
     fluid.kettle.markupSpout({
         renderHandlerConfig: {
@@ -54,28 +55,36 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         },
         producers: {
             "browse": function (context, renderHandlerConfig) {
-                  var params = context.urlState.params;
-                  var data = fluid.engage.exhibitionDataSource.get({db: params.db});
-                  if (!data.isError) {
-                      var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
-                      var options = {
-                          model: data.data,
-                          useCabinet: true
-                      };
-                      if (strings) {
-                          options.strings = strings;
-                      }
-          
-                      return {tree: {
-                          ID: "initBlock", 
-                          functionname: "fluid.browse", 
-                          "arguments": [".flc-browse", options]
-                      }};
-                  }
-                  else return data;
-              }
+                var params = context.urlState.params;
+                var data = fluid.engage.exhibitionDataSource.get({db: params.db});
+                if (!data.isError) {
+                    // TODO: We're hand-altering the configuration for getBundle(), since by default it assumes that all language bundles
+                    // are located relative to the HTML template. In this case, however, we've got feeds using the same template but
+                    // applying a different set of strings to it.
+                    var strings = fluid.kettle.getBundle({
+                        config: renderHandlerConfig.config,
+                        source: "components/exhibitionBrowse/html/",
+                        sourceMountRelative: "engage"
+                    }, params);
+                    var options = {
+                        showHeaderForFirstCategory: false,
+                        model: data.data,
+                        useCabinet: true
+                    };
+                    if (strings) {
+                        options.strings = strings;
+                    }
+                    
+                    return {tree: {
+                        ID: "initBlock", 
+                        functionname: "fluid.browse", 
+                        "arguments": [".flc-browse", options]
+                    }};
+                }
+                return data;
+            }
         }
-        });
+    });
     
     
     var compileTargetURL = function (URLBase, params) {
