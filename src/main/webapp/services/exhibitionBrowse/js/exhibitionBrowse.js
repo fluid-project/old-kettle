@@ -38,8 +38,8 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     fluid.kettle.dataSpout({
         url: "exhibitions/browse",
         contentType: "JSON",
-        source: {funcName: "fluid.engage.exhibitionDataSource",
-            args: [{db: "{params}.db", lang: "{params}.db"}]
+        source: {name: "fluid.engage.exhibitionDataSource",
+            args: [{db: "{params}.db", lang: "{params}.lang"}]
         }
     });
         
