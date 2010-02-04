@@ -37,7 +37,7 @@ fluid.engage = fluid.engage || {};
         handler.registerProducer("home", function (context, env) {
 	        var params = context.urlState.params;
             var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
-            var args = [".flc-engage-homeAndLanguage", strings ? {strings: strings} : {}];
+            var args = [".flc-homeAndLanguage", strings ? {strings: strings} : {}];
             var initBlock = {ID: "initBlock", functionname: "fluid.engage.home", 
                 "arguments": args};
                         
