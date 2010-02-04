@@ -63,7 +63,7 @@ fluid.catalogueService = fluid.catalogueService || {};
         return fluid.transform(artifacts, function (artifact) {
             return {
                 description: artifact.description,
-                media: artifact.media,
+                showBadge: artifact.media,
                 title: artifact.title,
                 image: artifact.image,
                 target: compileTargetURL(baseArtifactURL, {
