@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import uk.org.ponder.errorutil.ConfigurationException;
@@ -108,6 +109,12 @@ public class ResourceUtil {
         finally {
             StreamCloseUtil.closeOutputStream(os);
         }
+    }
+    
+    public static String getRequestBody(HttpServletRequest request) throws IOException {
+        InputStream is = null;
+        is = request.getInputStream();
+        return StreamCopyUtil.streamToString(is);
     }
     
     /** Copy an input to output stream using a fixed-sized buffer, and guarantee to close

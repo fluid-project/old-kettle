@@ -79,6 +79,16 @@ fluid = fluid || {};
           
         // not part of the formal spec
         env.REQUEST_URI          = String(request.getRequestURL() || "");
+        
+        env.jsgi = {
+            version: [0, 1],
+            url_scheme: "http",
+            input: String(Packages.org.fluidproject.kettle.ResourceUtil.getRequestBody(request)),
+            errors: "",
+            multithread: true,
+            multiprocess: false,
+            run_once: false
+        };
               
         // call the app
         var result = app(env),

@@ -16,7 +16,7 @@ fluid = fluid || {};
 (function ($, fluid) {
     fluid.kettle = fluid.kettle || {};
     
-    /** Two utilities that might well go into the framework **/
+    /** Three utilities that might well go into the framework **/
 
     /** Version of jQuery.makeArray that handles the case where the argument is undefined **/
     
@@ -32,6 +32,13 @@ fluid = fluid || {};
         }
         return togo;       
     };
+    
+    fluid.identity = function() {
+        if (arguments.length < 2) {
+            return arguments[0];
+        }
+        else return $.makeArray(arguments);
+    }
   
     // From URLUtil.java
     function push(hash, key, value) {

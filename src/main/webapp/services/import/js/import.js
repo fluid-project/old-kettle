@@ -17,20 +17,49 @@ fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function ($) {
+    fluid.setLogging(true);
     
-  fluid.engage.initImportService = function (config, app) {
-      var handler = fluid.engage.mountRenderHandler({
-          config: config,
-          app: app,
-          target: "import/",
-          source: "components/import/html/",
-          sourceMountRelative: "engage"
-      });
-          
-        handler.registerProducer("import", function (context, env) {
-            fluid.log("Received request: " + env.REQUEST_METHOD);
-            return {};
-        });
-  };
+    fluid.kettle.markupSpout({
+        renderHandlerConfig: {
+            target: "import/",
+            source: "components/import/html/",
+            sourceMountRelative: "engage",
+        },
+        producers: {
+            "import": function(context, renderHandlerConfig) {
+                return {tree: {}};
+               }
+        }
+    });
+    
+    fluid.engage.importDataSource = fluid.kettle.dataSource({
+        source: {
+            writeable: true,
+            type: "fluid.kettle.couchDBSource",
+            urlBuilder: {
+                funcName: "fluid.stringTemplate",
+                args: ["{config}.viewURLTemplate", 
+                {
+                    dbName: "${db}",
+                    view: "{config}.views.exhibitions"
+                }]
+            }
+        },
+        outputMapper: "fluid.engage.importLogger"
+    });
+    
+    fluid.kettle.dataSpout({
+        url: "import/import",
+        contentType: "JSON",
+        source: {name: "fluid.engage.importDataSource",
+            args: [{db: "{params}.db"}]
+        }
+    });
+    
+    fluid.engage.importLogger = function(data) {
+        fluid.log("Received POST request, returning data " + JSON.stringify(data));
+        return data;  
+    };
+
     
 })(jQuery);

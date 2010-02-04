@@ -19,20 +19,22 @@ fluid.engage = fluid.engage || {};
 
 (function () {
     // TODO: This fragile utility must be deprecated
-    fluid.engage.makeAcceptorForResource = function (atSegment, extension, handler) {
+    fluid.engage.makeAcceptorForResource = function (atSegment, extension, handler, protoExp) {
+        protoExp = protoExp || "GET";
+        var tester = new RegExp(protoExp);
         return {
-            accept: function (segment, relPath, pathInfo) {
+            accept: function (segment, relPath, pathInfo, context) {
                 if (segment === atSegment && pathInfo.extension === extension) {
-                    return {
+                    return tester.test(context.method)? {
                         handle: handler
-                    };
+                    } : fluid.kettle.METHOD_NOT_ALLOWED;
                 }
                 return null;
             }
         };
     };
     
-    fluid.engage.mountHandler = function (onApp, atSegment, handler) {
+    fluid.engage.mountHandler = function (onApp, atSegment, handler, protoExp) {
         fluid.engage.mountAcceptor(onApp, atSegment, {
             accept: function (segment, relPath, pathInfo) {
                 return {

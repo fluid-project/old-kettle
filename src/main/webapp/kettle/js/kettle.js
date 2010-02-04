@@ -79,22 +79,24 @@ fluid = fluid || {};
         }
     );
     
+    fluid.kettle.METHOD_NOT_ALLOWED = {};
+    
     fluid.kettle.mountDirectory = function (baseDir, relDirPath) {
         if (relDirPath === ".") {
             relDirPath = "";
         }
         var absBase = baseDir + relDirPath;
         return {
-            accept: function (segment, relPath, pathInfo) {
+            accept: function (segment, relPath, pathInfo, context) {
                 var absPath = absBase + relPath;
                 var file = new java.io.File(absPath); // TODO: Unportability here
                 var exists = file.exists();
                 fluid.log("File " + absPath + " exists: " + exists);
-                return exists ? {
+                return exists ? (context.method === "GET" ? {
                         handle: function (context, env) {
                             return [200, fluid.kettle.contentTypeFromExtension(pathInfo.extension), file];
                         }
-                    } : null;
+                    } : fluid.kettle.METHOD_NOT_ALLOWED) : null;
             }
         };
     };
@@ -120,11 +122,17 @@ fluid = fluid || {};
         return togo;
     };
     
-    fluid.kettle.getDataFromUrl = function(url) {
+    
+    fluid.kettle.JSONParser = function(text) {
+        // trim required for strangely fascistic NativeJSON impl in Rhino
+        return JSON.parse($.trim(text));
+    };
+    
+    fluid.kettle.operateUrl = function(url, responseParser, writeDispose) {
         var togo = {};
+        responseParser = responseParser || fluid.identity;
         function success(responseText, textStatus) {
-             // trim required for strangely fascistic NativeJSON impl in Rhino
-            togo.data = JSON.parse($.trim(responseText));
+            togo.data = responseParser(responseText); 
             togo.textStatus = textStatus;
         }
         function error(xhr, textStatus, errorThrown) {
@@ -134,20 +142,24 @@ fluid = fluid || {};
             togo.errorThrown = errorThrown;
             togo.isError = true;
         }
-        $.ajax({
+        var ajaxOpts = {
             url: url,
             success: success,
             error: error
-        });
+        };
+        if (writeDispose) {
+          $.extend(ajaxOpts, writeDispose);
+        } 
+        $.ajax(ajaxOpts);
         return togo;
     };
 
     
-    fluid.kettle.getLocalData = function(renderHandlerConfig, localPath) {
+    fluid.kettle.getLocalData = function(renderHandlerConfig, localPath, responseParser) {
         var rhc = renderHandlerConfig;
         var config = rhc.config; // IoC here
         var absPath = fluid.kettle.absoluteHandlerBase(config.mount, rhc) + localPath;
-        var data = fluid.kettle.getDataFromUrl(fluid.kettle.pathToFileURL(absPath));
+        var data = fluid.kettle.operateUrl(fluid.kettle.pathToFileURL(absPath), responseParser);
         return data.data? data.data : null;
     };
     
@@ -172,11 +184,14 @@ fluid = fluid || {};
         }
     };
 
-    fluid.kettle.makeDataSource = function(options) {
-        var that = fluid.initLittleComponent("fluid.kettle.renderHandler", options);
+    fluid.kettle.dataSource = function(options) {
+        var that = fluid.initLittleComponent("fluid.kettle.dataSource", options);
+        fluid.log("Creating dataSource with options " + JSON.stringify(that.options));
         // TODO: non-standard layout and odd knowledge of argument
         var srcOpt = that.options.source;
-        that.source = fluid.invokeGlobalFunction(srcOpt.type, [srcOpt.urlBuilder]);
+        var type = srcOpt.type;
+        delete srcOpt.type;
+        that.source = fluid.invokeGlobalFunction(type, [srcOpt]);
         that.get = function() {
             var togo = that.source.get.apply(null, arguments);
             if (!togo.isError && that.options.outputMapper) {
@@ -184,19 +199,54 @@ fluid = fluid || {};
             }
             return togo;
         }
+        if (that.source.put) {
+           that.put = function() {
+               var togo = that.source.put.apply(null, arguments);
+               // TODO - apply INVERSE MAPPING if we can compute it from outputMapper!
+               return togo;
+           };
+        }
         return that;
     };
+    // Taken from jquery.couch.js
+    function encodeDocId(docID) {
+      var parts = docID.split("/");
+      if (parts[0] == "_design") {
+        parts.shift();
+        return "_design/" + encodeURIComponent(parts.join('/'));
+      }
+      return encodeURIComponent(docID);
+    }
 
     fluid.kettle.couchDBSource = function(options) {
-        var that = fluid.initLittleComponent("fluid.kettle.couchDBSource", options);
-        that.get = function(directModel) {
-            var expanded = fluid.kettle.resolveEnvironment(that.options, directModel);
+        fluid.log("Creating couchDBSource with writeable = " + options.writeable);
+        function resolveUrl(resOptions, directModel) {
+            var expanded = fluid.kettle.resolveEnvironment(resOptions, directModel);
             if (expanded.funcName) { // what other forms of delivery might there be?
-                var url = fluid.invokeGlobalFunction(expanded.funcName, expanded.args);
-                var togo = fluid.kettle.getDataFromUrl(url);
-                return togo;
+                return fluid.invokeGlobalFunction(expanded.funcName, expanded.args);
             }
         }
+        var that = fluid.initLittleComponent("fluid.kettle.couchDBSource", options);
+        that.get = function(directModel) {
+            var url = resolveUrl(that.options.urlBuilder, directModel);
+            if (url) {
+                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser);
+            }
+        };
+        if (options.writeable) {
+            that.put = function(model, directModel) {
+                var url = resolveUrl(that.options.urlBuilder, directModel);
+                var expanded = fluid.kettle.resolveEnvironment(that.options, directModel);
+                var ajaxOpts = {data: JSON.stringify(model), contentType: fluid.kettle.contentTypeRegistry.JSON.contentTypeHeader};
+                   if (model._id === undefined) {
+                       ajaxOpts.type = "POST";
+                   } else {
+                       ajaxOpts.type = "PUT";
+                       url = url + encodeDocId(doc._id);
+                   }
+                return fluid.kettle.operateUrl(url, fluid.kettle.JSONParser, ajaxOpts);
+                };
+            }
         return that;
     };
     
@@ -273,13 +323,18 @@ fluid = fluid || {};
         return resolveEnvironmentImpl(obj, directModel, env);
     };
 
+    function getInvocationQueue(target) {
+        var exist = invocationQueue[target];
+        if (!invocationQueue[target]) {
+            invocationQueue[target] = exist = {queue: []}; 
+        }
+        return exist;
+    }
+
     var invocationQueue = {};
     // NB: This global state assumes that startup is single-threaded
     fluid.kettle.queueInvocation = function(target, packet) {
-        var exist = invocationQueue[target];
-        if (!exist) {
-            invocationQueue[target] = exist = {queue: []};
-        }
+        var exist = getInvocationQueue(target);
         exist.queue.push(packet);
         if (exist.handler) {
             exist.handler();
@@ -302,7 +357,8 @@ fluid = fluid || {};
                  invocationQueue[target].queue = []; // TODO: finally block?
              });
          }
-         invocationQueue[target].handler = handler;
+         
+         getInvocationQueue(target).handler = handler;
          handler();
     };
     
@@ -318,19 +374,26 @@ fluid = fluid || {};
     fluid.kettle.dataSpout = function(options) {
         var content = fluid.kettle.contentTypeRegistry[options.contentType];
         var togo = function (config, app) {
+            var source = fluid.getGlobalValue(options.source.name);
             var handler = function (context) {
                  var args = fluid.makeArray(fluid.kettle.resolveEnvironment(options.source.args));
-                 var source = fluid.getGlobalValue(options.source.name);
-                 var data = source.get.apply(null, args);
+                 var data;
+                 if (context.method === "GET") {
+                    data = source.get.apply(null, args);
+                 }
+                 else {
+                    var body = fluid.kettle.JSONParser(context.env.jsgi.input);
+                    data = source.put.apply(null, [body].concat(args));
+                 }
                  if (data.isError) {
                      return fluid.kettle.makeErrorResponse(data);
                  }
                  else {
-                     var data = data.data;                       
+                     data = data.data;                       
                      if (options.contentType === "JSON") { // TODO: any other content types
                          data = JSON.stringify(data);
                      }
-                 return [200, fluid.kettle.headerFromEntry(content), data];
+                     return [200, fluid.kettle.headerFromEntry(content), data];
                  }
             };
             var parsed = fluid.kettle.parsePathInfo(options.url); // TODO: support length other than 2
@@ -339,9 +402,8 @@ fluid = fluid || {};
             }
             var terminal = parsed.pathInfo[parsed.pathInfo.length - 1];
     
-            var acceptor = fluid.engage.makeAcceptorForResource(terminal, content.extension, handler);
+            var acceptor = fluid.engage.makeAcceptorForResource(terminal, content.extension, handler, source.put? "GET|POST|PUT" : "GET");
             fluid.engage.mountAcceptor(app, parsed.pathInfo[0], acceptor);
-
         };
         fluid.kettle.disposeSpout(togo, options);
         return togo;
@@ -365,7 +427,7 @@ fluid = fluid || {};
     
     fluid.kettle.getBundle = function(renderHandlerConfig, params) {
         if (params.lang) {
-            return fluid.kettle.getLocalData(renderHandlerConfig, "../messages/messages_"+params.lang+".json");
+            return fluid.kettle.getLocalData(renderHandlerConfig, "../messages/messages_"+params.lang+".json", fluid.kettle.JSONParser);
         }
         else {
             return null;
@@ -416,9 +478,12 @@ fluid = fluid || {};
         that.getContentType = function (segment) {
             return that.options.contentType;
         };
-        that.accept = function (segment, relPath, parsed) {
+        that.accept = function (segment, relPath, parsed, context) {
             if (parsed.extension && parsed.extension !== that.options.templateExtension) {
                 return null;
+            }
+            if (context.method !== "GET") {
+                return fluid.kettle.METHOD_NOT_ALLOWED;
             }
             fillCache(segment);
             return cache[segment].templates && cache[segment].producer? segmentHandler(segment): null;
@@ -444,22 +509,32 @@ fluid = fluid || {};
         }
         var relPath = fluid.kettle.makeRelPath(parsed, index);
         var defs = fluid.makeArray(root["*"]);
+        var notAllowed;
         for (var i = 0; i < defs.length; ++ i) {
             var rule = defs[i];
             var accept = rule.accept(segment, relPath, parsed, context);
             if (accept) {
-                return accept;
-            }  
+                if (accept === fluid.kettle.METHOD_NOT_ALLOWED) {
+                    notAllowed = accept;
+                }
+                else {
+                    return accept;
+                }
+            }
+        }
+        if (notAllowed) {
+            return notAllowed;
         }
     }
 
     fluid.kettle.routeApp = function (that, context) {
         var segs = context.urlState.pathInfo;
         var root = that.root;
+        var disposition;
         for (var i = 0; i < segs.length; ++ i) {
             var seg = segs[i];
-            var disposition = routeSegment(seg, root, context.urlState, i, context);
-            if (disposition) {
+            disposition = routeSegment(seg, root, context.urlState, i, context);
+            if (disposition && disposition !== fluid.kettle.METHOD_NOT_ALLOWED) {
                 if (disposition.handle) {
                     return disposition.handle(context, context.env);
                 }
@@ -468,7 +543,9 @@ fluid = fluid || {};
                 }
             }
         }
-        return [404, fluid.kettle.plainHeader, "Fluid Kettle: Url " + context.env.SCRIPT_NAME + " could not be resolved"];
+        return disposition === fluid.kettle.METHOD_NOT_ALLOWED?
+        [405, fluid.kettle.plainHeader, "Fluid Kettle: Method " + context.method + " was not allowed on resource " + context.env.SCRIPT_NAME]:
+        [404, fluid.kettle.plainHeader, "Fluid Kettle: Url " + context.env.SCRIPT_NAME + " could not be resolved"];
     };
     
     fluid.kettle.appRegistry = {};

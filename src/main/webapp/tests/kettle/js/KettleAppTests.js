@@ -28,13 +28,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
     
     fluid.threadLocal = fluid.singleThreadLocal;
     
-    fluid.identity = function() {
-        if (arguments.length < 2) {
-            return arguments[0];
-        }
-        else return $.makeArray(arguments);
-    }
-
     // End FluidIoC material
     
     fluid.engage.endeaden = fluid.identity;
@@ -120,16 +113,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
             }
         });
 
-    var KettleAppTests = new jqUnit.TestCase("Kettle App JS Tests");
-    
-    KettleAppTests.test("Application tests", function() {
-              // Corrupt global namespace by creating mock
-        fluid.kettle.getDataFromUrl = function(url) {
-            jqUnit.assertEquals("Resolved URL", "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/exhibitions/_view/browse", url);
-            return remoteReturn;
-        };
-      
-        var dataSource = fluid.kettle.makeDataSource({
+    var app;
+
+    function registerDataSpout() {
+        var dataSource = fluid.kettle.dataSource({
             source: {
               type: "fluid.kettle.couchDBSource",
               urlBuilder: {
@@ -150,8 +137,20 @@ https://source.fluidproject.org/svn/LICENSE.txt
             contentType: "JSON",
             source: {name: "fluid.engage.exhibitionDataSource",
                 args: [{db: "{params}.db"}]}
-            });
-        var app = fluid.engage.initEngageApp(config);
+            });    
+    }
+
+    var KettleAppTests = new jqUnit.TestCase("Kettle App JS Tests");
+    
+    KettleAppTests.test("Application tests", function() {
+              // Corrupt global namespace by creating mock
+        fluid.kettle.operateUrl = function(url) {
+            jqUnit.assertEquals("Resolved URL", "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/exhibitions/_view/browse", url);
+            return remoteReturn;
+        };
+      
+        registerDataSpout();
+        app = fluid.engage.initEngageApp(config);
         
         var env = fluid.kettle.testUtils.createMockEnv("GET", "exhibitions/browse.json?db=mccord");
         var response = app(env);
@@ -202,6 +201,16 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertDeepEq("Markup content type", fluid.kettle.headerFromEntry(fluid.kettle.contentTypeRegistry.HTML), response[1]);
         var markup = response[2];
         jqUnit.assertTrue("Rendered data", markup.indexOf("fluid.browse(\".flc-browse\", 35)") !== -1);
+
+    });
+    
+    KettleAppTests.test("Application POST tests", function() {
+        if (!app) {
+            app = fluid.engage.initEngageApp(config);
+        }
+        registerDataSpout();
+        var response3 = fluid.kettle.testUtils.makeRequest(app, "POST", "exhibitions/browse.json?db=mccord");
+        jqUnit.assertEquals("Method not allowed expected", 405, response3[0]);
     });
         
 })(jQuery);

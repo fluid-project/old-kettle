@@ -18,7 +18,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
 
 (function ($) {
 
-    fluid.engage.exhibitionDataSource = fluid.kettle.makeDataSource({
+    fluid.engage.exhibitionDataSource = fluid.kettle.dataSource({
         source: {
             type: "fluid.kettle.couchDBSource",
             urlBuilder: {
