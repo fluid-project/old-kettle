@@ -19,16 +19,29 @@ fluid.engage = fluid.engage || {};
 (function ($) {
     
     fluid.engage.initHomeService = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "home/",
             source: "components/home/html/",
-            sourceMountRelative: "engage"
-        });
+            sourceMountRelative: "engage",
+            baseOptions: {
+                renderOptions: {
+                    cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
+                }
+            }
+        };
+        
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
         
         handler.registerProducer("home", function (context, env) {
-            return {};
+	        var params = context.urlState.params;
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
+            var args = [".flc-engage-homeAndLanguage", strings ? {strings: strings} : {}];
+            var initBlock = {ID: "initBlock", functionname: "fluid.engage.home", 
+                "arguments": args};
+                        
+            return initBlock;
         });
     };
     
