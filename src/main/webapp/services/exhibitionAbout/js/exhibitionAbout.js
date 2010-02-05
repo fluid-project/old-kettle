@@ -62,6 +62,13 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         var url = compileDatabaseURL(params, config);
         var rawData = getAjax(url, errorCallback);
         var exhibitionData = fluid.engage.mapModel(rawData.rows[0], params.db + "_view");
+        
+        // ENGAGE-332: This is terrible! Exhibition View and About share the same Couch view and component,
+        // but with very different markup and presentation. They should be separate components.
+        // To work around this issue temporarily, we have to strip out catalogue information from the model.
+        delete exhibitionData["cataloguePreview"];
+        delete exhibitionData["catalogueSize"];
+        
         return exhibitionData;
     };
     
