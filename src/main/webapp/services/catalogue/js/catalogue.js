@@ -148,7 +148,7 @@ fluid.catalogueService = fluid.catalogueService || {};
                 model: afterMap(data, params)
             };
             if (strings) {
-                strings.options = strings;
+                options.strings = strings;
             }
             
             return {
