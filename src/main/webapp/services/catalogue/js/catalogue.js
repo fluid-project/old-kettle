@@ -71,7 +71,7 @@ fluid.catalogueService = fluid.catalogueService || {};
                     accessNumber: artifact.accessionNumber,
                     lang: params.lang
                 })
-            }
+            };
         });
     };
     
