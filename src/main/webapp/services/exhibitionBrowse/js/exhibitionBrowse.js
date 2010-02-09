@@ -70,6 +70,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     var options = {
                         showHeaderForFirstCategory: false,
                         model: data.data,
+                        showToggle: false,
                         useCabinet: true
                     };
                     if (strings) {
