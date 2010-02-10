@@ -53,6 +53,9 @@ fluid = fluid || {};
         var targetDepth = fluid.kettle.parsePathInfo(rhc.target).pathInfo.length;
         var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
         return function(url) {
+            if (url.charAt(0) === "#") {
+                return null; // avoid confusing the client by providing physical links
+            }
             var canon = fluid.kettle.makeCanon(self + url);
             for (var key in absMounts) {
                 var mount = absMounts[key];

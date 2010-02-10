@@ -17,8 +17,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 (function ($) {
 
-    fluid.setLogging(true);
-    
     var mount = {
         infusion: {
             target: "fluid-infusion/",
@@ -60,16 +58,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             exhibitions: "_design/exhibitions/_view/browse"
         }
     };
-    
-    // This code goes in FluidIoC.js once it is merged in
-    var singleThreadLocal = {};
-    
-    fluid.singleThreadLocal = function() {
-        return singleThreadLocal;
-    };
-    
-    fluid.threadLocal = fluid.singleThreadLocal;
-    
+
     var KettleTests = new jqUnit.TestCase("Kettle JS Tests");
 
     KettleTests.test("URL Tests", function() {
@@ -132,13 +121,13 @@ https://source.fluidproject.org/svn/LICENSE.txt
                jqUnit.assertDeepEq("Resolved Environment", required, resolved);  
            });
         
-        var dataSource = fluid.kettle.makeDataSource(dataSourceConfig);
+        var dataSource = fluid.kettle.dataSource(dataSourceConfig);
         var remoteReturn = {
             data: 34
         };
         
         // Corrupt global namespace by creating mock
-        fluid.kettle.getDataFromUrl = function(url) {
+        fluid.kettle.operateUrl = function(url) {
             jqUnit.assertEquals("Resolved URL", "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/exhibitions/_view/browse", url);
             return remoteReturn;
         };

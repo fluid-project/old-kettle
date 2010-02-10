@@ -10,6 +10,7 @@
    "$infusion/framework/renderer/js/fluidParser.js",
    "js/env2.js",
    "js/contentTypes.js",
+   "$engage/framework/js/kettleCore.js",
    "js/kettleUtils.js",
    "js/kettle.js",
    "js/servletJSGI.js",
