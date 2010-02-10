@@ -138,10 +138,10 @@ fluid = fluid || {};
         var config = rhc.config; // IoC here
         var absPath = fluid.kettle.absoluteHandlerBase(config.mount, rhc) + localPath;
         return fluid.kettle.pathToFileURL(absPath);
-    }
+    };
     
     fluid.kettle.getLocalData = function(renderHandlerConfig, localPath, responseParser) {
-        var data = fluid.kettle.operateUrl(fluid.kettle.resolveLocalUrl(renderHandlerConfig), localPath, responseParser);
+        var data = fluid.kettle.operateUrl(fluid.kettle.resolveLocalUrl(renderHandlerConfig, localPath), responseParser);
         return data.data? data.data : null;
     };
     
