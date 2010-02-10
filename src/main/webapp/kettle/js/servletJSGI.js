@@ -89,11 +89,11 @@ fluid = fluid || {};
             multiprocess: false,
             run_once: false
         };
-              
+        fluid.log("Calling app for " + env.REQUEST_METHOD + " of " + env.SCRIPT_NAME);
         // call the app
         var result = app(env),
             status = result[0], headers = result[1], body = result[2];
-          
+        fluid.log("App concluded");
         // set the status
         response.setStatus(status);
           
@@ -105,7 +105,7 @@ fluid = fluid || {};
                 });
             }
         }
-      
+        
         Packages.org.fluidproject.kettle.ResourceUtil.sendResponse(response, body);
     };
 

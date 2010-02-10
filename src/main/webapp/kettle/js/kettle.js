@@ -131,38 +131,17 @@ fluid = fluid || {};
         return JSON.parse($.trim(text));
     };
     
-    fluid.kettle.operateUrl = function(url, responseParser, writeDispose) {
-        var togo = {};
-        responseParser = responseParser || fluid.identity;
-        function success(responseText, textStatus) {
-            togo.data = responseParser(responseText); 
-            togo.textStatus = textStatus;
-        }
-        function error(xhr, textStatus, errorThrown) {
-            fluid.log("Data fetch error - textStatus: " + textStatus);
-            fluid.log("ErrorThrown: " + errorThrown);
-            togo.textStatus = textStatus;
-            togo.errorThrown = errorThrown;
-            togo.isError = true;
-        }
-        var ajaxOpts = {
-            url: url,
-            success: success,
-            error: error
-        };
-        if (writeDispose) {
-          $.extend(ajaxOpts, writeDispose);
-        } 
-        $.ajax(ajaxOpts);
-        return togo;
-    };
-
-    
-    fluid.kettle.getLocalData = function(renderHandlerConfig, localPath, responseParser) {
+    /** Accepts a relative path with respect to the given renderHandlerConfig's mount,
+     *  and returns an absolute file:// protocol URL from which is can be fetched */
+    fluid.kettle.resolveLocalUrl = function(renderHandlerConfig, localPath) {
         var rhc = renderHandlerConfig;
         var config = rhc.config; // IoC here
         var absPath = fluid.kettle.absoluteHandlerBase(config.mount, rhc) + localPath;
-        var data = fluid.kettle.operateUrl(fluid.kettle.pathToFileURL(absPath), responseParser);
+        return fluid.kettle.pathToFileURL(absPath);
+    }
+    
+    fluid.kettle.getLocalData = function(renderHandlerConfig, localPath, responseParser) {
+        var data = fluid.kettle.operateUrl(fluid.kettle.resolveLocalUrl(renderHandlerConfig), localPath, responseParser);
         return data.data? data.data : null;
     };
     
