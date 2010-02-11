@@ -27,6 +27,30 @@ fluid = fluid || {};
         var rhc = renderHandlerConfig;
         return absMounts[rhc.sourceMountRelative].absSource + rhc.source;
     }
+    /* Expand a "mount-relative" URL of the form $infusion/framework/core/js/Fluid.js
+     * as seen, say, in kettleIncludes.json - this may only be used from an active
+     * Kettle request
+     */
+    fluid.kettle.expandMountRelative = function(relative) {
+        var config = fluid.threadLocal().config;
+        var filePath;
+        if (relative.charAt(0) === "$") {
+            var spos = relative.indexOf("/");
+            if (spos === -1) {
+                spos = relative.length;
+            }
+            var mount = relative.substring(1, spos);
+            var absMount = config.mount[mount];
+            if (!absMount) {
+                fluid.fail("Mount key " + mount + " could not be located within configuration");
+            }
+            filePath = absMount.absSource + relative.substring(spos);
+        }
+        else {
+            filePath = config.baseDir + relative;
+        }
+        return fluid.kettle.pathToFileURL(filePath);
+    };
     
     fluid.kettle.renderHandlerConfig = function (options) {
         var baseOptions = options.baseOptions || {};

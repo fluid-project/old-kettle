@@ -27,8 +27,6 @@ fluid.catalogueService = fluid.catalogueService || {};
     var ajaxCall = function (url, success, error) {
         $.ajax({
             url: url,
-            dataType: "json",
-            asyn: false,
             success: success,
             error: error
         });

@@ -32,7 +32,6 @@ fluid.artifactView = fluid.artifactView || {};
         $.ajax({
             url: modelURL, 
             success: successCallback,
-            dataType: "json",
             async: false
         });
         

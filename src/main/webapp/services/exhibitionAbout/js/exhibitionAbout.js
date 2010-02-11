@@ -38,8 +38,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var ajaxCall = function (url, success, error) {
         $.ajax({
             url: url,
-            dataType: "json",
-            asyn: false,
             success: success,
             error: error
         });
@@ -100,7 +98,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             
         handler.registerProducer("about", function (context, env) {
             var params = context.urlState.params;
-            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
+            var strings = fluid.exhibitionService.getBundle(renderHandlerConfig, params);
             fluid.log("Decoded bundle");
             var options = {
                 model: getData(errorCallback, context.urlState.params, config)

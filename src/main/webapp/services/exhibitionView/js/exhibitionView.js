@@ -38,8 +38,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var ajaxCall = function (url, success, error) {
         $.ajax({
             url: url,
-            dataType: "json",
-            asyn: false,
             success: success,
             error: error
         });
@@ -52,10 +50,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         };        
         ajaxCall(url, success, error);
         return data;
-    };
-    
-    var compileTargetURL = function (URLBase, params) {
-        return URLBase + "?" + $.param(params);
     };
     
     var getData = function (errorCallback, params, config) {
@@ -74,18 +68,11 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         fluid.engage.mountAcceptor(app, "exhibitions", acceptor);
     };
     
-    var buildLink = function (url, lang, db, title) {
-        return compileTargetURL(url, {
-            db: db,
-            title: title,
-            lang: lang
-        });
-    };
     
     var afterMap = function (data, params) {
         data.cataloguePreview = fluid.transform(data.cataloguePreview, function (artifact) {
             return {
-                target: compileTargetURL("../artifacts/view.html", {
+                target: internalURL("../artifacts/view.html", {
                     db: params.db.slice(0, params.db.indexOf('_')),
                     accessNumber: artifact.accessionNumber,
                     lang: params.lang
@@ -97,6 +84,26 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         });
         return data;
     };
+    
+    function makeGuestbookOptions(directModel) {
+        var baseOptions = fluid.engage.guestbook.makeOptions(directModel);
+        var templateUrl = fluid.kettle.expandMountRelative("$engage/components/guestbook/html/guestbook.html");
+        var templateSource = fluid.kettle.fetchTemplateSection(templateUrl);
+        baseOptions.templateSource = templateSource.isError? "" : templateSource.data;
+        return {options: baseOptions};
+    }
+
+    var internalURL = function (URLBase, params, scheme) {
+        return URLBase + "?" + $.param(params);
+    };
+    
+    fluid.exhibitionService.getBundle = function(renderHandlerConfig, params) {
+        return fluid.kettle.getBundle({
+                        config: renderHandlerConfig.config,
+                        source: "components/exhibitionBrowse/html/",
+                        sourceMountRelative: "engage"
+                    }, params);
+    }
     
     fluid.exhibitionService.initExhibitionViewService = function (config, app) {
         var renderHandlerConfig = {
@@ -116,10 +123,12 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         handler.registerProducer("view", function (context, env) {
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
-            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
+            var strings = fluid.exhibitionService.getBundle(renderHandlerConfig, params);
+            var guestbookVP = {type: "exhibition", id: data.title, lang: params.lang};
             
-            data.catalogueLink = buildLink("../catalogue/view.html", params.lang, params.db, data.title);
-            data.aboutLink = buildLink("about.html", params.lang, params.db, data.title);
+            data.catalogueLink = internalURL("../catalogue/view.html", params, "titleCentred");
+            data.aboutLink = internalURL("about.html", params, "titleCentred");
+            data.guestbookLink = internalURL("../guestbook/guestbook.html", guestbookVP, "guestbook");
             
             var options = {
                 model: afterMap(data, params)
@@ -127,6 +136,9 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             if (strings) {
                 options.strings = strings;
             }
+            var guestbookOptions = makeGuestbookOptions($.extend({recent: 1}, guestbookVP));
+            options.guestbook = guestbookOptions;
+                
             var args = [".flc-exhibition-container", options];
             var initBlock = {ID: "initBlock", functionname: "fluid.engage.exhibitionView", 
                 "arguments": args};            

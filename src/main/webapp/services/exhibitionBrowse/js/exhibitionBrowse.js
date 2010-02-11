@@ -14,7 +14,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
 "use strict";
 
 fluid = fluid || {};
-fluid.exhibitionService = fluid.exhibitionService || {};
 
 (function ($) {
 
@@ -62,11 +61,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                     // TODO: We're hand-altering the configuration for getBundle(), since by default it assumes that all language bundles
                     // are located relative to the HTML template. In this case, however, we've got feeds using the same template but
                     // applying a different set of strings to it.
-                    var strings = fluid.kettle.getBundle({
-                        config: renderHandlerConfig.config,
-                        source: "components/exhibitionBrowse/html/",
-                        sourceMountRelative: "engage"
-                    }, params);
+                    var strings = fluid.exhibitionService.getBundle(renderHandlerConfig, params);
                     var options = {
                         showHeaderForFirstCategory: false,
                         model: data.data,

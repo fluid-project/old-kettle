@@ -730,22 +730,38 @@ var window = this;
 						
           Packages.org.fluidproject.kettle.ResourceUtil.copyStream(stream, baos);
 
-					self.responseText = java.nio.charset.Charset.forName(contentEncoding)
+					var javaResponseText = java.nio.charset.Charset.forName(contentEncoding)
 						.decode(java.nio.ByteBuffer.wrap(baos.toByteArray())).toString();
-					
+					self.responseText = String(javaResponseText);
 					var responseXML = null;
+					var failedXML = false;
+					// PATCH: AMB
+					// Commentary - we NEED responseXML to be defined in order to get the "base DOM" up,
+					// but actually never need it subsequently. jQuery will be relatively smart and not
+					// query responseXML so by providing this lazy evaluator, we can save time and also 
+					// (I believe) more closely emulate browser behaviour and remain closer to jQuery's
+					// apparent expectations in $.httpData()
+					
 					self.__defineGetter__("responseXML", function(){
+					  if (!responseXML && !failedXML) {
+					    try {
+                  if ( self.responseText.match(/^\s*</) ) {
+                      responseXML = new DOMDocument(
+                        new java.io.ByteArrayInputStream(
+                          javaResponseText.getBytes("UTF8")));
+                  }
+                  else {
+                    throw "parsererror"
+                  }
+					    }
+					    catch (e) {
+					        responseXML = {documentElement: {tagName: "parsererror"}}
+					        failedXML = true;
+					    }
+					  }
 						return responseXML;
 					});
-					
-					if ( self.responseText.match(/^\s*</) ) {
-						// PATCH: AMB
-							responseXML = new DOMDocument(
-								new java.io.ByteArrayInputStream(
-									(new java.lang.String(
-										self.responseText)).getBytes("UTF8")));
-					}
-					self.responseText = new String(self.responseText);
+
 				}
 				
 				self.onreadystatechange();
