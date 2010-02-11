@@ -99,7 +99,7 @@ fluid.artifactView = fluid.artifactView || {};
             var artifactViewStrings = fluid.kettle.getBundle(renderHandlerConfig, params) || {};
             var moreLessStrings = fluid.kettle.getBundle({
                 config: renderHandlerConfig.config,
-                source: "components/description/html/",
+                source: "components/moreLess/html/",
                 sourceMountRelative: "engage"
             }, params) || {};
             var options = prepareArtifactViewOptions(data, artifactViewStrings, moreLessStrings);
