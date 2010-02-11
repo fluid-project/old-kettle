@@ -68,9 +68,6 @@ fluid.artifactView = fluid.artifactView || {};
             model: data,
             descriptionMoreLess: {
                 options: {
-                    model: {
-                        text: data.artifactDescription
-                    },
                     strings: moreLessStrings
                 }
             },
