@@ -50,11 +50,8 @@ fluid.artifactView = fluid.artifactView || {};
     };
 
     var fetchAndNormalizeModel = function (params, config) {
-        var urlBase = "browse.html?";
         var artifactModel = fluid.engage.mapModel(getData(buildDataURL(params, config)), params.db);
-        return {
-            artifact: artifactModel
-        };
+        return artifactModel;
     };
     
     fluid.artifactView.initDataFeed = function (config, app) {
@@ -66,8 +63,23 @@ fluid.artifactView = fluid.artifactView || {};
         fluid.engage.mountAcceptor(app, "artifacts", acceptor);
     };
     
+    var prepareArtifactViewOptions = function (data, artifactViewStrings, moreLessStrings) {
+        return {
+            model: data,
+            descriptionMoreLess: {
+                options: {
+                    model: {
+                        text: data.artifactDescription
+                    },
+                    strings: moreLessStrings
+                }
+            },
+            strings: artifactViewStrings
+        };
+    };
+    
     fluid.artifactView.initMarkupFeed = function (config, app) {
-        var handler = fluid.engage.mountRenderHandler({
+        var renderHandlerConfig = {
             config: config,
             app: app,
             target: "artifacts/",
@@ -78,13 +90,19 @@ fluid.artifactView = fluid.artifactView || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        });
+        };
+        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
         
         handler.registerProducer("view", function (context, env) {
-            var options = {
-                model: fetchAndNormalizeModel(context.urlState.params, config)
-            };
-
+            var params = context.urlState.params;
+            var data = fetchAndNormalizeModel(context.urlState.params, config);
+            var artifactViewStrings = fluid.kettle.getBundle(renderHandlerConfig, params) || {};
+            var moreLessStrings = fluid.kettle.getBundle({
+                config: renderHandlerConfig.config,
+                source: "components/description/html/",
+                sourceMountRelative: "engage"
+            }, params) || {};
+            var options = prepareArtifactViewOptions(data, artifactViewStrings, moreLessStrings);
             return {
                 ID: "initBlock", 
                 functionname: "fluid.engage.artifactView", 
