@@ -27,9 +27,9 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var compileDatabaseURL = function (params, config) {
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
-            view: config.views.exhibitionByTitle, 
+            view: config.views.exhibitionByID, 
             key: JSON.stringify({
-                title: params.title,
+                id: params.id,
                 lang: params.lang
             })
         });

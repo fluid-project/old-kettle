@@ -27,9 +27,9 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     var compileDatabaseURL = function (params, config) {
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
-            view: config.views.exhibitionByTitle, 
+            view: config.views.exhibitionByID, 
             key: JSON.stringify({
-                title: params.title,
+                id: params.id,
                 lang: params.lang
             })
         });
@@ -118,8 +118,14 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             var strings = fluid.exhibitionService.getBundle(renderHandlerConfig, params);
             var guestbookVP = {type: "exhibition", id: data.title, lang: params.lang};
             
-            data.catalogueLink = internalURL("../catalogue/view.html", params, "titleCentred");
-            data.aboutLink = internalURL("about.html", params, "titleCentred");
+            var paramForURL = {
+                db: params.db,
+                id: data.id,
+                lang: params.lang
+            }; 
+            
+            data.catalogueLink = internalURL("../catalogue/view.html", paramForURL, "titleCentred");
+            data.aboutLink = internalURL("about.html", paramForURL, "titleCentred");
             data.guestbookLink = internalURL("../guestbook/guestbook.html", guestbookVP, "guestbook");
             
             var options = {

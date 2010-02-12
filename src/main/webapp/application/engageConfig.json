@@ -31,9 +31,13 @@ views: {
     all: "all",
     byCollectionCategory: "by_collection_category",
     exhibitionByTitle: "_design/exhibitions/_view/view",
+    exhibitionByID: "_design/exhibitions/_view/viewByID",
     catalogueByTitle: "_design/catalogue/_view/view",
+    catalogueByID: "_design/catalogue/_view/viewByID",
     catalogueArtifacts: "_design/catalogue/_view/browse",
+    catalogueArtifactsByID: "_design/catalogue/_view/browseByID",
     exhibitions: "_design/exhibitions/_view/browse",
+    exhibitionsByID: "_design/exhibitions/_view/browseByID",
     artifactByAccession: "_design/artifacts/_view/view",
     byObjectCode: "_design/artifacts/_view/viewByObjectCode"
 },

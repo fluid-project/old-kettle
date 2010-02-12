@@ -43,14 +43,19 @@ fluid.catalogueService = fluid.catalogueService || {};
     };
     
     var compileDatabaseURL = function (params, config) {
+        // ENGAGE-383: Couch appears to require keys in a specific order, so we have to ensure that
+        // the lang param gets added *after* the section param if it is present.
+        var key = {
+            exhibitID: params.exhibitID
+        };
+        if (params.sectionID) {
+            key.sectionID = params.sectionID;
+        }
+        key.lang = params.lang;
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
-            view: config.views.catalogueArtifacts, 
-            key: JSON.stringify({
-                exhibitTitle: params.exhibition,
-                sectionTitle: params.title,
-                lang: params.lang
-            })
+            view: config.views.catalogueArtifactsByID, 
+            key: JSON.stringify(key)
         });
     };
     

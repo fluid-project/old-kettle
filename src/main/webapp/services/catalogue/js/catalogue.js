@@ -44,9 +44,9 @@ fluid.catalogueService = fluid.catalogueService || {};
     var compileDatabaseURL = function (params, config) {
         return fluid.stringTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db || "", 
-            view: config.views.catalogueByTitle, 
+            view: config.views.catalogueByID, 
             key: JSON.stringify({
-                title: params.title,
+                id: params.id,
                 lang: params.lang
             })
         });
@@ -73,15 +73,15 @@ fluid.catalogueService = fluid.catalogueService || {};
         });
     };
     
-    var compileTheme = function (themes, exhibitionTitle, params, baseURL) {
+    var compileTheme = function (themes, exhibitionID, params, baseURL) {
         baseURL = baseURL || "";
         return fluid.transform(themes, function (theme) {
             return {
                 title: theme.title,
                 allArtifactsViewURL: compileTargetURL(baseURL, {
                     db: params.db,
-                    exhibition: exhibitionTitle,
-                    title: theme.title,
+                    exhibitID: exhibitionID,
+                    sectionID: theme.sectionID,
                     lang: params.lang
                 }),
                 numArtifacts: theme.numArtifacts,
@@ -97,12 +97,11 @@ fluid.catalogueService = fluid.catalogueService || {};
             title: data.title,
             allArtifactsViewURL: compileTargetURL(baseCatalogueURL, {
                 db: params.db,
-                exhibition: data.title,
-                title: "viewAll",
+                exhibitID: data.id,
                 lang: params.lang
             }),
             numArtifacts: data.numArtifacts,
-            themes: compileTheme(data.themes, data.title, params, baseCatalogueURL)
+            themes: compileTheme(data.themes, data.id, params, baseCatalogueURL)
         };
     };
     

@@ -25,7 +25,7 @@ fluid = fluid || {};
                 args: ["{config}.viewURLTemplateWithKey", 
                 {
                     dbName: "${db}_exhibitions",
-                    view: "{config}.views.exhibitions",
+                    view: "{config}.views.exhibitionsByID",
                     key: '"${lang}"'
                 }]
             }
@@ -114,7 +114,7 @@ fluid = fluid || {};
                     title: exhibition.title,
                     url: compileTargetURL(exhibition.isCurrent ? baseExhibitionURL : baseUpcomingExhibitionURL, {
                         db: dbName,
-                        title: exhibition.title,
+                        id: exhibition.id,
                         lang: options.lang
                     }),
                     displayDate: exhibition.displayDate,
