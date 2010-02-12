@@ -75,12 +75,7 @@ fluid.codeEntry = fluid.codeEntry || {};
             var mappedArtifact =  fluid.engage.mapModel(artifact.rows[0],
                     params.db);
             
-            return {
-                artifactFound: true,
-                artifactLink: compileTargetUrl(mappedArtifact, params.db, params.lang)
-            };
-        } else {
-            return {artifactFound: false};
+            return compileTargetUrl(mappedArtifact, params.db, params.lang);
         }
     };
     
@@ -92,7 +87,12 @@ fluid.codeEntry = fluid.codeEntry || {};
      */
     fluid.codeEntry.initCodeEntryDataFeed = function (config, app) {
         var dataHandler = function (env) {
-            return ["200", {"Content-Type": "text/plain"}, JSON.stringify(getArtifactLink(config, env.urlState.params))];
+            var artifactLink = getArtifactLink(config, env.urlState.params);
+            if (artifactLink) {
+                return ["200", {"Content-Type": "text/plain"}, artifactLink];
+            } else {
+                return ["404", {"Content-Type": "text/plain"}, "NOT FOUND"];
+            }
         };
         
         var acceptor = fluid.engage.makeAcceptorForResource("codeEntry", "json", dataHandler);
