@@ -92,7 +92,7 @@ fluid.artifactView = fluid.artifactView || {};
         
         handler.registerProducer("view", function (context, env) {
             var params = context.urlState.params;
-            var data = fetchAndNormalizeModel(context.urlState.params, config);
+            var data = fetchAndNormalizeModel(params, config);
             var artifactViewStrings = fluid.kettle.getBundle(renderHandlerConfig, params) || {};
             var moreLessStrings = fluid.kettle.getBundle({
                 config: renderHandlerConfig.config,
@@ -100,6 +100,9 @@ fluid.artifactView = fluid.artifactView || {};
                 sourceMountRelative: "engage"
             }, params) || {};
             var options = prepareArtifactViewOptions(data, artifactViewStrings, moreLessStrings);
+            // TODO: solution awaiting proper definition of "domain ids" and their domain of uniqueness
+            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions({type: "artifact", id: "accessNumber"});
+            options.comments = guestbookOptions;
             return {
                 ID: "initBlock", 
                 functionname: "fluid.engage.artifactView", 

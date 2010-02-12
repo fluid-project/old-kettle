@@ -85,14 +85,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return data;
     };
     
-    function makeGuestbookOptions(directModel) {
-        var baseOptions = fluid.engage.guestbook.makeOptions(directModel);
-        var templateUrl = fluid.kettle.expandMountRelative("$engage/components/guestbook/html/guestbook.html");
-        var templateSource = fluid.kettle.fetchTemplateSection(templateUrl);
-        baseOptions.templateSource = templateSource.isError? "" : templateSource.data;
-        return {options: baseOptions};
-    }
-
     var internalURL = function (URLBase, params, scheme) {
         return URLBase + "?" + $.param(params);
     };
@@ -136,7 +128,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             if (strings) {
                 options.strings = strings;
             }
-            var guestbookOptions = makeGuestbookOptions($.extend({recent: 1}, guestbookVP));
+            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions({recent: 1}, guestbookVP);
             options.guestbook = guestbookOptions;
                 
             var args = [".flc-exhibition-container", options];

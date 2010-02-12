@@ -89,6 +89,17 @@ fluid = fluid || {};
              };
          }
     };
+    
+    /** Construct a set of options suitable for embedding a guestbook in a foreign
+     * component, given "directModel" */
+     
+    fluid.engage.guestbook.makeRemoteOptions = function(directModel) {
+        var baseOptions = fluid.engage.guestbook.makeOptions(directModel);
+        var templateUrl = fluid.kettle.expandMountRelative("$engage/components/guestbook/html/guestbook.html");
+        var templateSource = fluid.kettle.fetchTemplateSection(templateUrl);
+        baseOptions.templateSource = templateSource.isError? "" : templateSource.data;
+        return {options: baseOptions};
+    };
         
     fluid.kettle.markupSpout({
         renderHandlerConfig: fluid.engage.guestbook.renderHandlerConfig,
