@@ -22,10 +22,10 @@ fluid.codeEntry = fluid.codeEntry || {};
      * @param {Object} artifact, the artifact retrieved from CouchDB
      * @param dbName, the name of the database the artifact comes from
      */
-    var compileTargetUrl = function (artifact, dbName) {
+    var compileTargetUrl = function (artifact, dbName, lang) {
         var baseArtifactUrl = "../artifacts/view.html";
         
-        return baseArtifactUrl + "?" + $.param({q: artifact.linkTarget, db: dbName});        
+        return baseArtifactUrl + "?" + $.param({accessNumber: artifact.artifactAccessionNumber, db: dbName, lang: lang});        
     };
     
     /**
@@ -37,19 +37,29 @@ fluid.codeEntry = fluid.codeEntry || {};
      * @param {Object} params, URL parameters passed to this handler.
      */
     var getArtifactLink = function (config, params) {
-        var url = fluid.stringTemplate(config.codeEntryQueryURLTemplate, {
-            dbName: params.db,
-            view: config.views.byObjectCode,
-            query: params.code
-        });
-        
         var artifact = {};
         
+        var url = fluid.stringTemplate(config.viewURLTemplateWithKey, {
+            dbName: params.db,
+            view: config.views.byObjectCode,
+            key: JSON.stringify({
+                objectCode: params.code,
+                lang: params.lang
+            })
+        });
+        
         var success = function (data) {
+            // Workaround for '\n' character inserted at the end of the
+            // returned data
+            if (data.charAt(data.length - 1) === "\n") {
+                data = data.substring(0, data.length - 1);
+            }
+        
             artifact = JSON.parse(data);
         };
         
-        var error = function (XMLHttpRequest, textStatus, errorThrown) {
+        var error = function (XHR, textStatus, errorThrown) {
+            fluid.log("XHR: " + XHR);
             fluid.log("Status: " + textStatus);
             fluid.log("Error: " + errorThrown);
         };
@@ -61,13 +71,13 @@ fluid.codeEntry = fluid.codeEntry || {};
             error: error
         });
         
-        if (artifact.total_rows > 0) {
-            var mappedArtifact =  fluid.engage.mapModel(artifact.rows[0].doc,
+        if (artifact.rows.length > 0) {
+            var mappedArtifact =  fluid.engage.mapModel(artifact.rows[0],
                     params.db);
             
             return {
                 artifactFound: true,
-                artifactLink: compileTargetUrl(mappedArtifact, params.db)
+                artifactLink: compileTargetUrl(mappedArtifact, params.db, params.lang)
             };
         } else {
             return {artifactFound: false};
@@ -82,12 +92,10 @@ fluid.codeEntry = fluid.codeEntry || {};
      */
     fluid.codeEntry.initCodeEntryDataFeed = function (config, app) {
         var dataHandler = function (env) {
-            return ["200", {"Content-Type": "text/plain"},
-                    JSON.stringify(getArtifactLink(config, env.urlState.params))];
+            return ["200", {"Content-Type": "text/plain"}, JSON.stringify(getArtifactLink(config, env.urlState.params))];
         };
         
-        var acceptor = fluid.engage.makeAcceptorForResource("codeEntryService", "js",
-            dataHandler);
+        var acceptor = fluid.engage.makeAcceptorForResource("codeEntry", "json", dataHandler);
         fluid.engage.mountAcceptor(app, "artifacts", acceptor);
     };
     
@@ -114,19 +122,27 @@ fluid.codeEntry = fluid.codeEntry || {};
         var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
         
         handler.registerProducer("codeEntry", function (context, env) {
-            var strings =
-            	fluid.kettle.getBundle(renderHandlerConfig, context.urlState.params);
+            var params = context.urlState.params;
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
+            var requestUri = env.REQUEST_URI.replace("html", "json");
                 
-            var options = {};
+            var options = {
+                codeCheckUrlTemplate: requestUri + "?" + $.param({
+                    db: params.db,
+                    lang: params.lang,
+                    code: "%objectCode"
+                })
+            };
+            
             if (strings) {
-            	options.strings = strings;
-            }        	 
-        	
+                options.strings = strings;
+            }
+            
             var initBlock = {
-            		ID: "initBlock",
-            		functionname: "fluid.engage.codeEntry",
-            		arguments: [".flc-codeEntry", options]
-          		};	
+                ID: "initBlock",
+                functionname: "fluid.engage.codeEntry",
+                "arguments": [".flc-codeEntry", options]
+            };
             
             return initBlock;
         });            
