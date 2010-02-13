@@ -62,6 +62,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     var KettleTests = new jqUnit.TestCase("Kettle JS Tests");
 
     KettleTests.test("URL Tests", function() {
+      // Windows-style URL tests
         var baseUrl = "E:\\workspace\\fluid-engage-kettle\\src\\main\\webapp/";
         var rewBaseUrl = fluid.kettle.slashiseUrl(baseUrl);
         jqUnit.assertEquals("Deslash", "E:/workspace/fluid-engage-kettle/src/main/webapp/", rewBaseUrl);
@@ -78,7 +79,12 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertEquals("Rewrite Short Mount", "../fluid-engage-core/components/home/css/Home.css", rewriter("../css/Home.css"));
         jqUnit.assertNull("Rewrite non-Mount", rewriter("../../../../../fluid-infusion"));
         
-        
+     // Unix-style URL tests   
+        var baseUrl2 = "/private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/";
+        var rewBaseUrl2 = fluid.kettle.slashiseUrl(baseUrl2);
+        jqUnit.assertEquals("Deslash idempotency", baseUrl2, rewBaseUrl2);
+        var infusionbase2 = fluid.kettle.makeCanon(fluid.kettle.slashiseUrl(baseUrl2 + "fluid-infusion/"));
+        jqUnit.assertEquals("Retain slash front", "/private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/fluid-infusion/", infusionbase2);
       
     });
  
