@@ -39,13 +39,13 @@ fluid.codeEntry = fluid.codeEntry || {};
     var getArtifactLink = function (config, params) {
         var artifact = {};
         
-        var url = fluid.stringTemplate(config.viewURLTemplateWithKey, {
+        var url = fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
             dbName: params.db,
             view: config.views.byObjectCode,
-            key: JSON.stringify({
+            key: {
                 objectCode: params.code,
                 lang: params.lang
-            })
+            }
         });
         
         var success = function (data) {

@@ -29,15 +29,15 @@ views: {
     all: "all",
     byCollectionCategory: "by_collection_category",
     exhibitionByTitle: "_design/exhibitions/_view/view",
-    exhibitionByID: "_design/exhibitions/_view/viewByID",
-    catalogueByTitle: "_design/catalogue/_view/view",
-    catalogueByID: "_design/catalogue/_view/viewByID",
-    catalogueArtifacts: "_design/catalogue/_view/browse",
-    catalogueArtifactsByID: "_design/catalogue/_view/browseByID",
     exhibitions: "_design/exhibitions/_view/browse",
-    exhibitionsByID: "_design/exhibitions/_view/browseByID",
-    artifactByAccession: {view: "_design/artifacts/_view/view", keyList: ["accessNumber", "lang"]},
-    byObjectCode: "_design/artifacts/_view/viewByObjectCode"
+    catalogueByTitle: "_design/catalogue/_view/view",
+    catalogueArtifacts: "_design/catalogue/_view/browse",
+    exhibitionByID:          {view: "_design/exhibitions/_view/viewByID",        keyList: ["id", "lang"]},
+    catalogueByID:           {view: "_design/catalogue/_view/viewByID",          keyList: ["id", "lang"]},
+    catalogueArtifactsByID:  {view: "_design/catalogue/_view/browseByID",        keyList: ["exhibitID", "sectionID", "lang"]},
+    exhibitionsByID:         {view: "_design/exhibitions/_view/browseByID",      keyList: ["lang"]},
+    artifactByAccession:     {view: "_design/artifacts/_view/view",              keyList: ["accessNumber", "lang"]},
+    byObjectCode:            {view: "_design/artifacts/_view/viewByObjectCode",  keyList: ["objectCode", "lang"]}
 },
 mount: {
     infusion: {

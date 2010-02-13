@@ -21,12 +21,12 @@ fluid = fluid || {};
         source: {
             type: "fluid.kettle.couchDBSource",
             urlBuilder: {
-                funcName: "fluid.stringTemplate",
+                funcName: "fluid.kettle.couchDBViewTemplate",
                 args: ["{config}.viewURLTemplateWithKey", 
                 {
                     dbName: "${db}_exhibitions",
                     view: "{config}.views.exhibitionsByID",
-                    key: '"${lang}"'
+                    key: "${lang}"
                 }]
             }
         },

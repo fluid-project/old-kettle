@@ -42,13 +42,13 @@ fluid.catalogueService = fluid.catalogueService || {};
     };
     
     var compileDatabaseURL = function (params, config) {
-        return fluid.stringTemplate(config.viewURLTemplateWithKey, {
-            dbName: params.db || "", 
+        return fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
+            dbName: params.db, 
             view: config.views.catalogueByID, 
-            key: JSON.stringify({
+            key: {
                 id: params.id,
                 lang: params.lang
-            })
+            }
         });
     };
     

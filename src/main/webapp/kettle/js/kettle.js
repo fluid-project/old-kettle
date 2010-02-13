@@ -265,7 +265,10 @@ fluid = fluid || {};
             var els = [];
             for (var i = 0; i < keyList.length; ++ i) {
                 var keyName = keyList[i]; // TODO: perhaps one day we may want to support nested keys!
-                els.push("\"" + keyName +"\":" + JSON.stringify(key[keyName]));
+                var keyValue = key[keyName];
+                if (keyValue !== undefined) {
+                    els.push("\"" + keyName +"\":" + JSON.stringify(key[keyName]));
+                }
             }
             return "{" + els.join(",") + "}";
         }
