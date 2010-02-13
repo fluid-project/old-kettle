@@ -256,6 +256,42 @@ fluid = fluid || {};
         return that;
     };
     
+        
+    fluid.kettle.encodeCouchDBKey = function(key, keyList) {
+        if (!keyList || fluid.isPrimitive(key) || fluid.isArrayable(key)) {
+            return JSON.stringify(key);
+        }
+        else {
+            var els = [];
+            for (var i = 0; i < keyList.length; ++ i) {
+                var keyName = keyList[i]; // TODO: perhaps one day we may want to support nested keys!
+                els.push("\"" + keyName +"\":" + JSON.stringify(key[keyName]));
+            }
+            return "{" + els.join(",") + "}";
+        }
+    }
+    
+    /** Render a URL suitable for querying a CouchDB view requiring a key, according a
+     * to a particular serialization order (CouchDB views are sequence-sensitive and
+     * cannot be trusted to JSON.stringify http://issues.fluidproject.org/browse/ENGAGE-387)
+     * @param template A template in the format expected by fluid.stringTemplate, or a structure
+     *  {template: "My %template", keyList: ["key1", "key2"]} 
+     * @param args A map of arguments - the one named "key" will be interpreted and serialised
+     * specially
+     */
+    fluid.kettle.couchDBViewTemplate = function(template, args) {
+        args = fluid.copy(args);
+        if (args.key !== undefined) {
+            var keyList;
+            if (typeof(args.view) !== "string") {
+                keyList = args.view.keyList;
+                args.view = args.view.view;
+            }
+            args.key = fluid.kettle.encodeCouchDBKey(args.key, keyList);
+        }
+        return fluid.stringTemplate(template, args);
+    };
+    
     // to integrate with FluidIoC
     fluid.parseContextReference = function(reference, index, delimiter) {
         var endcpos = reference.indexOf("}", index + 1);

@@ -53,6 +53,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
             all: "all",
             byCollectionCategory: "by_collection_category",
             exhibitionByTitle: "_design/exhibitions/_view/view",
+            exhibitionsByID: "_design/exhibitions/_view/browseByID",
+            artifactByAccession: {view: "_design/artifacts/_view/view", keyList: ["accessNumber", "lang"]},
             catalogueByTitle: "_design/catalogue/_view/viewWithArtifacts",
             catalogueArtifacts: "_design/catalogueArtefacts/_view/view",
             exhibitions: "_design/exhibitions/_view/browse"
@@ -86,6 +88,29 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var infusionbase2 = fluid.kettle.makeCanon(fluid.kettle.slashiseUrl(baseUrl2 + "fluid-infusion/"));
         jqUnit.assertEquals("Retain slash front", "/private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/fluid-infusion/", infusionbase2);
       
+    });
+    
+    KettleTests.test("Couch URL Tests", function() {
+        var encoded = fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
+                    dbName: "mccord_exhibitions",
+                    view: config.views.exhibitionsByID,
+                    key: "en"
+                });
+        jqUnit.assertEquals("Stringify quoting", 
+           "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/exhibitions/_view/browseByID?key=\"en\"", encoded);
+        
+        var encoded2 = fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
+                    dbName: "mccord_exhibitions",
+                    view: config.views.artifactByAccession,
+                    key: {lang: "en",
+                          accessNumber: "II-43721",
+                          }
+                });
+                
+        jqUnit.assertEquals("Composite ordered encoding", 
+           "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/artifacts/_view/view?key={\"accessNumber\":\"II-43721\",\"lang\":\"en\"}", encoded2);
+    
+        
     });
  
     var dataSourceConfig = {

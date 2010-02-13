@@ -38,7 +38,7 @@ views: {
     catalogueArtifactsByID: "_design/catalogue/_view/browseByID",
     exhibitions: "_design/exhibitions/_view/browse",
     exhibitionsByID: "_design/exhibitions/_view/browseByID",
-    artifactByAccession: "_design/artifacts/_view/view",
+    artifactByAccession: {view: "_design/artifacts/_view/view", keyList: ["accessNumber", "lang"]},
     byObjectCode: "_design/artifacts/_view/viewByObjectCode"
 },
 mount: {

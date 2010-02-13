@@ -39,13 +39,13 @@ fluid.artifactView = fluid.artifactView || {};
     };
     
     var buildDataURL = function (params, config) {
-        return fluid.stringTemplate(config.viewURLTemplateWithKey, {
-            dbName: params.db, 
-            view: config.views.artifactByAccession, 
-            key: JSON.stringify({
+        return fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
+            dbName: params.db,
+            view: config.views.artifactByAccession,
+            key: {
                 accessNumber: params.accessNumber,
                 lang: params.lang
-            })
+            }
         }); 
     };
 
