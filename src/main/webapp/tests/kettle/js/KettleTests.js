@@ -87,6 +87,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertEquals("Deslash idempotency", baseUrl2, rewBaseUrl2);
         var infusionbase2 = fluid.kettle.makeCanon(fluid.kettle.slashiseUrl(baseUrl2 + "fluid-infusion/"));
         jqUnit.assertEquals("Retain slash front", "/private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/fluid-infusion/", infusionbase2);
+        var file = fluid.kettle.pathToFileURL(infusionbase2);
+        jqUnit.assertEquals("File triple slash", "file:///private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/fluid-infusion/", file);
       
     });
     
