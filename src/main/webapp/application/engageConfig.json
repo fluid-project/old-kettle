@@ -39,7 +39,8 @@ views: {
     catalogueArtifactsByID:  {view: "_design/catalogue/_view/browseByID",        keyList: ["exhibitID", "sectionID", "lang"]},
     exhibitionsByID:         {view: "_design/exhibitions/_view/browseByID",      keyList: ["lang"]},
     artifactByAccession:     {view: "_design/artifacts/_view/view",              keyList: ["accessNumber", "lang"]},
-    byObjectCode:            {view: "_design/artifacts/_view/viewByObjectCode",  keyList: ["objectCode", "lang"]}
+    byObjectCode:            {view: "_design/artifacts/_view/viewByObjectCode",  keyList: ["objectCode", "lang"]},
+    comments:                {view: "_design/comments/_view/comments",           keyList: ["type", "id", "date"]}
 },
 mount: {
     infusion: {
