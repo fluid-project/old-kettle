@@ -45,9 +45,25 @@ fluid = fluid || {};
         };
     };
     
+    
     fluid.engage.guestbook.dataSource = fluid.kettle.dataSource({
         source: {
-            type: "fluid.engage.guestbook.demoDataSource"
+            type: "fluid.kettle.couchDBSource",
+            urlBuilder: {
+                funcName: "fluid.kettle.couchDBViewBuilder",
+                args:  {
+                  baseUrl: "{config}.couchDBBaseUrl",
+                  dbName: "${dbName}_comments",
+                  design: "comments",
+                  view: "comments",
+                  keyList: ["type", "id", "date"],
+                  startkey: {type: "${type}",
+                             id: "${id}"},
+                  endkeyExtend: {date: "9999"},
+                  limit: "${recent}",
+                  descending: true
+                  }
+            }
         },
         outputMapper: "fluid.engage.guestbook.mapper"
     });
@@ -106,7 +122,7 @@ fluid = fluid || {};
         producers: {
             "guestbook": function (context) {
                 var params = context.urlState.params;
-                var options = fluid.engage.guestbook.makeOptions({recent: params.recent, type: params.type, id: params.id});
+                var options = fluid.engage.guestbook.makeOptions({dbName: params.db, recent: params.recent, type: params.type, id: params.id});
                 if (!options.isError) {
                     return {tree: {
                         ID: "initBlock", 
