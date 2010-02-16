@@ -101,7 +101,7 @@ fluid.artifactView = fluid.artifactView || {};
             }, params) || {};
             var options = prepareArtifactViewOptions(data, artifactViewStrings, moreLessStrings);
             // TODO: solution awaiting proper definition of "domain ids" and their domain of uniqueness
-            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions({type: "artifact", id: "accessNumber"});
+            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions({dbName: params.db, type: "artifact", id: params.accessNumber});
             options.comments = guestbookOptions;
             return {
                 ID: "initBlock", 
