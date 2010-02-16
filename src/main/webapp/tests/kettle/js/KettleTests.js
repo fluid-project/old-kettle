@@ -45,6 +45,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     }
     
     var config = {
+        couchDBBaseUrl: "http://142.150.154.59:5984",
         queryURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
         viewURLTemplate: "http://titan.atrc.utoronto.ca:5984/%dbName/%view",
         viewURLTemplateWithKey: "http://titan.atrc.utoronto.ca:5984/%dbName/%view?key=%key",
@@ -112,6 +113,23 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertEquals("Composite ordered encoding", 
            "http://titan.atrc.utoronto.ca:5984/mccord_exhibitions/_design/artifacts/_view/view?key={\"accessNumber\":\"II-43721\",\"lang\":\"en\"}", encoded2);
     
+          
+        var options = {
+            baseUrl: config.couchDBBaseUrl,
+            dbName: "mccord_comments",
+            design: "comments",
+            view: "comments",
+            keyList: ["type", "id", "date"],
+            startkey: {type: "exhibition",
+                       id: "1"},
+            endkeyExtend: {date: "9999"},
+            limit: "2",
+            descending: true
+        };
+        
+        var encoded = fluid.kettle.couchDBViewBuilder(options);
+        jqUnit.assertEquals("Couch builder", "http://142.150.154.59:5984/mccord_comments/_design/comments/_view/comments?startkey={\"type\":\"exhibition\",\"id\":\"1\",\"date\":\"9999\"}&endkey={\"type\":\"exhibition\",\"id\":\"1\"}&limit=2&descending=true",
+            encoded);
         
     });
  
