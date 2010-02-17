@@ -31,7 +31,7 @@ fluid = fluid || {};
         function resolveUrl(resOptions, directModel) {
             var expanded = fluid.kettle.resolveEnvironment(resOptions, directModel);
             if (expanded.funcName) { // what other forms of delivery might there be?
-                return fluid.invokeGlobalFunction(expanded.funcName, expanded.args);
+                return fluid.invokeGlobalFunction(expanded.funcName, $.makeArray(expanded.args));
             }
         }
         var that = fluid.initLittleComponent("fluid.kettle.couchDBSource", options);
@@ -75,9 +75,7 @@ fluid = fluid || {};
             return "{" + els.join(",") + "}";
         }
     }
-    
-    
-    fluid.kettle.couchDBViewBuilder = function(options) {
+
         function expect(members, target) {
             fluid.transform($.makeArray(members), function(key) {
                 if (!target[key]) {
@@ -85,9 +83,20 @@ fluid = fluid || {};
                 }
             });
         }
+    fluid.kettle.couchDBDocUrlBuilder = function(options) {
+        expect(["baseUrl", "dbName"], options);
+        var stub = fluid.stringTemplate("%baseUrl/%dbName/", options);
+        if (options.docId) {
+            stub += options.docId;
+        } 
+        return stub;
+    }
+    
+    fluid.kettle.couchDBViewBuilder = function(options) {
+
         expect(["baseUrl", "dbName", "design", "view"], options);
 
-        var stub = fluid.stringTemplate("%baseUrl/%dbName/design/%design/_view/%view", options);
+        var stub = fluid.stringTemplate("%baseUrl/%dbName/_design/%design/_view/%view", options);
         var params = {};
         if (options.startkeyExtend) {
             expect("endkey", options);

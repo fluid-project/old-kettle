@@ -243,9 +243,10 @@ fluid = fluid || {};
             var parsed = fluid.parseContextReference(string, 0);
             return fetchContextReference(parsed, env);        
         }
-        while (true) {
+        while (typeof(string) === "string") {
             var i1 = string.indexOf("${");
             var i2 = string.indexOf("}", i1 + 2);
+            var all =  (i1 === 0 && i2 === string.length - 1); 
             if (i1 !== -1 && i2 !== -1) {
                 var subs, path;
                 if (string.charAt(i1 + 2) === "{") {
@@ -258,10 +259,11 @@ fluid = fluid || {};
                     path = string.substring(i1 + 2, i2);
                     subs = fluid.model.getBeanValue(directModel, path);
                 }
-                if (subs === undefined) {
+                // TODO: test case for all undefined substitution
+                if (subs === undefined && !all) {
                     fluid.fail("Unable to resolve substitution value at path " + path + " within model for expression " + string);
                     }
-                string = string.substring(0, i1) + subs + string.substring(i2 + 1);
+                string = all? subs : string.substring(0, i1) + subs + string.substring(i2 + 1);
             }
             else {
                 break;

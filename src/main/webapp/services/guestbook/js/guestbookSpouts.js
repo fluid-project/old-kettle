@@ -19,7 +19,8 @@ fluid = fluid || {};
   
     fluid.engage.guestbook = fluid.engage.guestbook || {};
   
-    fluid.engage.guestbook.mapper = function(model, directModel) {
+    fluid.engage.guestbook.demoMapper = function(model, directModel) {
+        model.comments = model.comments || [];
         var comments = model.comments;
         var recent = directModel.recent;
         if (!recent || recent > comments.length) {
@@ -30,7 +31,7 @@ fluid = fluid || {};
         }
         return model;
     };
-  
+    
     fluid.engage.guestbook.demoDataSource = function() {
         return {
             get: function(directModel) {
@@ -45,7 +46,14 @@ fluid = fluid || {};
         };
     };
     
-    /*
+    fluid.engage.guestbook.mapper = function(model) {
+        var togo = {};
+        togo.comments = fluid.transform(model.rows, function(row) {
+            return row.value;
+        });
+        return togo;
+    };
+    
     fluid.engage.guestbook.dataSource = fluid.kettle.dataSource({
         source: {
             type: "fluid.kettle.couchDBSource",
@@ -57,9 +65,9 @@ fluid = fluid || {};
                   design: "comments",
                   view: "comments",
                   keyList: ["type", "id", "date"],
-                  startkey: {type: "${type}",
+                  startkeyExtend: {date: "9999"},
+                  endkey: {type: "${type}",
                              id: "${id}"},
-                  endkeyExtend: {date: "9999"},
                   limit: "${recent}",
                   descending: true
                   }
@@ -67,21 +75,44 @@ fluid = fluid || {};
         },
         outputMapper: "fluid.engage.guestbook.mapper"
     });
-    */
-    
+   
+    fluid.engage.guestbook.docDataSource = fluid.kettle.dataSource({
+        source: {
+            type: "fluid.kettle.couchDBSource",
+            writeable: true,
+            urlBuilder: {
+                funcName: "fluid.kettle.couchDBDocUrlBuilder",
+                    args: {
+                        baseUrl: "{config}.couchDBBaseUrl",
+                        dbName: "${dbName}_comments",
+                        docId: "${docId}"
+                    }
+            }
+        }
+    });
+   
+    /*
     fluid.engage.guestbook.dataSource = fluid.kettle.dataSource({
         source: {
             type: "fluid.engage.guestbook.demoDataSource"
         },
-        outputMapper: "fluid.engage.guestbook.mapper"
+        outputMapper: "fluid.engage.guestbook.demoMapper"
     });
-    
+    */
         
     fluid.kettle.dataSpout({
         url: "guestbook/comments",
         contentType: "JSON",
         source: {name: "fluid.engage.guestbook.dataSource",
             args: [{recent: "{params}.recent"}]
+        }
+    });
+    
+    fluid.kettle.dataSpout({
+        url: "guestbook/comment",
+        contentType: "JSON",
+        source: {name: "fluid.engage.guestbook.docDataSource",
+            args: [{docId: "{params}.docId", dbName: "{params}.db"}]
         }
     });
     
@@ -95,6 +126,7 @@ fluid = fluid || {};
                 }
             }
         };
+        
     fluid.engage.guestbook.makeOptions = function(directModel) {
          var data = fluid.engage.guestbook.dataSource.get(directModel);
          var strings = fluid.kettle.getBundle(fluid.engage.guestbook.renderHandlerConfig, directModel);
@@ -105,6 +137,12 @@ fluid = fluid || {};
              if (strings) {
                 options.strings = strings;
              }
+             var params = {
+                 type: directModel.type,
+                 id: directModel.id,
+                 db: directModel.dbName
+             };
+             options.addNoteTarget = "/guestbook/comment.html?" + $.param(params);
              return options;
          }
          else {
@@ -114,10 +152,20 @@ fluid = fluid || {};
          }
     };
     
+    // lunacy whilst we continue to store each category of thing in its own database
+    function targetDbToCommentsDb(dbName) {
+        var _pos = dbName.indexOf("_");
+        if (_pos === -1) {
+            _pos = dbName.length;
+        }
+        return dbName.substring(0, _pos);
+    }
+    
     /** Construct a set of options suitable for embedding a guestbook in a foreign
      * component, given "directModel" */
      
     fluid.engage.guestbook.makeRemoteOptions = function(directModel) {
+        directModel.dbName = targetDbToCommentsDb(directModel.dbName);
         var baseOptions = fluid.engage.guestbook.makeOptions(directModel);
         var templateUrl = fluid.kettle.expandMountRelative("$engage/components/guestbook/html/guestbook.html");
         var templateSource = fluid.kettle.fetchTemplateSection(templateUrl);
@@ -139,6 +187,24 @@ fluid = fluid || {};
                     }};
                 }
                 return options;
+            },
+            "comment": function(context) {
+                var params = context.urlState.params;
+                var options = {};
+                options.postURL = "/guestbook/comment.json?db="+params.db; // TODO: blatantly disgraceful hard-coded URL
+                //options.userid = "anonymous";
+                options.docRoot = {
+                    type: "fluid.guestbook.comment",
+                    authorName: "Anonymous CATT",
+                    targetType: params.type,
+                    targetId: params.id,
+                 };
+                return {tree: {
+                    ID: "initBlock",
+                    functionname: "fluid.engage.guestbookComment",
+                    "arguments": [".flc-guestbook-container", options]
+                }};
+                
             }
         }
     });

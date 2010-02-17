@@ -93,6 +93,11 @@ https://source.fluidproject.org/svn/LICENSE.txt
       
     });
     
+    KettleTests.test("Param tests", function() {
+        var decode = fluid.kettle.decodeURIComponent("Jewish+Painters+of+Montreal%3A+Witnesses+of+Their+Time%2C+1930-1948");
+        jqUnit.assertEquals("Deplussing, decoding", "Jewish Painters of Montreal: Witnesses of Their Time, 1930-1948", decode);
+    });
+    
     KettleTests.test("Couch URL Tests", function() {
         var encoded = fluid.kettle.couchDBViewTemplate(config.viewURLTemplateWithKey, {
                     dbName: "mccord_exhibitions",
