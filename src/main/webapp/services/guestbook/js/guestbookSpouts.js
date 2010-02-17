@@ -45,7 +45,7 @@ fluid = fluid || {};
         };
     };
     
-    
+    /*
     fluid.engage.guestbook.dataSource = fluid.kettle.dataSource({
         source: {
             type: "fluid.kettle.couchDBSource",
@@ -64,6 +64,14 @@ fluid = fluid || {};
                   descending: true
                   }
             }
+        },
+        outputMapper: "fluid.engage.guestbook.mapper"
+    });
+    */
+    
+    fluid.engage.guestbook.dataSource = fluid.kettle.dataSource({
+        source: {
+            type: "fluid.engage.guestbook.demoDataSource"
         },
         outputMapper: "fluid.engage.guestbook.mapper"
     });
