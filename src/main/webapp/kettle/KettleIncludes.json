@@ -29,5 +29,9 @@
    "../services/guestbook/js/guestbookSpouts.js",   
    "$engage/framework/js/Engage.js",
    "../services/kettleDemo/js/kettleCherryDemo.js",
-   "../services/kettleDemo/js/kettleJSGIDemo.js"
+   "../services/kettleDemo/js/kettleJSGIDemo.js",
+   "../services/myCollection/js/myCollectionService.js",
+   "../services/myCollection/js/collectOperations.js",
+   "../services/myCollection/js/collectionCommon.js",
+   "../services/user/js/userService.js"
   ]

@@ -7,6 +7,7 @@ loaderFunction: "fluid.engage.initEngageApp",
 queryURLTemplate: "http://142.150.154.59:5984/%dbName/_fti/lucene/%view?include_docs=true&q=%query",
 viewURLTemplate: "http://142.150.154.59:5984/%dbName/%view",
 viewURLTemplateWithKey: "http://142.150.154.59:5984/%dbName/%view?key=%key",
+querySingleDocumentURLTemplate: "http://142.150.154.59:5984/%dbName/%id",
 initServices: [
     "fluid.engage.initHomeService",
     "fluid.artifactView.initMarkupFeed", 
@@ -23,7 +24,9 @@ initServices: [
     "fluid.catalogueService.initBrowseCatalogueService",
     "fluid.catalogueService.initBrowseCatalogueDataFeed",
     "fluid.codeEntry.initCodeEntryDataFeed",
-    "fluid.codeEntry.initCodeEntryService" 
+    "fluid.codeEntry.initCodeEntryService",
+    "fluid.myCollection.initMyCollectionService",
+    "fluid.collectOperations.initAcceptor"
 ],
 views: {
     all: "all",
@@ -32,6 +35,7 @@ views: {
     exhibitions: "_design/exhibitions/_view/browse",
     catalogueByTitle: "_design/catalogue/_view/view",
     catalogueArtifacts: "_design/catalogue/_view/browse",
+    artifactsByID: "by_id",
     exhibitionByID:          {view: "_design/exhibitions/_view/viewByID",        keyList: ["id", "lang"]},
     catalogueByID:           {view: "_design/catalogue/_view/viewByID",          keyList: ["id", "lang"]},
     catalogueArtifactsByID:  {view: "_design/catalogue/_view/browseByID",        keyList: ["exhibitID", "sectionID", "lang"]},
