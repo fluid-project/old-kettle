@@ -127,6 +127,10 @@ fluid = fluid || {};
             }
         };
         
+    function makeCommentPostURL(dbName) {
+        return "../guestbook/comment.json?db="+dbName; // TODO: blatantly disgraceful hard-coded URL
+    }
+        
     fluid.engage.guestbook.makeOptions = function(directModel) {
          var data = fluid.engage.guestbook.dataSource.get(directModel);
          var strings = fluid.kettle.getBundle(fluid.engage.guestbook.renderHandlerConfig, directModel);
@@ -143,6 +147,7 @@ fluid = fluid || {};
                  db: directModel.dbName
              };
              options.addNoteTarget = "../guestbook/comment.html?" + $.param(params);
+             options.postURL = makeCommentPostURL(directModel.dbName);
              return options;
          }
          else {
@@ -191,7 +196,7 @@ fluid = fluid || {};
             "comment": function(context) {
                 var params = context.urlState.params;
                 var options = {};
-                options.postURL = "comment.json?db="+params.db; // TODO: blatantly disgraceful hard-coded URL
+                options.postURL = makeCommentPostURL(params.db);
                 //options.userid = "anonymous";
                 options.docRoot = {
                     type: "fluid.guestbook.comment",
