@@ -25,7 +25,7 @@ fluid.engage = fluid.engage || {};
     
     fluid.engage.userDataSource = fluid.kettle.dataSource({
         source: {
-            type: "fluid.kettle.couchDBSource",
+            type: "fluid.kettle.URLDataSource",
             writeable: true,
             urlBuilder: {
                 funcName: "fluid.engage.idURLBuilder",

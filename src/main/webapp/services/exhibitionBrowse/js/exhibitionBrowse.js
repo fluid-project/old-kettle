@@ -19,7 +19,7 @@ fluid = fluid || {};
 
     fluid.engage.exhibitionDataSource = fluid.kettle.dataSource({
         source: {
-            type: "fluid.kettle.couchDBSource",
+            type: "fluid.kettle.URLDataSource",
             urlBuilder: {
                 funcName: "fluid.kettle.couchDBViewTemplate",
                 args: ["{config}.viewURLTemplateWithKey", 

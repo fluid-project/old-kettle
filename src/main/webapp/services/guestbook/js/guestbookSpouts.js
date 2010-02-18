@@ -56,7 +56,7 @@ fluid = fluid || {};
     
     fluid.engage.guestbook.dataSource = fluid.kettle.dataSource({
         source: {
-            type: "fluid.kettle.couchDBSource",
+            type: "fluid.kettle.URLDataSource",
             urlBuilder: {
                 funcName: "fluid.kettle.couchDBViewBuilder",
                 args:  {
@@ -78,7 +78,7 @@ fluid = fluid || {};
    
     fluid.engage.guestbook.docDataSource = fluid.kettle.dataSource({
         source: {
-            type: "fluid.kettle.couchDBSource",
+            type: "fluid.kettle.URLDataSource",
             writeable: true,
             urlBuilder: {
                 funcName: "fluid.kettle.couchDBDocUrlBuilder",

@@ -35,7 +35,7 @@ fluid.engage = fluid.engage || {};
     fluid.engage.importDataSource = fluid.kettle.dataSource({
         source: {
             writeable: true,
-            type: "fluid.kettle.couchDBSource",
+            type: "fluid.kettle.URLDataSource",
             urlBuilder: {
                 funcName: "fluid.stringTemplate",
                 args: ["{config}.viewURLTemplate", 

@@ -70,7 +70,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     function registerDataSpout() {
         var dataSource = fluid.kettle.dataSource({
             source: {
-              type: "fluid.kettle.couchDBSource",
+              type: "fluid.kettle.URLDataSource",
               urlBuilder: {
                   funcName: "fluid.stringTemplate",
                   args: ["{config}.viewURLTemplate", 

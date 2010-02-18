@@ -140,7 +140,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
  
     var dataSourceConfig = {
         source: {
-            type: "fluid.kettle.couchDBSource",
+            type: "fluid.kettle.URLDataSource",
             urlBuilder: {
                 funcName: "fluid.stringTemplate",
                 args: ["{config}.viewURLTemplate", 
