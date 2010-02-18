@@ -161,6 +161,7 @@ fluid = fluid || {};
         var rhc = renderHandlerConfig;
         var config = rhc.config; // IoC here
         var absPath = fluid.kettle.absoluteHandlerBase(config.mount, rhc) + localPath;
+        absPath = fluid.kettle.makeCanon(absPath);
         return fluid.kettle.pathToFileURL(absPath);
     };
     
