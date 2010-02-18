@@ -23,7 +23,6 @@
    "../services/catalogue/js/catalogue.js",
    "../services/browseCatalogue/js/browseCatalogue.js",
    "../services/browse/js/browse.js",
-   "../services/engageDemo/js/engageDemo.js",
    "../services/import/js/import.js",
    "../services/codeEntry/js/codeEntryService.js",
    "../services/guestbook/js/guestbookSpouts.js",   
