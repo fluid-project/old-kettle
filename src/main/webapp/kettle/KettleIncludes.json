@@ -33,5 +33,6 @@
    "../services/myCollection/js/myCollectionService.js",
    "../services/myCollection/js/collectOperations.js",
    "../services/myCollection/js/collectionCommon.js",
-   "../services/user/js/userService.js"
+   "../services/user/js/userService.js",
+   "../services/myCollection/js/submitMyCollectionService.js"
   ]

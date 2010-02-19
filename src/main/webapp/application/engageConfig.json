@@ -9,6 +9,8 @@ queryURLTemplate: "http://142.150.154.59:5984/%dbName/_fti/lucene/%view?include_
 viewURLTemplate: "http://142.150.154.59:5984/%dbName/%view",
 viewURLTemplateWithKey: "http://142.150.154.59:5984/%dbName/%view?key=%key",
 querySingleDocumentURLTemplate: "http://142.150.154.59:5984/%dbName/%id",
+sendMyCollectionURL: "http://www.mccord-museum.qc.ca/scripts/myCollectionHandler.php",
+
 initServices: [
     "fluid.engage.initHomeService",
     "fluid.artifactView.initMarkupFeed", 
@@ -28,7 +30,8 @@ initServices: [
     "fluid.codeEntry.initCodeEntryDataFeed",
     "fluid.codeEntry.initCodeEntryService",
     "fluid.myCollection.initMyCollectionService",
-    "fluid.collectOperations.initAcceptor"
+    "fluid.collectOperations.initAcceptor",
+    "fluid.engage.myCollection.initSendCollectionFeed"
 ],
 views: {
     all: "all",

@@ -78,7 +78,7 @@ fluid.myCollection = fluid.myCollection || {};
                 urlsByMuseum.push({
                     url: compileArtifactQueryURL(urlTemplate, view, museum, query),
                     museum: museum
-                })
+                });
             }
         }
         
@@ -98,6 +98,7 @@ fluid.myCollection = fluid.myCollection || {};
         return fluid.transform(artifacts, function (artifact) {
             return {                
                 id: artifact.id,
+                artifactId: artifact.artifactId, // TODO: This is not actually part of the navigation list model
                 target: baseArtifactURL + "?" +  $.param({
                     accessNumber: artifact.artifactAccessionNumber,
                     db: dbName,
@@ -157,7 +158,8 @@ fluid.myCollection = fluid.myCollection || {};
                 'comments': artifact.comments ? artifact.comments.comment || [] : [],
                 'relatedArtifactsCount': artifact.related_artifacts ? artifact.related_artifacts.cnt || "0" : "0",
                 'relatedArtifacts': artifact.related_artifacts ? artifact.related_artifacts.artifact || [] : [],
-                'image': artifact.images ? artifact.images.image : []            
+                'image': artifact.images ? artifact.images.image : [],
+                'artifactId': artifact.id
             };
         }
         return mappedModel;
@@ -174,7 +176,9 @@ fluid.myCollection = fluid.myCollection || {};
         
         return fluid.transform(dataRows, function (row) {
             var artifact = preMap(row.doc, database);
-            return fluid.engage.mapModel(artifact, database);
+            var mappedModel = fluid.engage.mapModel(artifact, database);
+            mappedModel.artifactId = artifact.value.artifactId; // Another ugly walkaround that should be dealt with
+            return mappedModel;
         });
     };
     
@@ -242,7 +246,7 @@ fluid.myCollection = fluid.myCollection || {};
             return {
                 ID: "initBlock",
                 functionname: "fluid.engage.myCollection",
-                arguments: [".flc-myCollection", options]
+                "arguments": [".flc-myCollection", options]
             };
         });
     };
