@@ -14,6 +14,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 "use strict";
 
 fluid = fluid || {};
+fluid.exhibitionService = fluid.exhibitionService || {};
 
 (function ($) {
 
@@ -41,7 +42,15 @@ fluid = fluid || {};
             args: [{db: "{params}.db", lang: "{params}.lang"}]
         }
     });
-        
+    
+    fluid.exhibitionService.getBundle = function(renderHandlerConfig, params) {
+        return fluid.kettle.getBundle({
+                        config: renderHandlerConfig.config,
+                        source: "components/exhibitionBrowse/html/",
+                        sourceMountRelative: "engage"
+                    }, params);
+    }
+    
     fluid.kettle.markupSpout({
         renderHandlerConfig: {
             target: "exhibitions/",

@@ -89,14 +89,6 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         return URLBase + "?" + $.param(params);
     };
     
-    fluid.exhibitionService.getBundle = function(renderHandlerConfig, params) {
-        return fluid.kettle.getBundle({
-                        config: renderHandlerConfig.config,
-                        source: "components/exhibitionBrowse/html/",
-                        sourceMountRelative: "engage"
-                    }, params);
-    }
-    
     fluid.exhibitionService.initExhibitionViewService = function (config, app) {
         var renderHandlerConfig = {
             config: config,
@@ -115,7 +107,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
         handler.registerProducer("view", function (context, env) {
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
-            var strings = fluid.exhibitionService.getBundle(renderHandlerConfig, params);
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
             var guestbookVP = {db: params.db, type: "exhibition", id: data.title, lang: params.lang};
             
             var paramForURL = {
