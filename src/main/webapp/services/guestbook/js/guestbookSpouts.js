@@ -19,7 +19,7 @@ fluid = fluid || {};
   
     fluid.engage.guestbook = fluid.engage.guestbook || {};
   
-    fluid.engage.guestbook.demoMapper = function(model, directModel) {
+    fluid.engage.guestbook.recentMapper = function(model, directModel) {
         model.comments = model.comments || [];
         var comments = model.comments;
         var recent = directModel.recent;
@@ -46,11 +46,13 @@ fluid = fluid || {};
         };
     };
     
-    fluid.engage.guestbook.mapper = function(model) {
+    fluid.engage.guestbook.mapper = function(model, directModel) {
         var togo = {};
         togo.comments = fluid.transform(model.rows, function(row) {
             return row.value;
         });
+        togo = fluid.engage.guestbook.recentMapper(togo, directModel);
+        togo.totalComments = model.rows.length;
         return togo;
     };
     
@@ -68,7 +70,7 @@ fluid = fluid || {};
                   startkeyExtend: {date: "9999"},
                   endkey: {type: "${type}",
                              id: "${id}"},
-                  limit: "${recent}",
+                  //limit: "${recent}",
                   descending: true
                   }
             }
@@ -96,7 +98,7 @@ fluid = fluid || {};
         source: {
             type: "fluid.engage.guestbook.demoDataSource"
         },
-        outputMapper: "fluid.engage.guestbook.demoMapper"
+        outputMapper: "fluid.engage.guestbook.recentMapper"
     });
     */
         
@@ -144,7 +146,8 @@ fluid = fluid || {};
              var params = {
                  type: directModel.type,
                  id: directModel.id,
-                 db: directModel.dbName
+                 db: directModel.dbName,
+                 lang: directModel.lang
              };
              options.addNoteTarget = "../guestbook/comment.html?" + $.param(params);
              options.postURL = makeCommentPostURL(directModel.dbName);
@@ -183,7 +186,8 @@ fluid = fluid || {};
         producers: {
             "guestbook": function (context) {
                 var params = context.urlState.params;
-                var options = fluid.engage.guestbook.makeOptions({dbName: params.db, recent: params.recent, type: params.type, id: params.id});
+                var dbName = targetDbToCommentsDb(params.db);
+                var options = fluid.engage.guestbook.makeOptions({dbName: dbName, lang: params.lang, recent: params.recent, type: params.type, id: params.id});
                 if (!options.isError) {
                     return {tree: {
                         ID: "initBlock", 
@@ -204,6 +208,7 @@ fluid = fluid || {};
                     targetType: params.type,
                     targetId: params.id,
                  };
+                options.strings = fluid.kettle.getBundle(fluid.engage.guestbook.renderHandlerConfig, params);
                 return {tree: {
                     ID: "initBlock",
                     functionname: "fluid.engage.guestbookComment",

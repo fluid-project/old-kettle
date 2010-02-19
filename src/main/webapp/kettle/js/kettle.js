@@ -383,11 +383,10 @@ fluid = fluid || {};
             rhc.config = config;
             rhc.app = app;
             var handler = fluid.engage.mountRenderHandler(rhc);
-            for (var key in options.producers) {
+            fluid.transform(options.producers, function(value, key) {
                 handler.registerProducer(key, function(context) {
-                    return options.producers[key](context, rhc);
-                });
-            }
+                    return value(context, rhc);
+                })});
         }
         fluid.kettle.disposeSpout(togo, options);
         return togo;
@@ -523,7 +522,6 @@ fluid = fluid || {};
         that.root = {"*": []};
         that.app = function (env) {
             var context = {env: env};
-            context.parsedUri = fluid.parseUri(env.SCRIPT_NAME);
             context.urlState = fluid.kettle.parseUrlState(env);
             context.method = env.REQUEST_METHOD;
             return fluid.kettle.withEnvironment(

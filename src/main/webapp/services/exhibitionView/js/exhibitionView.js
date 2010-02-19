@@ -116,7 +116,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             var params = context.urlState.params;
             var data = getData(errorCallback, params, config);
             var strings = fluid.exhibitionService.getBundle(renderHandlerConfig, params);
-            var guestbookVP = {dbName: params.db, type: "exhibition", id: data.title, lang: params.lang};
+            var guestbookVP = {db: params.db, type: "exhibition", id: data.title, lang: params.lang};
             
             var paramForURL = {
                 db: params.db,
@@ -134,7 +134,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
             if (strings) {
                 options.strings = strings;
             }
-            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions($.extend({recent: 1}, guestbookVP));
+            var guestbookOptions = fluid.engage.guestbook.makeRemoteOptions($.extend({recent: 1, dbName: params.db}, guestbookVP));
             options.guestbook = guestbookOptions;
                 
             var args = [".flc-exhibition-container", options];
