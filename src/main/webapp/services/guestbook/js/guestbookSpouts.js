@@ -151,6 +151,7 @@ fluid = fluid || {};
              };
              options.addNoteTarget = "../guestbook/comment.html?" + $.param(params);
              options.postURL = makeCommentPostURL(directModel.dbName);
+             options.locale = directModel.lang;
              return options;
          }
          else {
