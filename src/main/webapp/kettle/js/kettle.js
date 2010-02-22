@@ -276,8 +276,8 @@ fluid = fluid || {};
     function resolveEnvironmentImpl(obj, directModel, env) {
         return fluid.transform(obj, function(value, key) {
             if (typeof(value) === "string") {
-                 return resolveValue(value, directModel, env);
-               }
+                return resolveValue(value, directModel, env);
+            }
             else if (fluid.isPrimitive(value)) {
                 return value;
             }
@@ -310,24 +310,24 @@ fluid = fluid || {};
     };
     
     fluid.kettle.dequeueInvocations = function(target, environment) {
-         var handler = function() {
-             fluid.kettle.withEnvironment(environment, function() {
-                 var queued = fluid.makeArray(invocationQueue[target].queue);
-                 for (var i = 0; i < queued.length; ++ i) {
-                     var resolved = fluid.kettle.resolveEnvironment(queued[i]);
-                     if (resolved.func) {
-                         resolved.func.apply(null, resolved.args);
-                     }
-                     else if (resolved.funcName) {
-                         fluid.invokeGlobalFunction(resolved.funcName, resolved.args);
-                     }
-                 }
-                 invocationQueue[target].queue = []; // TODO: finally block?
-             });
-         }
-         
-         getInvocationQueue(target).handler = handler;
-         handler();
+        var handler = function() {
+            fluid.kettle.withEnvironment(environment, function() {
+                var queued = fluid.makeArray(invocationQueue[target].queue);
+                for (var i = 0; i < queued.length; ++ i) {
+                    var resolved = fluid.kettle.resolveEnvironment(queued[i]);
+                    if (resolved.func) {
+                        resolved.func.apply(null, resolved.args);
+                    }
+                    else if (resolved.funcName) {
+                        fluid.invokeGlobalFunction(resolved.funcName, resolved.args);
+                    }
+                }
+                invocationQueue[target].queue = []; // TODO: finally block?
+            });
+        }
+        
+        getInvocationQueue(target).handler = handler;
+        handler();
     };
     
     fluid.kettle.disposeSpout = function(spout, options) {

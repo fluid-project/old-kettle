@@ -33,13 +33,14 @@ fluid = fluid || {};
         }
     }
 
-        function expect(members, target) {
-            fluid.transform($.makeArray(members), function(key) {
-                if (!target[key]) {
-                    fluid.fail("Builder options missing required parameter " + key);
-                }
-            });
-        }
+    function expect(members, target) {
+        fluid.transform($.makeArray(members), function(key) {
+            if (!target[key]) {
+                fluid.fail("Builder options missing required parameter " + key);
+            }
+        });
+    }
+        
     fluid.kettle.couchDBDocUrlBuilder = function(options) {
         expect(["baseUrl", "dbName"], options);
         var stub = fluid.stringTemplate("%baseUrl/%dbName/", options);
