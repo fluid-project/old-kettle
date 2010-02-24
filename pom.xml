@@ -7,7 +7,7 @@
 
   <artifactId>fluid-engage</artifactId>
   <groupId>org.fluidproject</groupId>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.3b1</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +20,7 @@
   <inceptionYear>2009</inceptionYear>
   <packaging>war</packaging>
   <description>
-    A set of test components for evaluating conversion and rendering strategies
+    Fluid Engage's server-side JavaScript application environment, Kettle.
   </description>
 
   <repositories>
