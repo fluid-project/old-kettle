@@ -141,7 +141,13 @@ fluid.myCollection = fluid.myCollection || {};
         var mappedModel = {
             id: document._id
         };
-
+        var calculateMediaCount = function (mediafiles) {
+            if (!mediafiles || !mediafiles.mediafile) {
+                return "0";
+            }
+            var mediafile = mediafiles.mediafile;        
+            return mediafile.length ? mediafile.length.toString() : "1";                
+        };
         if (database === "mccord") {
             mappedModel.value = {
                 'title': artifact.label.title || artifact.label.object,
@@ -152,7 +158,7 @@ fluid.myCollection = fluid.myCollection || {};
                 'mention': artifact.label.mention,
                 'accessnumber': artifact.label.accessnumber,
                 'description': artifact.description || "",
-                'mediaCount': artifact.mediafiles ? artifact.mediafiles.mediafile.length.toString() || "0" : "0",
+                'mediaCount': calculateMediaCount(artifact.mediafiles),
                 'media': artifact.mediafiles ? artifact.mediafiles.mediafile || [] : [],
                 'commentsCount': artifact.comments ? artifact.comments.cnt || "0" : "0",
                 'comments': artifact.comments ? artifact.comments.comment || [] : [],
