@@ -149,7 +149,12 @@ fluid.catalogueService = fluid.catalogueService || {};
             
             var options = {
                 strings: strings,
-                model: afterMap(data, params)
+                model: afterMap(data, params),
+                navigationList: {
+                    options: {
+                        defaultToGrid: true
+                    }
+                }
             };
 
             return {
