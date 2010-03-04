@@ -75,7 +75,15 @@ fluid.exhibitionService = fluid.exhibitionService || {};
                         showHeaderForFirstCategory: false,
                         model: data.data,
                         showToggle: false,
-                        useCabinet: true
+                        useCabinet: true,
+                        cabinet: {
+                            options: {
+                                startOpen: true,
+                                selectors: {
+                                    openByDefault: ".flc-cabinet-drawer"
+                                }
+                            }
+                        }
                     };
                     if (strings) {
                         options.strings = strings;
