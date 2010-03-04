@@ -77,16 +77,25 @@ fluid = fluid || {};
         var targetDepth = fluid.kettle.parsePathInfo(rhc.target).pathInfo.length;
         var targetPrefix = fluid.kettle.generateDepth(targetDepth - 1);
         return function(url) {
-            if (url.charAt(0) === "#") {
+            if (url.charAt(0) === "#") { // TODO: move upstairs into renderer
                 return null; // avoid confusing the client by providing physical links
             }
+            var urlRewriterKey = fluid.kettle.resolveEnvironment("{params}.urlRewriter");
+            if (urlRewriterKey) {
+                var urlRewriterI = fluid.kettle.resolveEnvironment("{appStorage}."+urlRewriterKey+".urlRewriter");
+            }
+
             var canon = fluid.kettle.makeCanon(self + url);
             for (var key in absMounts) {
                 var mount = absMounts[key];
                 var source = mount.absSource;
                 if (canon.indexOf(source) === 0) {
-                    var togo = targetPrefix + mount.target + canon.substring(source.length);
-                    fluid.log("Rewriting url " + url + " to " + togo)
+                    var extent = canon.substring(source.length);
+                    var togo = targetPrefix + mount.target + extent;
+                    if (urlRewriterI) {
+                        togo = urlRewriterI({mount: mount, targetPrefix: targetPrefix, extent: extent, first: togo});
+                    }
+                    fluid.log("Rewriting url " + url + " to " + JSON.stringify(togo))
                     return togo;
                 }
             }
@@ -177,20 +186,9 @@ fluid = fluid || {};
         }
         return [500, fluid.kettle.plainHeader, message];
     };
-    
-    fluid.kettle.withEnvironment = function(envAdd, func) {
-        var root = fluid.threadLocal();
-        try {
-            $.extend(root, envAdd);
-            return func();
-        }
-        finally {
-            for (var key in envAdd) {
-               delete root[key];
-            }
-        }
-    };
 
+// This is really a "mappedDataSource" - the functionality it applies above the base is
+// to apply a function computed from "options.outputMapper" to the returned results.
     fluid.kettle.dataSource = function(options) {
         var that = fluid.initLittleComponent("fluid.kettle.dataSource", options);
         fluid.log("Creating dataSource with options " + JSON.stringify(that.options));
@@ -216,127 +214,14 @@ fluid = fluid || {};
         return that;
     };
 
-    // to integrate with FluidIoC
-    fluid.parseContextReference = function(reference, index, delimiter) {
-        var endcpos = reference.indexOf("}", index + 1);
-        if (endcpos === -1) {
-            fluid.fail("Malformed context reference without }");
-        }
-        var context = reference.substring(index + 1, endcpos);
-        var endpos = delimiter? reference.indexOf(delimiter, endcpos + 1) : reference.length;
-        var path = reference.substring(endcpos + 1, endpos);
-        if (path.charAt(0) === ".") {
-            path = path.substring(1);
-        }
-        return {context: context, path: path, endpos: endpos};
-    };
-    
-    function fetchContextReference(parsed, env) {
-        var base = env[parsed.context];
-        if (!base) {
-            fluid.fail("Context " + parsed.context + " could not be resolved in current environment");
-        }
-        return fluid.model.getBeanValue(base, parsed.path);
-    }
-    
-    function resolveValue(string, directModel, env) {
-        if (string.charAt(0) === "{") {
-            var parsed = fluid.parseContextReference(string, 0);
-            return fetchContextReference(parsed, env);        
-        }
-        while (typeof(string) === "string") {
-            var i1 = string.indexOf("${");
-            var i2 = string.indexOf("}", i1 + 2);
-            var all =  (i1 === 0 && i2 === string.length - 1); 
-            if (i1 !== -1 && i2 !== -1) {
-                var subs, path;
-                if (string.charAt(i1 + 2) === "{") {
-                    var parsed = fluid.parseContextReference(string, i1 + 2, "}");
-                    i2 = parsed.endpos;
-                    subs = fetchContextReference(parsed, env);
-                    path = parsed.path;
-                }
-                else {
-                    path = string.substring(i1 + 2, i2);
-                    subs = fluid.model.getBeanValue(directModel, path);
-                }
-                // TODO: test case for all undefined substitution
-                if (subs === undefined && !all) {
-                    fluid.fail("Unable to resolve substitution value at path " + path + " within model for expression " + string);
-                    }
-                string = all? subs : string.substring(0, i1) + subs + string.substring(i2 + 1);
-            }
-            else {
-                break;
-            }
-        }
-        return string;
-    }
-    
-    function resolveEnvironmentImpl(obj, directModel, env) {
-        return fluid.transform(obj, function(value, key) {
-            if (typeof(value) === "string") {
-                return resolveValue(value, directModel, env);
-            }
-            else if (fluid.isPrimitive(value)) {
-                return value;
-            }
-            else return resolveEnvironmentImpl(value, directModel, env);
-        });
-    }
-    
-    fluid.kettle.resolveEnvironment = function(obj, directModel) {
-        directModel = directModel || {};
-        var env = fluid.threadLocal();
-        return resolveEnvironmentImpl(obj, directModel, env);
-    };
-
-    function getInvocationQueue(target) {
-        var exist = invocationQueue[target];
-        if (!invocationQueue[target]) {
-            invocationQueue[target] = exist = {queue: []}; 
-        }
-        return exist;
-    }
-
-    var invocationQueue = {};
-    // NB: This global state assumes that startup is single-threaded
-    fluid.kettle.queueInvocation = function(target, packet) {
-        var exist = getInvocationQueue(target);
-        exist.queue.push(packet);
-        if (exist.handler) {
-            exist.handler();
-        }
-    };
-    
-    fluid.kettle.dequeueInvocations = function(target, environment) {
-        var handler = function() {
-            fluid.kettle.withEnvironment(environment, function() {
-                var queued = fluid.makeArray(invocationQueue[target].queue);
-                for (var i = 0; i < queued.length; ++ i) {
-                    var resolved = fluid.kettle.resolveEnvironment(queued[i]);
-                    if (resolved.func) {
-                        resolved.func.apply(null, resolved.args);
-                    }
-                    else if (resolved.funcName) {
-                        fluid.invokeGlobalFunction(resolved.funcName, resolved.args);
-                    }
-                }
-                invocationQueue[target].queue = []; // TODO: finally block?
-            });
-        }
-        
-        getInvocationQueue(target).handler = handler;
-        handler();
-    };
-    
     fluid.kettle.disposeSpout = function(spout, options) {
         if (options.init) {
             fluid.registerGlobalFunction(options.init, togo);
             }
         else {
-            fluid.kettle.queueInvocation("fluid.engage.initEngageApp", {func: spout, args: ["{config}", "{app}"]});
-        }      
+            fluid.kettle.queueInvocation("fluid.engage.initEngageApp", 
+                {func: spout, args: ["{config}", "{app}", "{appStorage}"]});
+        }
     };
     
     fluid.kettle.dataSpout = function(options) {
@@ -344,25 +229,25 @@ fluid = fluid || {};
         var togo = function (config, app) {
             var source = fluid.getGlobalValue(options.source.name);
             var handler = function (context) {
-                 var args = fluid.makeArray(fluid.kettle.resolveEnvironment(options.source.args));
-                 var data;
-                 if (context.method === "GET") {
-                    data = source.get.apply(null, args);
-                 }
-                 else {
-                    var body = fluid.kettle.JSONParser(context.env.jsgi.input);
-                    data = source.put.apply(null, [body].concat(args));
-                 }
-                 if (data.isError) {
-                     return fluid.kettle.makeErrorResponse(data);
-                 }
-                 else {
-                     data = data.data;                       
-                     if (options.contentType === "JSON") { // TODO: any other content types
-                         data = JSON.stringify(data);
-                     }
-                     return [200, fluid.kettle.headerFromEntry(content), data];
-                 }
+                var args = fluid.makeArray(fluid.kettle.resolveEnvironment(options.source.args));
+                var data;
+                if (context.method === "GET") {
+                   data = source.get.apply(null, args);
+                }
+                else {
+                   var body = fluid.kettle.JSONParser(context.env.jsgi.input);
+                   data = source.put.apply(null, [body].concat(args));
+                }
+                if (data.isError) {
+                    return fluid.kettle.makeErrorResponse(data);
+                }
+                else {
+                    data = data.data;                       
+                    if (options.contentType === "JSON") { // TODO: any other content types
+                        data = JSON.stringify(data);
+                    }
+                    return [200, fluid.kettle.headerFromEntry(content), data];
+                }
             };
             var parsed = fluid.kettle.parsePathInfo(options.url); // TODO: support length other than 2
             if (parsed.pathInfo.length !== 2) {
@@ -515,9 +400,33 @@ fluid = fluid || {};
         [404, fluid.kettle.plainHeader, "Fluid Kettle: Url " + context.env.SCRIPT_NAME + " could not be resolved"];
     };
     
+    fluid.kettle.createMockEnv = function(method, url) {
+        var togo = {};
+        var path = url;
+        var query;
+        var qpos = url.indexOf("?");
+        if (qpos !== -1) {
+            path = url.substring(0, qpos);
+            query = url.substring(qpos + 1);
+        }
+        togo.REQUEST_METHOD = method;
+        togo.SCRIPT_NAME = path;
+        togo.PATH_INFO = "/mount-point/" + path;
+
+        if (query) {
+            togo.QUERY_STRING = query;
+        }
+        return togo;
+    };
+    
+    fluid.kettle.makeRequest = function(app, method, url) {
+        var env = fluid.kettle.createMockEnv(method, url);
+        return app(env);
+    };
+    
     fluid.kettle.appRegistry = {};
       
-    fluid.kettle.makeKettleApp = function (config) {
+    fluid.kettle.makeKettleApp = function (config, appStorage) {
         var that = {};
         that.root = {"*": []};
         that.app = function (env) {
@@ -527,13 +436,15 @@ fluid = fluid || {};
             return fluid.kettle.withEnvironment(
                 {config: config,
                  app: that.app,
+                 appStorage: appStorage,
                  context: context,
                  params: context.urlState.params},
                  function() {
                      return fluid.kettle.routeApp(that, context);
                      });
         };
-        fluid.kettle.appRegistry[config.appName] = that;
+        appStorage.appHolder = that;
+        fluid.kettle.appRegistry[config.appName] = {appStorage: appStorage, config: config};
         return that;
     };
   

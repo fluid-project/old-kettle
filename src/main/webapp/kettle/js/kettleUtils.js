@@ -23,30 +23,6 @@ fluid = fluid || {};
     };
     
         
-    /** Canonicalise IN PLACE the supplied segment array derived from parsing a
-     * pathInfo structure. Warning, this destructively modifies the argument.
-     */
-    fluid.kettle.cononocolosePath = function(pathInfo) {
-        var consume = 0;
-        for (var i = 0; i < pathInfo.length; ++ i) {
-           if (pathInfo[i] === "..") {
-               ++consume;
-           }
-           else if (consume !== 0) {
-               pathInfo.splice(i - consume*2, consume*2);
-               i -= consume * 2;
-               consume = 0;
-           }
-        }
-        return pathInfo;
-    };
-    
-    fluid.kettle.makeCanon = function(compound) {
-        var parsed = fluid.kettle.parsePathInfo(compound);
-        fluid.kettle.cononocolosePath(parsed.pathInfo);
-        return fluid.kettle.makeRelPath(parsed); 
-    }
-       
     fluid.kettle.generateDepth = function(depth) {
         return fluid.generate(depth, "../").join("");
     };

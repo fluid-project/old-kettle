@@ -104,7 +104,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         registerDataSpout();
         app = fluid.engage.initEngageApp(config);
         
-        var env = fluid.kettle.testUtils.createMockEnv("GET", "exhibitions/browse.json?db=mccord");
+        var env = fluid.kettle.createMockEnv("GET", "exhibitions/browse.json?db=mccord");
         var response = app(env);
         
         jqUnit.assertDeepEq("Processed response", [200, {"Content-type": fluid.kettle.contentTypeRegistry.JSON.contentTypeHeader},
@@ -148,7 +148,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             data: {value: 34}
         };
             
-        var response = fluid.kettle.testUtils.makeRequest(app, "GET", "exhibitions/browse.html?db=mccord");
+        var response = fluid.kettle.makeRequest(app, "GET", "exhibitions/browse.html?db=mccord");
         jqUnit.assertEquals("Successful response", 200, response[0]);
         jqUnit.assertDeepEq("Markup content type", fluid.kettle.headerFromEntry(fluid.kettle.contentTypeRegistry.HTML), response[1]);
         var markup = response[2];
@@ -161,7 +161,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
             app = fluid.engage.initEngageApp(config);
         }
         registerDataSpout();
-        var response3 = fluid.kettle.testUtils.makeRequest(app, "POST", "exhibitions/browse.json?db=mccord");
+        var response3 = fluid.kettle.makeRequest(app, "POST", "exhibitions/browse.json?db=mccord");
         jqUnit.assertEquals("Method not allowed expected", 405, response3[0]);
     });
         

@@ -13,6 +13,7 @@
    "js/contentTypes.js",
    "$engage/framework/js/kettleCore.js",
    "js/kettleUtils.js",
+   "js/kettleEnvironment.js",
    "js/kettle.js",
    "js/kettleCouchDB.js",
    "../application/js/EngageApp.js",
@@ -34,5 +35,6 @@
    "../services/myCollection/js/collectOperations.js",
    "../services/myCollection/js/collectionCommon.js",
    "../services/user/js/userService.js",
-   "../services/myCollection/js/submitMyCollectionService.js"
+   "../services/myCollection/js/submitMyCollectionService.js",
+   "../services/condenser/js/condenserSpouts.js"
   ]

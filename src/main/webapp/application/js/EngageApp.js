@@ -106,9 +106,12 @@ fluid.engage = fluid.engage || {};
         return handler;
     };
     
+    // This remains in "engage" because of its reliance on the still not properly conceived
+    // "applyMountConfig->mountAcceptor".
     fluid.engage.initEngageApp = function (config) {
         config = fluid.engage.endeaden(config);
-        var app = fluid.kettle.makeKettleApp(config);
+        var appStorage = {};
+        var app = fluid.kettle.makeKettleApp(config, appStorage);
         config.baseDir = fluid.kettle.slashiseUrl(config.baseDir);
         var baseDir = config.baseDir;
         var mounts = config.mount;
@@ -120,10 +123,10 @@ fluid.engage = fluid.engage || {};
         for (var i = 0; i < serviceInits.length; i++) {
             var initFn = serviceInits[i];
             fluid.log("Initializing service " + initFn);
-            fluid.invokeGlobalFunction(initFn, [config, app]);
+            fluid.invokeGlobalFunction(initFn, [config, app, appStorage]);
         }
         fluid.kettle.dequeueInvocations("fluid.engage.initEngageApp", {
-          config: config, app: app});  
+          config: config, app: app, appStorage: appStorage});  
         
         // Mount shared directory points.
         fluid.engage.applyMountConfig(app, mounts, baseDir);

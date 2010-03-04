@@ -12,7 +12,6 @@ querySingleDocumentURLTemplate: "http://142.150.154.59:5984/%dbName/%id",
 sendMyCollectionURL: "http://www.mccord-museum.qc.ca/scripts/myCollectionHandler.php",
 
 initServices: [
-    "fluid.engage.initHomeService",
     "fluid.artifactView.initMarkupFeed", 
     "fluid.artifactView.initDataFeed", 
     "fluid.browseDemo.initBrowseDemo",

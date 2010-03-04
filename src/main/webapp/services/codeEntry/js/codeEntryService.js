@@ -123,11 +123,9 @@ fluid.codeEntry = fluid.codeEntry || {};
         
         handler.registerProducer("codeEntry", function (context, env) {
             var params = context.urlState.params;
-            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
-            var requestUri = env.REQUEST_URI.replace("html", "json");
-                
+            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);                
             var options = {
-                codeCheckUrlTemplate: requestUri + "?" + $.param({
+                codeCheckUrlTemplate: "../artifacts/codeEntry.json" + "?" + $.param({
                     db: params.db,
                     lang: params.lang,
                     code: "%objectCode"

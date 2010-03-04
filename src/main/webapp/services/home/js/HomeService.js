@@ -14,14 +14,11 @@ https://source.fluidproject.org/svn/LICENSE.txt
 "use strict";
 
 fluid = fluid || {};
-fluid.engage = fluid.engage || {};
+fluid.engage.home = fluid.engage.home || {};
 
 (function ($) {
     
-    fluid.engage.initHomeService = function (config, app) {
-        var renderHandlerConfig = {
-            config: config,
-            app: app,
+    fluid.engage.home.renderHandlerConfig = {
             target: "home/",
             source: "components/home/html/",
             sourceMountRelative: "engage",
@@ -30,19 +27,28 @@ fluid.engage = fluid.engage || {};
                     cutpoints: [{selector: "#flc-initBlock", id: "initBlock"}]
                 }
             }
-        };
-        
-        var handler = fluid.engage.mountRenderHandler(renderHandlerConfig);
-        
-        handler.registerProducer("home", function (context, env) {
-	        var params = context.urlState.params;
-            var strings = fluid.kettle.getBundle(renderHandlerConfig, params);
-            var args = [".flc-homeAndLanguage", strings ? {strings: strings} : {}];
-            var initBlock = {ID: "initBlock", functionname: "fluid.engage.home", 
-                "arguments": args};
-                        
-            return initBlock;
-        });
     };
+    
+    fluid.kettle.markupSpout({
+        renderHandlerConfig: fluid.engage.home.renderHandlerConfig,
+        producers: {
+          "home": function(context) {
+          var params = context.urlState.params;
+            var strings = fluid.kettle.getBundle(fluid.engage.home.renderHandlerConfig, params);
+            var options = {};
+            if (strings) {
+                options.strings = strings;
+            }
+            var args = [".flc-homeAndLanguage", options];
+            var initBlock = {
+                ID: "initBlock", 
+                functionname: "fluid.engage.home", 
+                "arguments": args
+            };
+                        
+            return {tree: initBlock};
+            }
+        }
+    });
     
 })(jQuery);

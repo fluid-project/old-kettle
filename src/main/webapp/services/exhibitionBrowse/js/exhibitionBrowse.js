@@ -99,7 +99,7 @@ fluid.exhibitionService = fluid.exhibitionService || {};
     
     fluid.engage.exhibitionMapper = function (model, options) {
         var dbName = options.db + "_exhibitions";
-        var baseExhibitionURL = "view.html";
+        var baseExhibitionURL = "../exhibitions/view.html";
         var baseUpcomingExhibitionURL = "about.html";
         var data = fluid.transform(model.rows, function (value) {
             return fluid.engage.mapModel(value, dbName);

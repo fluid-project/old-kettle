@@ -133,7 +133,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         };
         
         var encoded = fluid.kettle.couchDBViewBuilder(options);
-        jqUnit.assertEquals("Couch builder", "http://142.150.154.59:5984/mccord_comments/_design/comments/_view/comments?startkey={\"type\":\"exhibition\",\"id\":\"1\",\"date\":\"9999\"}&endkey={\"type\":\"exhibition\",\"id\":\"1\"}&limit=2&descending=true",
+        jqUnit.assertEquals("Couch builder", "http://142.150.154.59:5984/mccord_comments/_design/comments/_view/comments?startkey=%7B%22type%22%3A%22exhibition%22%2C%22id%22%3A%221%22%7D&endkey=%7B%22type%22%3A%22exhibition%22%2C%22id%22%3A%221%22%2C%22date%22%3A%229999%22%7D&limit=2&descending=true",
             encoded);
         
     });

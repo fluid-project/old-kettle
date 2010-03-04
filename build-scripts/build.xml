@@ -14,56 +14,91 @@
         <mkdir dir="${build-source}" />
     </target>
     
+	<target name="buildBaseInfusionFile">
+       <antcall target="concatJavaScript">
+            <param name="assembled" value="${infusion-assembled}" />
+            <param name="jsfile" value="MyInfusion.js" />
+            <param name="allRequiredJSFiles" value="${baseInfusionFiles}" />
+       	    <param name="sourceDir" value="${infusion-assembled}" />
+        </antcall>
+	</target>
+	
     <target name="infusionBuild">
         <ant dir="${infusion-scripts}" target="customBuild" inheritAll="false" />
+        <antcall target="buildBaseInfusionFile" />
         
-        <copy todir="${build-mini-webapp}/infusion" >
+        <copy todir="${build-mini-webapp}/fluid-infusion" >
             <fileset dir="${infusion-assembled}">
                 <exclude name="**/*.war" />
             </fileset>
-        </copy>
-        
+        </copy>        
+    	
+    	
     	<ant dir="${infusion-scripts}" target="customBuild" inheritAll="false">
               <property name="noMinify" value="true" />
         </ant>
+        <antcall target="buildBaseInfusionFile" />
     	
         <copy todir="${build-source-webapp}/fluid-infusion" >
             <fileset dir="${infusion-assembled}">
                 <exclude name="**/*.war" />
             </fileset>
         </copy>
+
     </target>
-    
+
+   <target name="buildBaseEngageFile">
+       <antcall target="concatJavaScript">
+            <param name="assembled" value="${fromDir}" />
+            <param name="jsfile" value="MyEngage.js" />
+            <param name="allRequiredJSFiles" value="${baseEngageFiles}" />
+            <param name="sourceDir" value="${fromDir}" />
+        </antcall>
+    </target>
+
     <target name="engageCoreBuild">
         <copy todir="${build-source-webapp}/fluid-engage-core">
             <fileset dir="${engage-core}"></fileset>
         </copy>
         
+    	<antcall target="buildBaseEngageFile">
+    	   <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
+    	</antcall>
+    	
         <copy todir="${build-mini-webapp}/fluid-engage-core">
           <fileset dir="${engage-core}" excludes="**/*.js,**/*.css" />
         </copy>
 
-      <antcall target="minifyJsAndCss">
-        <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
-        <param name="toDir" value="${build-mini-webapp}/fluid-engage-core" />
-      </antcall>
+        <antcall target="minifyJsAndCss">
+            <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
+            <param name="toDir" value="${build-mini-webapp}/fluid-engage-core" />
+        </antcall>
 
+        <antcall target="buildBaseEngageFile">
+            <param name="fromDir" value="${build-mini-webapp}/fluid-engage-core" />
+         </antcall>
     </target>
-     
-    <target name="engageServerBuild">
-        <copy todir="${build-source-webapp}">
+
+	<target name="copyServerBuildFiles" >
+        <copy todir="${toDir}/src/main/webapp">
             <fileset dir="${engage-webapp}">
                 <exclude name="**/engage*Config.json" />
             </fileset>
         </copy>
-        <copy tofile="${build-source-webapp}/application/engageConfig.json" file="${engage-webapp}/application/engageStandaloneConfig.json" />
-        <copy todir="${build-source}/src/main/java">
+        <copy tofile="${toDir}/src/main/webapp/application/engageConfig.json" file="${engage-webapp}/application/engageStandaloneConfig.json" />
+        <copy todir="${toDir}/src/main/java">
             <fileset dir="${engage-java}"></fileset>
         </copy> 
-
-        <copy todir="${build-mini}">
-            <fileset dir="${build-source}"></fileset>
-        </copy> 
+	</target>
+	
+    <target name="engageServerBuild">
+    	<antcall target="copyServerBuildFiles">
+    	    <param name="toDir" value="${build-source}" />
+        </antcall>
+    	
+        <antcall target="copyServerBuildFiles">
+            <param name="toDir" value="${build-mini}" />
+        </antcall>
     </target>
     
     <!-- Copies the files required to build a war file -->
