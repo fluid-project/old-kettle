@@ -66,12 +66,21 @@ fluid = fluid || {};
         return "<div" + body.substring(5, body.length - 6) + "</div>";
     }
     
+    fluid.engage.condenser.DESTRUCTIBLE_STRING = "/:/&/?/*/";
+    
+    function filterDestructible(list) {
+        return $.grep(list, function(string) {
+            return string.indexOf(fluid.engage.condenser.DESTRUCTIBLE_STRING) === -1;
+        });
+    }
+    
     fluid.engage.condenser.parseMarkup = function(markup) {
         var rootState = {string: markup, start: 0, end: markup.length};
         var headState = fluid.engage.trundle(rootState, "<head", "</head", ">");
         var bodyState = fluid.engage.trundle({string: markup, start: headState.end}, "<body", "</body");
         var linkTags = fluid.engage.multiTrundle(headState, "<link", "</link>");
         var scriptTags = fluid.engage.multiTrundle(headState, "<script", "</script>");
+        scriptTags = filterDestructible(scriptTags);
         var body = bodyToDiv(bodyState.get());
 
         return {
@@ -108,9 +117,9 @@ fluid = fluid || {};
     fluid.engage.condenser.dataSource = {
         get: function(directModel) {
             var app = fluid.kettle.resolveEnvironment("{appStorage}.appHolder");
-            var targetUrl = fluid.kettle.addParamsToUrl(directModel.targetUrl, {urlRewriter: "condenser"});
-            //var params = fluid.kettle.resolveEnvironment("{params}");
-            var response = fluid.kettle.makeRequest(app.app, "GET", directModel.targetUrl);
+            var key = fluid.kettle.resolveEnvironment("{config}.condenserRewriterKey");
+            var targetUrl = key? fluid.kettle.addParamsToUrl(directModel.targetUrl, {urlRewriter: key}) : directModel.targetUrl;
+            var response = fluid.kettle.makeRequest(app.app, "GET", targetUrl);
             var markup = response[2]; // TODO: JSGI upgrade // TODO: deal with error return
             return {data: fluid.engage.condenser.parseMarkup(markup)};
         }
@@ -125,9 +134,21 @@ fluid = fluid || {};
     });
         
     fluid.engage.condenserInitialiser = function(config, app, appStorage) {
-        var urlRewriter = fluid.kettle.makeUrlRewriter(config.mount, fluid.engage.mobileHome.renderHandlerConfig);
-        appStorage.condenser = {
-            urlRewriter: urlRewriter
-        };
+        var bundles = config.bundledResources;
+        var key = config.condenserRewriterKey;
+        if (key) {
+            var expanded = {};
+            fluid.transform(bundles, function(relative) {
+                expanded[relative] = true;
+            });
+            var urlRewriter = function(urlPackage) {
+                var real = "$"+urlPackage.mount.key + "/"+urlPackage.extent;
+                return expanded[real]? fluid.engage.condenser.DESTRUCTIBLE_STRING : urlPackage.first;
+            };
+            appStorage[key] = {
+                urlRewriter: urlRewriter,
+                bundledResources: expanded
+            };
+        }
     };
 })(jQuery);

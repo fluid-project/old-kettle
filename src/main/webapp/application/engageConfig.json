@@ -30,7 +30,27 @@ initServices: [
     "fluid.codeEntry.initCodeEntryService",
     "fluid.myCollection.initMyCollectionService",
     "fluid.collectOperations.initAcceptor",
-    "fluid.engage.myCollection.initSendCollectionFeed"
+    "fluid.engage.myCollection.initSendCollectionFeed",
+    "fluid.engage.condenserInitialiser"
+],
+condenserRewriterKey: "",
+bundledResources: [
+    "$infusion/lib/jquery/core/js/jquery.js",
+    "$infusion/lib/json/js/json2.js",
+    "$infusion/framework/core/js/Fluid.js",
+    "$infusion/framework/core/js/FluidDOMUtilities.js",
+    "$infusion/framework/core/js/DataBinding.js",
+    "$infusion/framework/renderer/js/fluidParser.js",
+    "$infusion/framework/renderer/js/fluidRenderer.js",
+    "$infusion/lib/fastXmlPull/js/fastXmlPull.js",
+    "$engage/lib/jquery/plugins/cookie/js/jquery.cookie.js",
+    "$engage/framework/js/user.js",
+    "$engage/framework/js/kettleCore.js",
+    "$engage/framework/js/URLUtilities.js",
+    "$engage/framework/js/engageRenderUtils.js",
+    "$engage/components/navigationBar/js/NavigationBar.js",
+    "$engage/components/navigationList/js/NavigationList.js",  
+    "$engage/components/cabinet/js/Cabinet.js"
 ],
 views: {
     all: "all",

@@ -120,13 +120,16 @@ fluid.engage = fluid.engage || {};
         var serviceInits = fluid.makeArray(config.initServices);        
         // Initialize each of the Engage app services registered in the config file.
         fluid.setLogging(true);
-        for (var i = 0; i < serviceInits.length; i++) {
-            var initFn = serviceInits[i];
-            fluid.log("Initializing service " + initFn);
-            fluid.invokeGlobalFunction(initFn, [config, app, appStorage]);
-        }
-        fluid.kettle.dequeueInvocations("fluid.engage.initEngageApp", {
-          config: config, app: app, appStorage: appStorage});  
+        var envObj = {config: config, app: app, appStorage: appStorage}; 
+        fluid.kettle.withEnvironment(envObj,
+            function() {
+                for (var i = 0; i < serviceInits.length; i++) {
+                    var initFn = serviceInits[i];
+                    fluid.log("Initializing service " + initFn);
+                    fluid.invokeGlobalFunction(initFn, [config, app, appStorage]);
+                }
+        });
+        fluid.kettle.dequeueInvocations("fluid.engage.initEngageApp", envObj);  
         
         // Mount shared directory points.
         fluid.engage.applyMountConfig(app, mounts, baseDir);

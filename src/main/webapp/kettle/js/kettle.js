@@ -17,9 +17,10 @@ fluid = fluid || {};
     fluid.kettle = fluid.kettle || {};
 
     fluid.kettle.computeAbsMounts = function(mounts, baseDir) {
-        fluid.transform(mounts, function(mount) {
+        fluid.transform(mounts, function(mount, key) {
             var absMount = baseDir + mount.source;
             mount.absSource = fluid.kettle.makeCanon(absMount);
+            mount.key = key;
         });
     };
     
