@@ -60,11 +60,7 @@
         <copy todir="${build-source-webapp}/fluid-engage-core">
             <fileset dir="${engage-core}"></fileset>
         </copy>
-        
-    	<antcall target="buildBaseEngageFile">
-    	   <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
-    	</antcall>
-    	
+            	
         <copy todir="${build-mini-webapp}/fluid-engage-core">
           <fileset dir="${engage-core}" excludes="**/*.js,**/*.css" />
         </copy>
@@ -75,6 +71,10 @@
         </antcall>
 
         <antcall target="buildBaseEngageFile">
+           <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
+        </antcall>
+
+    	<antcall target="buildBaseEngageFile">
             <param name="fromDir" value="${build-mini-webapp}/fluid-engage-core" />
          </antcall>
     </target>
