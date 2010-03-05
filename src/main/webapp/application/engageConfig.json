@@ -50,7 +50,12 @@ bundledResources: [
     "$engage/framework/js/engageRenderUtils.js",
     "$engage/components/navigationBar/js/NavigationBar.js",
     "$engage/components/navigationList/js/NavigationList.js",  
-    "$engage/components/cabinet/js/Cabinet.js"
+    "$engage/components/cabinet/js/Cabinet.js",
+    "$engage/lib/jquery/datepicker/ui.datepicker-stub.js",
+    "$engage/lib/jquery/datepicker/i18n/jquery.ui.datepicker-en-GB.js",
+    "$engage/lib/jquery/datepicker/i18n/jquery.ui.datepicker-fr.js",
+    "$engage/framework/js/dateUtils.js,
+    "$engage/components/guestbook/js/guestbook.js"
 ],
 views: {
     all: "all",

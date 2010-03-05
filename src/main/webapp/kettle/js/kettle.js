@@ -18,7 +18,7 @@ fluid = fluid || {};
 
     fluid.kettle.computeAbsMounts = function(mounts, baseDir) {
         fluid.transform(mounts, function(mount, key) {
-            var absMount = baseDir + mount.source;
+            var absMount = baseDir + (mount.rewriteSource? mount.rewriteSource : mount.source);
             mount.absSource = fluid.kettle.makeCanon(absMount);
             mount.key = key;
         });

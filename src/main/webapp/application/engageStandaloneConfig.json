@@ -28,7 +28,32 @@ initServices: [
     "fluid.codeEntry.initCodeEntryService",
     "fluid.myCollection.initMyCollectionService",
     "fluid.collectOperations.initAcceptor",
-    "fluid.engage.myCollection.initSendCollectionFeed"
+    "fluid.engage.myCollection.initSendCollectionFeed",
+    "fluid.engage.condenserInitialiser"
+],
+condenserRewriterKey: "condenser",
+bundledResources: [
+    "$infusion/lib/jquery/core/js/jquery.js",
+    "$infusion/lib/json/js/json2.js",
+    "$infusion/framework/core/js/Fluid.js",
+    "$infusion/framework/core/js/FluidDOMUtilities.js",
+    "$infusion/framework/core/js/DataBinding.js",
+    "$infusion/framework/renderer/js/fluidParser.js",
+    "$infusion/framework/renderer/js/fluidRenderer.js",
+    "$infusion/lib/fastXmlPull/js/fastXmlPull.js",
+    "$engage/lib/jquery/plugins/cookie/js/jquery.cookie.js",
+    "$engage/framework/js/user.js",
+    "$engage/framework/js/kettleCore.js",
+    "$engage/framework/js/URLUtilities.js",
+    "$engage/framework/js/engageRenderUtils.js",
+    "$engage/components/navigationBar/js/NavigationBar.js",
+    "$engage/components/navigationList/js/NavigationList.js",  
+    "$engage/components/cabinet/js/Cabinet.js",
+    "$engage/lib/jquery/datepicker/ui.datepicker-stub.js",
+    "$engage/lib/jquery/datepicker/i18n/jquery.ui.datepicker-en-GB.js",
+    "$engage/lib/jquery/datepicker/i18n/jquery.ui.datepicker-fr.js",
+    "$engage/framework/js/dateUtils.js,
+    "$engage/components/guestbook/js/guestbook.js"
 ],
 views: {
     all: "all",
@@ -48,7 +73,8 @@ views: {
 mount: {
     infusion: {
         target: "fluid-infusion/",
-        source: "fluid-infusion/"
+        source: "fluid-infusion/",
+        rewriteSource: "fluid-infusion/src/webapp/"
         },
     engage: {
         target: "fluid-engage-core/",
