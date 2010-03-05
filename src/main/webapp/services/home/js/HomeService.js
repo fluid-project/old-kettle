@@ -19,7 +19,7 @@ fluid.engage.home = fluid.engage.home || {};
 (function ($) {
     
     fluid.engage.home.renderHandlerConfig = {
-            target: "home/",
+            target: "app/",
             source: "components/home/html/",
             sourceMountRelative: "engage",
             baseOptions: {

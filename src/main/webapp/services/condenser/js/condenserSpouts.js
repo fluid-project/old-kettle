@@ -82,7 +82,7 @@ fluid = fluid || {};
     };
     
     fluid.engage.condenser.renderHandlerConfig = {
-        target: "mobileHome/",
+        target: "home/",
         source: "components/mobileHome/html/",
         sourceMountRelative: "engage",
         baseOptions: {
@@ -95,9 +95,9 @@ fluid = fluid || {};
     fluid.kettle.markupSpout({
         renderHandlerConfig: fluid.engage.condenser.renderHandlerConfig,
         producers: {
-          "mobileHome": function(context) {
+          "home": function(context) {
             var initBlock = {ID: "initBlock", functionname: "fluid.engage.screenNavigator", 
-                "arguments": [".flc-navigator-portal", {initialUrl: "home/home.html", condenser: "../condenser/condense.json"}]};
+                "arguments": [".flc-navigator-portal", {initialUrl: "app/home.html", condenser: "../condenser/condense.json"}]};
                         
             return {tree: initBlock};
             }
