@@ -138,8 +138,7 @@ var window = this;
 	window.DOMDocument = function(file){
 		this._file = file;
 		// PATCH: AMB
-		var dbf = Packages.javax.xml.parsers.
-      DocumentBuilderFactory.newInstance(); 
+		var dbf = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance(); 
 		
 		dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
     dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
@@ -156,6 +155,11 @@ var window = this;
 		// PATCH: AMB
 		createComment: function(data) {
 			return makeNode( this._dom.createComment(data));
+		},
+		createDocumentFragment: function() {
+		  var fragment = this._dom.createDocumentFragment();
+		  java.lang.System.out.println("fragment: " + fragment);
+		  return makeNode(fragment);
 		},
 		createTextNode: function(text){
 			return makeNode( this._dom.createTextNode(
@@ -297,6 +301,32 @@ var window = this;
 		cloneNode: function(deep){
 			return makeNode( this._dom.cloneNode(deep) );
 		},
+		appendChild: function(node){
+      // AMB patch: Return value support required for jQuery 1.4.x
+      // moved up to DOMNode for DocumentFragment support
+      return makeNode(this._dom.appendChild( node._dom ));
+    },
+    getAttribute: function(name){
+      return this._dom.hasAttribute(name) ?
+        new String( this._dom.getAttribute(name) ) :
+        null;
+    },
+    setAttribute: function(name,value){
+      this._dom.setAttribute(name,value);
+    },
+    removeAttribute: function(name){
+      this._dom.removeAttribute(name);
+    },
+    
+    get childNodes(){
+      return new DOMNodeList( this._dom.getChildNodes() );
+    },
+    get firstChild(){
+      return makeNode( this._dom.getFirstChild() );
+    },
+    get lastChild(){
+      return makeNode( this._dom.getLastChild() );
+    },
 		get ownerDocument(){
 			return getDocument( this._dom.ownerDocument );
 		},
@@ -514,30 +544,6 @@ var window = this;
 		get id() { return this.getAttribute("id") || ""; },
 		set id(val) { return this.setAttribute("id",val); },
 		
-		getAttribute: function(name){
-			return this._dom.hasAttribute(name) ?
-				new String( this._dom.getAttribute(name) ) :
-				null;
-		},
-		setAttribute: function(name,value){
-			this._dom.setAttribute(name,value);
-		},
-		removeAttribute: function(name){
-			this._dom.removeAttribute(name);
-		},
-		
-		get childNodes(){
-			return new DOMNodeList( this._dom.getChildNodes() );
-		},
-		get firstChild(){
-			return makeNode( this._dom.getFirstChild() );
-		},
-		get lastChild(){
-			return makeNode( this._dom.getLastChild() );
-		},
-		appendChild: function(node){
-			this._dom.appendChild( node._dom );
-		},
 		insertBefore: function(node,before){
 			this._dom.insertBefore( node._dom, before ? before._dom : before );
 			
@@ -557,7 +563,8 @@ var window = this;
 			}
 		},
 		removeChild: function(node){
-			this._dom.removeChild( node._dom );
+		  // AMB patch: Return value support required for jQuery 1.4.x
+			return makeNode(this._dom.removeChild( node._dom ));
 		},
 
 		getElementsByTagName: DOMDocument.prototype.getElementsByTagName,
@@ -628,6 +635,7 @@ var window = this;
 	
 	function makeNode(node){
 		if ( node ) {
+		  java.lang.System.out.println("makeNode: " + node);
 			if ( !obj_nodes.containsKey( node ) )
 				obj_nodes.put( node, node.getNodeType() == 1?
 					new DOMElement( node ) :
@@ -635,7 +643,9 @@ var window = this;
 					new DOMComment( node ) :
 					new DOMNode( node ) );
 			
-			return obj_nodes.get(node);
+			var togo = obj_nodes.get(node);
+			java.lang.System.out.println("Returning " + togo + ": " + togo.nodeType);
+			return togo;
 		} else
 			return null;
 	}

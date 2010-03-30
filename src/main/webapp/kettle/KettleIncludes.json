@@ -1,7 +1,7 @@
   [
    "js/env.js",
    "$infusion/lib/jquery/core/js/jquery.js",
-   "$infusion/lib/jquery/ui/js/ui.core.js",
+   "$infusion/lib/jquery/ui/js/jquery.ui.core.js",
    "$infusion/lib/fastXmlPull/js/fastXmlPull.js",
    "$infusion/lib/json/js/json2.js",
    "$infusion/framework/core/js/Fluid.js",
