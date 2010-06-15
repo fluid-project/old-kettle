@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artefacts userid="0">
+	<brokeraddress><![CDATA[/scripts/XMLBroker.new.php?Lang=1&contentType=IMAGES&contentID=M956.5]]></brokeraddress>
+	<lang>1</lang>
+	<artefact id="0">
+		<header>
+			<link rel="meta" href="http://www.mccord-museum.qc.ca/en/collection/artifacts/M956.5/meta/dc/"/>
+			<link rel="bookmark" href="http://www.mccord-museum.qc.ca/en/collection/artifacts/M956.5/"/>
+		</header>
+		<objectid>23778</objectid>
+		<accessnumber>M956.5</accessnumber>
+		<title/>
+		<artist><![CDATA[Anonyme - Anonymous]]></artist>
+		<dimensions><![CDATA[28.5 x 58 cm]]></dimensions>
+		<dated><![CDATA[1865-1900, 19th century]]></dated>
+		<object><![CDATA[Headdress]]></object>
+		<culture><![CDATA[Aboriginal: Maliseet]]></culture>
+		<geoculturalarea><![CDATA[Eastern Woodlands]]></geoculturalarea>
+		<medium><![CDATA[Ostrich feathers, glass beads, brass beads, brass tokens, silk ribbon, cotton thread, birchbark, cardboard, metallic thread, metallic ribbon, metal braid]]></medium>
+		<mention><![CDATA[Gift of Mr. David Ross McCord]]></mention>
+		<copyright><![CDATA[© McCord Museum]]></copyright>
+		<soundfiles/>
+		<images>
+			<image id="149469" rank="0" primarydisplay="yes" url="" alt="" view="" copyright="© McCord Museum">
+				<longdesc/>
+				<rights>
+					<right type="cc">
+						<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/" title="This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License" target="_blank">
+							<img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"/>
+						</a>
+					</right>
+				</rights>
+				<imagesfiles>
+					<imagefile id="667176" format="mini" label="Square" height="75" width="75" filesize="5" sizeunit="kB">http://eich.wsg.mcgill.ca/ThumbView/5090.jpg</imagefile>
+					<imagefile id="782021" format="small" label="Thumbnail" height="114" width="91" filesize="6" sizeunit="kB">http://eich.wsg.mcgill.ca/ListView/5090.jpg</imagefile>
+					<imagefile id="782021" format="carrousel" label="Thumbnail" height="85" width="67" filesize="6" sizeunit="kB">http://eich.wsg.mcgill.ca/ListView/5090.jpg</imagefile>
+					<imagefile id="914266" format="medium" label="Medium" height="385" width="308" filesize="48" sizeunit="kB">http://eich.wsg.mcgill.ca/ObjView/5090.jpg</imagefile>
+					<imagefile id="914266" format="album" label="Medium" height="200" width="159" filesize="48" sizeunit="kB">http://eich.wsg.mcgill.ca/ObjView/5090.jpg</imagefile>
+					<imagefile id="1046509" format="large" label="Large" height="768" width="615" filesize="64" sizeunit="kB">http://eich.wsg.mcgill.ca/largeimages/5090.jpg</imagefile>
+					<imagefile id="1345396" format="zoomify" label="" height="" width="" filesize="" sizeunit="">http://wozniak.wsg.mcgill.ca/zoomify/BATCH_ETHNO_0/5090</imagefile>
+				</imagesfiles>
+				<imagemaps/>
+			</image>
+			<image id="303053" rank="1" primarydisplay="no" url="" alt="" view="" copyright="© McCord Museum">
+				<longdesc/>
+				<rights>
+					<right type="cc">
+						<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/" title="This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License" target="_blank">
+							<img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"/>
+						</a>
+					</right>
+				</rights>
+				<imagesfiles>
+					<imagefile id="1524838" format="mini" label="Square" height="74" width="74" filesize="7" sizeunit="kB">http://eich.wsg.mcgill.ca/ThumbView/5091.jpg</imagefile>
+					<imagefile id="1537583" format="small" label="Thumbnail" height="89" width="114" filesize="10" sizeunit="kB">http://eich.wsg.mcgill.ca/ListView/5091.jpg</imagefile>
+					<imagefile id="1537583" format="carrousel" label="Thumbnail" height="66" width="85" filesize="10" sizeunit="kB">http://eich.wsg.mcgill.ca/ListView/5091.jpg</imagefile>
+					<imagefile id="1550329" format="medium" label="Medium" height="303" width="385" filesize="98" sizeunit="kB">http://eich.wsg.mcgill.ca/ObjView/5091.jpg</imagefile>
+					<imagefile id="1550329" format="album" label="Medium" height="157" width="200" filesize="98" sizeunit="kB">http://eich.wsg.mcgill.ca/ObjView/5091.jpg</imagefile>
+					<imagefile id="1563075" format="large" label="Large" height="604" width="768" filesize="369" sizeunit="kB">http://eich.wsg.mcgill.ca/largeimages/5091.jpg</imagefile>
+					<imagefile id="1587905" format="zoomify" label="" height="" width="" filesize="" sizeunit="">http://wozniak.wsg.mcgill.ca/zoomify/BATCH_ETHNO_0/5091</imagefile>
+				</imagesfiles>
+				<imagemaps/>
+			</image>
+		</images>
+		<descriptions>
+			<description_museum><![CDATA[Turn-of-the-century photographs of Malecite and Mi'kmaq men often show them wearing feather headdresses, which were very popular at the time. Some Aboriginals no doubt realized that wearing so-called traditional items like this headdress helped them to sell their handicrafts. The Malecites and Mi'kmaqs may also have worn traditional costumes, and these types of headresses, so that their Aboriginal identity would not be swallowed up by white society.]]></description_museum>
+			<description_cura><![CDATA[<I>The Imaginary "Indian"</I><br><br>In the 19th century, tourists, whether Euro-Canadians or Europeans, were fond of souvenirs representing their travels in North America. Aboriginal objects were especially appreciated as mementos of this adventure. The "Indian" that animated the dreams and imaginations of so many people in the 19th century often wore a feathered headdress.<br><br>This type of headgear was probably not worn by the Mi'kmaq before the arrival of Europeans; however, the Mi'kmaq realized that new clients flocked to them when they wore such regalia. They no doubt adopted the style to increase the "visibility" of the artisanal objects they had for sale.<br><br>Nevertheless, the affection of the Mi'kmaq for such headdresses should not be underestimated; they provided a means to affirm their Aboriginal identity loudly and clearly in the face of threats to their culture.]]></description_cura>
+			<what><![CDATA[This headdress resembles the <b>Glengarry</b> caps worn by some British regiments that served in Canada. The headdress is decorated with ostrich feathers, as well as brass and glass beads.]]></what>
+			<when><![CDATA[This object was probably made after 1860. It is unlikely that the Mi'kmaq wore this type of headgear before the arrival of Europeans.]]></when>
+			<where><![CDATA[This headdress may come from New Brunswick or Nova Scotia.]]></where>
+			<who><![CDATA[In this photograph, taken in 1914, we see six dancers wearing headdresses similar to this one. The dancer whose face is unclear because the  photograph is damaged, is thought to be Chief Isaac Sack (1855-1930), who was elected the grand chief of the Mi'kmaq in 1917.]]></who>
+		</descriptions>
+		<comments count="0"/>
+		<keywords>
+			<keyword id="6992" count="38">
+				<label><![CDATA[Headdress]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=6992</href>
+				</search_link>
+			</keyword>
+		</keywords>
+		<tags>
+			<tag id="20131" keywordid="20131" userid="" count="2" usercount="0">
+				<label><![CDATA[chef]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20131&amp;userid</href>
+				</search_link>
+				<search_link global="no">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20131</href>
+				</search_link>
+			</tag>
+			<tag id="20132" keywordid="20132" userid="" count="1" usercount="0">
+				<label><![CDATA[fleurs]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20132&amp;userid</href>
+				</search_link>
+				<search_link global="no">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20132</href>
+				</search_link>
+			</tag>
+			<tag id="20130" keywordid="20130" userid="" count="1" usercount="0">
+				<label><![CDATA[plume]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20130&amp;userid</href>
+				</search_link>
+				<search_link global="no">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=20130</href>
+				</search_link>
+			</tag>
+		</tags>
+		<links>
+			<type id="internal">
+				<category id="webtour_default" label="Related Web Tours">
+					<link id="0">
+						<href><![CDATA[/en/keys/webtours/tourID/VQ_P1_3_EN]]></href>
+						<target><![CDATA[_self]]></target>
+						<label><![CDATA[Tradition, Change and Survival: Mi'kmaq Tourist Art]]></label>
+						<title><![CDATA[Tradition, Change and Survival: Mi'kmaq Tourist Art]]></title>
+					</link>
+				</category>
+			</type>
+		</links>
+	</artefact>
+</artefacts>

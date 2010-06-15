@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artefacts userid="0">
+	<brokeraddress><![CDATA[/scripts/XMLBroker.new.php?Lang=1&contentType=IMAGES&contentID=MP-0000.25.1023]]></brokeraddress>
+	<lang>1</lang>
+	<artefact id="0">
+		<header>
+			<link rel="meta" href="http://www.mccord-museum.qc.ca/en/collection/artifacts/MP-0000.25.1023/meta/dc/"/>
+			<link rel="bookmark" href="http://www.mccord-museum.qc.ca/en/collection/artifacts/MP-0000.25.1023/"/>
+		</header>
+		<objectid>167060</objectid>
+		<accessnumber>MP-0000.25.1023</accessnumber>
+		<title><![CDATA[Canadian winter sports, snowshoeing and skiing, about 1905]]></title>
+		<artist><![CDATA[Anonyme - Anonymous]]></artist>
+		<dimensions><![CDATA[8 x 10 cm]]></dimensions>
+		<dated><![CDATA[About 1905, 20th century]]></dated>
+		<object><![CDATA[Photograph, glass lantern slide]]></object>
+		<culture/>
+		<geoculturalarea/>
+		<medium><![CDATA[Silver salts and transparent ink on glass - Gelatin dry plate process]]></medium>
+		<mention><![CDATA[Gift of Mr. Stanley G. Triggs]]></mention>
+		<copyright><![CDATA[© McCord Museum]]></copyright>
+		<soundfiles/>
+		<images>
+			<image id="150681" rank="0" primarydisplay="yes" url="" alt="" view="" copyright="McCord Museum">
+				<longdesc/>
+				<rights>
+					<right type="cc">
+						<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/2.5/ca/" title="This image is licensed under a Creative Commons Attribution-Noncommercial-No Derivative Works 2.5 Canada License" target="_blank">
+							<img alt="Creative Commons License" src="http://i.creativecommons.org/l/by-nc-nd/2.5/ca/88x31.png"/>
+						</a>
+					</right>
+				</rights>
+				<imagesfiles>
+					<imagefile id="668385" format="mini" label="Square" height="75" width="75" filesize="6" sizeunit="kB">http://eich.wsg.mcgill.ca/ThumbView/025-1023.jpg</imagefile>
+					<imagefile id="783231" format="small" label="Thumbnail" height="106" width="113" filesize="11" sizeunit="kB">http://eich.wsg.mcgill.ca/ListView/025-1023.jpg</imagefile>
+					<imagefile id="783231" format="carrousel" label="Thumbnail" height="79" width="85" filesize="11" sizeunit="kB">http://eich.wsg.mcgill.ca/ListView/025-1023.jpg</imagefile>
+					<imagefile id="915476" format="medium" label="Medium" height="360" width="385" filesize="64" sizeunit="kB">http://eich.wsg.mcgill.ca/ObjView/025-1023.jpg</imagefile>
+					<imagefile id="915476" format="album" label="Medium" height="187" width="200" filesize="64" sizeunit="kB">http://eich.wsg.mcgill.ca/ObjView/025-1023.jpg</imagefile>
+					<imagefile id="1047719" format="large" label="Large" height="719" width="767" filesize="64" sizeunit="kB">http://eich.wsg.mcgill.ca/largeimages/025-1023.jpg</imagefile>
+					<imagefile id="1346568" format="zoomify" label="" height="" width="" filesize="" sizeunit="">http://wozniak.wsg.mcgill.ca/zoomify/BATCH_NO_31/025-1023</imagefile>
+				</imagesfiles>
+				<imagemaps/>
+			</image>
+		</images>
+		<descriptions>
+			<description_museum/>
+			<description_cura><![CDATA[Young working women who were still single probably lived at home and contributed to the family budget, but they did enjoy a certain degree of financial independence and personal autonomy. Their experiences at work carried over into the world of leisure: the idea that young men and women who mingled daily at work could get together for leisure activities, such as sports, without having to be supervised by adults gradually gained acceptance. The softening of the old restrictions applied to both traditional entertainments and the commercial entertainments introduced around the turn of the century, such as amusement parks, dance halls and movie theatres.]]></description_cura>
+			<what><![CDATA[The easy mingling of these young men and women and the way in which they are touching would not have been possible during the Victorian era.]]></what>
+			<when><![CDATA[Although most workers normally had only Sunday off, some service sectors (banking, administration and other service industries) gave their workers Saturday afternoon off as well.]]></when>
+			<where><![CDATA[As public transportation was extended to the city outskirts, people had greater access to leisure activities such as snowshoeing.]]></where>
+			<who><![CDATA[These young men and women, who appear so happy, relaxed and uninhibited while posing for the photographer seem very modern, don't they?]]></who>
+		</descriptions>
+		<references>
+			<reference id="3">
+				<label><![CDATA[Kathy Peiss, <I>Cheap Amusements. Working Women and Leisure in Turn-of-Century New York</I> (Philadelphia: Temple University Press, 1986), pp. 4-8.]]></label>
+			</reference>
+		</references>
+		<comments count="0"/>
+		<keywords>
+			<keyword id="9565" count="1849">
+				<label><![CDATA[figure]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=9565</href>
+				</search_link>
+			</keyword>
+			<keyword id="9706" count="644">
+				<label><![CDATA[group]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=9706</href>
+				</search_link>
+			</keyword>
+			<keyword id="7460" count="1110">
+				<label><![CDATA[Occupation]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=7460</href>
+				</search_link>
+			</keyword>
+			<keyword id="7610" count="77678">
+				<label><![CDATA[Photograph]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=7610</href>
+				</search_link>
+			</keyword>
+			<keyword id="10628" count="7">
+				<label><![CDATA[skiing]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=10628</href>
+				</search_link>
+			</keyword>
+			<keyword id="10648" count="6">
+				<label><![CDATA[snowshoeing]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=10648</href>
+				</search_link>
+			</keyword>
+			<keyword id="8137" count="475">
+				<label><![CDATA[sport]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=8137</href>
+				</search_link>
+			</keyword>
+			<keyword id="10670" count="107">
+				<label><![CDATA[sport]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=10670</href>
+				</search_link>
+			</keyword>
+			<keyword id="10972" count="71">
+				<label><![CDATA[winter]]></label>
+				<search_link global="yes">
+					<href>/scripts/search_results.php?Lang=1&amp;keyword=10972</href>
+				</search_link>
+			</keyword>
+		</keywords>
+		<tags/>
+		<links>
+			<type id="internal">
+				<category id="webtour_default" label="Related Web Tours">
+					<link id="0">
+						<href><![CDATA[/en/keys/webtours/tourID/VQ_P3_5_EN]]></href>
+						<target><![CDATA[_self]]></target>
+						<label><![CDATA[Pastimes of Yesteryear, 1896-1919]]></label>
+						<title><![CDATA[Pastimes of Yesteryear, 1896-1919]]></title>
+					</link>
+				</category>
+			</type>
+		</links>
+	</artefact>
+</artefacts>

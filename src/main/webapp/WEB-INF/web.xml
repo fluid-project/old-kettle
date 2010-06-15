@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+	<servlet>
+		  <servlet-name>KettleServlet</servlet-name>
+		  <servlet-class>org.fluidproject.kettle.KettleServlet</servlet-class>
+      <init-param>
+          <param-name>kettleConfigLocation</param-name>
+          <param-value>/application/engageConfig.json</param-value>
+      </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+	    <servlet-name>KettleServlet</servlet-name>
+	    <url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>

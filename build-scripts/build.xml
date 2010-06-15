@@ -1,0 +1,147 @@
+<project name="FluidEngage" default="releaseBuild" basedir=".">
+    <description>
+      Build a distributable package of Fluid Engage.
+      
+      To build a distribution, type: ant
+    </description>
+
+    <property file="build.properties"/>
+    <import file="${infusion-scripts}/buildutils.xml"/>
+
+    <target name="initDirs" depends="clean">
+        <mkdir dir="${products}" />
+        <mkdir dir="${build-mini}" />
+        <mkdir dir="${build-source}" />
+    </target>
+    
+	<target name="buildBaseInfusionFile">
+       <antcall target="concatJavaScript">
+            <param name="assembled" value="${infusion-assembled}" />
+            <param name="jsfile" value="MyInfusion.js" />
+            <param name="allRequiredJSFiles" value="${baseInfusionFiles}" />
+       	    <param name="sourceDir" value="${infusion-assembled}" />
+        </antcall>
+	</target>
+	
+    <target name="infusionBuild">
+        <ant dir="${infusion-scripts}" target="customBuild" inheritAll="false" />
+        <antcall target="buildBaseInfusionFile" />
+        
+        <copy todir="${build-mini-webapp}/fluid-infusion" >
+            <fileset dir="${infusion-assembled}">
+                <exclude name="**/*.war" />
+            </fileset>
+        </copy>        
+    	
+    	
+    	<ant dir="${infusion-scripts}" target="customBuild" inheritAll="false">
+              <property name="noMinify" value="true" />
+        </ant>
+        <antcall target="buildBaseInfusionFile" />
+    	
+        <copy todir="${build-source-webapp}/fluid-infusion" >
+            <fileset dir="${infusion-assembled}">
+                <exclude name="**/*.war" />
+            </fileset>
+        </copy>
+
+    </target>
+
+   <target name="buildBaseEngageFile">
+       <antcall target="concatJavaScript">
+            <param name="assembled" value="${fromDir}" />
+            <param name="jsfile" value="MyEngage.js" />
+            <param name="allRequiredJSFiles" value="${baseEngageFiles}" />
+            <param name="sourceDir" value="${fromDir}" />
+        </antcall>
+    </target>
+
+    <target name="engageCoreBuild">
+        <copy todir="${build-source-webapp}/fluid-engage-core">
+            <fileset dir="${engage-core}"></fileset>
+        </copy>
+            	
+        <copy todir="${build-mini-webapp}/fluid-engage-core">
+          <fileset dir="${engage-core}" excludes="**/*.js,**/*.css" />
+        </copy>
+
+        <antcall target="minifyJsAndCss">
+            <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
+            <param name="toDir" value="${build-mini-webapp}/fluid-engage-core" />
+        </antcall>
+
+        <antcall target="buildBaseEngageFile">
+           <param name="fromDir" value="${build-source-webapp}/fluid-engage-core" />
+        </antcall>
+
+    	<antcall target="buildBaseEngageFile">
+            <param name="fromDir" value="${build-mini-webapp}/fluid-engage-core" />
+         </antcall>
+    </target>
+
+	<target name="copyServerBuildFiles" >
+        <copy todir="${toDir}/src/main/webapp">
+            <fileset dir="${engage-webapp}">
+                <exclude name="**/engage*Config.json" />
+            </fileset>
+        </copy>
+        <copy tofile="${toDir}/src/main/webapp/application/engageConfig.json" file="${engage-webapp}/application/engageStandaloneConfig.json" />
+        <copy todir="${toDir}/src/main/java">
+            <fileset dir="${engage-java}"></fileset>
+        </copy> 
+	</target>
+	
+    <target name="engageServerBuild">
+    	<antcall target="copyServerBuildFiles">
+    	    <param name="toDir" value="${build-source}" />
+        </antcall>
+    	
+        <antcall target="copyServerBuildFiles">
+            <param name="toDir" value="${build-mini}" />
+        </antcall>
+    </target>
+    
+    <!-- Copies the files required to build a war file -->
+    <target name="copyWARFiles">        
+      <copy todir="${todir}" >
+        <fileset dir="${base-dir}">
+            <include name="pom.xml" />
+        </fileset>
+      </copy>
+      <copy todir="${todir}/licenses" flatten="true">
+        <fileset dir="${base-dir}">
+            <include name="**/*LICENSE.txt" />
+            <exclude name="${build}" />
+            <exclude name="${products}" />
+        </fileset>
+      </copy>
+    </target>
+        
+    <target name="distWAR">
+      <antcall target="copyWARFiles">
+        <param name="todir" value="${build-source}" />
+      </antcall>
+   	  <copy todir="${build-source-webapp}/javaSources">
+        <fileset dir="${engage-java}"></fileset>
+      </copy>
+      <antcall target="buildWAR">
+        <param name="fromDir" value="${build-source}" />
+        <param name="toFile" value="${products}/${warfile-src}" />
+        <param name="warFile" value="${warfile}" />
+      </antcall>
+
+      <antcall target="copyWARFiles">
+        <param name="todir" value="${build-mini}" />
+      </antcall>
+      <antcall target="buildWAR">
+        <param name="fromDir" value="${build-mini}" />
+        <param name="toFile" value="${products}/${warfile}" />
+        <param name="warFile" value="${warfile}" />
+      </antcall>
+    </target>
+
+    <target name="releaseBuild" depends="initDirs, infusionBuild, engageCoreBuild, engageServerBuild, distWAR" 
+        description="Builds and packages a release bundle of Engage.">
+    </target>
+        
+</project>

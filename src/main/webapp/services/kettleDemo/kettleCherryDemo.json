@@ -1,0 +1,8 @@
+
+{initFunction: "fluid.kettleDemo.initCherryDemo",
+  handlerFunction: "fluid.kettle.servlet.process",
+  includes: "kettle/KettleIncludes.json",
+  includesPrefix: "kettle/",
+  loaderFunction: "fluid.kettleDemo.initCherryDemo",
+  debugMode: false
+}
