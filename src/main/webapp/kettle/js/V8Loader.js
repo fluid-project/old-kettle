@@ -52,7 +52,7 @@
     kettle.computeAbsMounts = function(mounts, baseDir) {
         for (var key in mounts) {
             var mount = mounts[key];
-            var absMount = baseDir + (mount.rewriteSource? mount.rewriteSource : mount.source);
+            var absMount = baseDir + mount.source;
             mount.absSource = absMount; // fluid.kettle.makeCanon(absMount);
             mount.key = key;
         }
