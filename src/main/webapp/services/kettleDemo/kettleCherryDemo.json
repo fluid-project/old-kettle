@@ -1,8 +1,14 @@
-
-{initFunction: "fluid.kettleDemo.initCherryDemo",
-  handlerFunction: "fluid.kettle.servlet.process",
-  includes: "kettle/KettleIncludes.json",
-  includesPrefix: "kettle/",
-  loaderFunction: "fluid.kettleDemo.initCherryDemo",
-  debugMode: false
+{ 
+"apps": {
+    "CherryDemo": {
+        "includes": "js/kettleCherryDemo.js",
+        "initFunction": "fluid.kettleDemo.initCherryDemo"
+        }
+    },
+"mount": {
+    "kettleDemo": {
+        "target": "kettleDemo/",
+        "source": ""
+        }
+    }
 }

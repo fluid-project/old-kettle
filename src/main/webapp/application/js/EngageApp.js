@@ -54,6 +54,7 @@ fluid.engage = fluid.engage || {};
         var urlTable = onApp.root[segment];
         urlTable["*"] = urlTable["*"] || [];
         urlTable["*"].push(acceptor);
+        console.log("Acceptor " + acceptor + " pushed at segment " + segment);
     };
     
     fluid.engage.mountAcceptor = function (onApp, atSegment, acceptor) {
@@ -62,7 +63,7 @@ fluid.engage = fluid.engage || {};
             acceptorMap = {};
             acceptorMap[atSegment] = acceptor;
         }
-
+        console.log("mountAcceptor at " + atSegment);
         for (var segment in acceptorMap) {
             mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
         }
@@ -91,11 +92,11 @@ fluid.engage = fluid.engage || {};
         return togo;
     };
     
-    fluid.engage.applyMountConfig = function (app, mounts, baseDir) {
+    fluid.engage.applyMountConfig = function (app, mounts) {
         for (var key in mounts) {
             var mount = mounts[key];
             fluid.engage.mountAcceptor(app, mount.target, 
-            fluid.kettle.mountDirectory(baseDir, mount.source));
+            fluid.kettle.mountDirectory(mount.absSource, mount.source));
         }
     };
     

@@ -1,0 +1,26 @@
+{
+"handlerFunction": "fluid.kettle.V8.process",
+"includes": "kettle/NodeIncludes.json",
+"port": 8080,
+
+"appPaths": [
+    "services/kettleDemo/kettleJSGIDemo.json",
+    "services/kettleDemo/kettleCherryDemo.json"
+    ],
+
+"mount": {
+    "infusion": {
+        "target": "fluid-infusion/",
+        "source": "../../../../fluid-infusion/src/webapp/"
+        },
+    "engage": {
+        "target": "fluid-engage-core/",
+        "source": "../../../../fluid-engage-core/"
+        },
+    "engageDemo": {
+        "target": "engageDemo/",
+        "source": "services/engageDemo/"
+        }
+    },
+"debugMode": true
+}

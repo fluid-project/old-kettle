@@ -17,8 +17,8 @@ fluid = fluid || {};
     fluid.kettle = fluid.kettle || {};
     
     fluid.kettle.parseUrlState = function (env) {
-        var togo = fluid.kettle.parsePathInfo(env.SCRIPT_NAME);
-        togo.params = fluid.kettle.paramsToMap(env.QUERY_STRING);
+        var togo = fluid.kettle.parsePathInfo(env.scriptName);
+        togo.params = fluid.kettle.paramsToMap(env.queryString);
         return togo;
     };
     

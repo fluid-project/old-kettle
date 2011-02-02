@@ -1,0 +1,21 @@
+[
+   "$infusion/lib/jquery/core/js/jquery.js",
+   "$infusion/lib/jquery/ui/js/jquery.ui.core.js",
+   "$infusion/lib/fastXmlPull/js/fastXmlPull.js",
+   "$infusion/lib/json/js/json2.js",
+   "$infusion/framework/core/js/Fluid.js",
+   "$infusion/framework/core/js/FluidIoC.js",
+   "$infusion/framework/core/js/FluidRequests.js",
+   "$infusion/framework/core/js/FluidDebugging.js",
+   "$infusion/framework/renderer/js/fluidRenderer.js",
+   "$infusion/framework/renderer/js/fluidParser.js",
+   "kettle/js/contentTypes.js",
+   "$engage/framework/js/kettleCore.js",
+   "kettle/js/kettleUtils.js",
+   "kettle/js/kettleEnvironment.js",
+   "kettle/js/kettle.js",
+   "kettle/js/kettleCouchDB.js",
+   "kettle/js/V8JSGI.js",
+   "kettle/js/V8LoaderMain.js",
+   "application/js/EngageApp.js"
+]

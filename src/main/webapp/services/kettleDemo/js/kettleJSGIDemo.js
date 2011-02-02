@@ -19,9 +19,12 @@ fluid = fluid || {};
     fluid.kettleDemo = fluid.kettleDemo || {};
     
     fluid.kettleDemo.initJSGIHandlerDemo = function (config, app) {
+        console.log("initJSGIHandlerDemo");
         var handler = function (context, env) {
-            return [200, {"Content-Type": "text/plain"}, "THE KETTOL HAS LANDED!"];
+            return {status: 200, 
+                     headers: {"Content-Type": "text/plain"}, 
+                     body: "THE KETTOL HAS LANDED!"};
         };
-        fluid.engage.mountHandler(app, "kettleJSGIDemo/", handler);
+        fluid.engage.mountHandler(app, "kettleJSGIDemo", handler);
     };
 })(jQuery, fluid);

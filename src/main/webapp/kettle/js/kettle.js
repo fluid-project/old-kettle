@@ -118,20 +118,26 @@ fluid = fluid || {};
     
     fluid.kettle.METHOD_NOT_ALLOWED = {};
     
-    fluid.kettle.mountDirectory = function (baseDir, relDirPath) {
+    fluid.kettle.fileExists = function(path) {
+        return fluid.kettle.node.fileExists(path); // TODO: IOC
+    };
+    
+    fluid.kettle.mountDirectory = function (absSource, relDirPath) {
+        console.log("mountDirectory " + absSource + " "  + relDirPath);
         if (relDirPath === ".") {
             relDirPath = "";
         }
-        var absBase = baseDir + relDirPath;
+        var absBase = absSource + relDirPath;
         return {
             accept: function (segment, relPath, pathInfo, context) {
                 var absPath = absBase + relPath;
-                var file = new java.io.File(absPath); // TODO: Unportability here
-                var exists = file.exists();
+                var exists = fluid.kettle.fileExists(absPath);
                 fluid.log("File " + absPath + " exists: " + exists);
                 return exists ? (context.method === "GET" ? {
                         handle: function (context, env) {
-                            return [200, fluid.kettle.contentTypeFromExtension(pathInfo.extension), file];
+                            return {status: 200, headers: fluid.kettle.contentTypeFromExtension(pathInfo.extension), 
+                                body: {type: "file",
+                                       path: absPath}};
                         }
                     } : fluid.kettle.METHOD_NOT_ALLOWED) : null;
             }
@@ -185,7 +191,7 @@ fluid = fluid || {};
         if (data.errorThrown) {
             message += " - Thrown error: " + data.errorThrown;
         }
-        return [500, fluid.kettle.plainHeader, message];
+        return {status: 500, headers: fluid.kettle.plainHeader, body: message};
     };
 
 // This is really a "mappedDataSource" - the functionality it applies above the base is
@@ -247,7 +253,7 @@ fluid = fluid || {};
                     if (options.contentType === "JSON") { // TODO: any other content types
                         data = JSON.stringify(data);
                     }
-                    return [200, fluid.kettle.headerFromEntry(content), data];
+                    return {status: 200, headers: fluid.kettle.headerFromEntry(content), body: data};
                 }
             };
             var parsed = fluid.kettle.parsePathInfo(options.url); // TODO: support length other than 2
@@ -320,7 +326,7 @@ fluid = fluid || {};
                         }
                         var markup = fluid.renderTemplates(entry.templates, tree, that.options.renderOptions);
                         var contentType = that.getContentType(segment);
-                        return [200, fluid.kettle.headerFromEntry(contentType), markup];
+                        return {status: 200, headers: fluid.kettle.headerFromEntry(contentType), body: markup};
                     }
                     else {
                         return kettle.makeErrorResponse(tree);
@@ -357,6 +363,7 @@ fluid = fluid || {};
             segment = "/";
         }
         var exist = root[segment];
+        console.log("Root at " + segment + ": " + exist);
         if (exist) {
             return {route: exist};
         }
@@ -384,6 +391,7 @@ fluid = fluid || {};
         var segs = context.urlState.pathInfo;
         var root = that.root;
         var disposition;
+        fluid.log("routing segments " + JSON.stringify(segs));
         for (var i = 0; i < segs.length; ++ i) {
             var seg = segs[i];
             disposition = routeSegment(seg, root, context.urlState, i, context);
@@ -397,8 +405,8 @@ fluid = fluid || {};
             }
         }
         return disposition === fluid.kettle.METHOD_NOT_ALLOWED?
-        [405, fluid.kettle.plainHeader, "Fluid Kettle: Method " + context.method + " was not allowed on resource " + context.env.SCRIPT_NAME]:
-        [404, fluid.kettle.plainHeader, "Fluid Kettle: Url " + context.env.SCRIPT_NAME + " could not be resolved"];
+        {status: 405, headers: fluid.kettle.plainHeader, body: "Fluid Kettle: Method " + context.method + " was not allowed on resource " + context.env.scriptName}:
+        {status: 404, headers: fluid.kettle.plainHeader, body: "Fluid Kettle: Url " + context.env.scriptName + " could not be resolved"};
     };
     
     fluid.kettle.createMockEnv = function(method, url) {
@@ -410,12 +418,12 @@ fluid = fluid || {};
             path = url.substring(0, qpos);
             query = url.substring(qpos + 1);
         }
-        togo.REQUEST_METHOD = method;
-        togo.SCRIPT_NAME = path;
-        togo.PATH_INFO = "/mount-point/" + path;
+        togo.method = method;
+        togo.scriptName = path;
+        togo.pathInfo = "/mount-point/" + path;
 
         if (query) {
-            togo.QUERY_STRING = query;
+            togo.queryString = query;
         }
         return togo;
     };
@@ -433,7 +441,7 @@ fluid = fluid || {};
         that.app = function (env) {
             var context = {env: env};
             context.urlState = fluid.kettle.parseUrlState(env);
-            context.method = env.REQUEST_METHOD;
+            context.method = env.method;
             return fluid.kettle.withEnvironment(
                 {config: config,
                  app: that.app,
