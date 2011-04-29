@@ -33,7 +33,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     function loadInclude(config, include) {
         for (var key in config.mount) {
             var mount = config.mount[key];
-            if (include.indexOf(key) === 1) { 
+            if (include.indexOf(key) === 1 && !(/Fluid\.js/.test(include))) {
                 var resolved = "file://" + config.baseDir + mount.source + include.substring(key.length + 1);
                 injectScript(resolved);
                 return; 
@@ -81,8 +81,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
         jqUnit.assertNotNull("App loaded", app);
         
         var response = fluid.kettle.makeRequest(app, "GET", "app/home.html");
-        jqUnit.assertTrue("Successful request", response[0] === 200);
-        jqUnit.assertTrue("Found init block in markup", response[2].indexOf("id=\"initBlock\"") !== -1);
+        jqUnit.assertTrue("Successful request", response.status === 200);
+        jqUnit.assertTrue("Found init block in markup", response.body.indexOf("id=\"initBlock\"") !== -1);
       
     });
     }, 1);        

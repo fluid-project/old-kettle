@@ -11,8 +11,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 /*global jQuery, fluid, java*/
 
-fluid = fluid || {};
-
 (function ($, fluid) {
     fluid.kettle = fluid.kettle || {};
 

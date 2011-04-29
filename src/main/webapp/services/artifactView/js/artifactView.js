@@ -14,7 +14,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery, fluid*/
 "use strict";
 
-fluid = fluid || {};
 fluid.artifactView = fluid.artifactView || {};
 
 (function ($) {

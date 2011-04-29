@@ -22,17 +22,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
 
 (function ($) {
 
-
     fluid.setLogging(true);
-    
-    // This code goes in FluidIoC.js once it is merged in
-    var singleThreadLocal = {};
-    
-    fluid.singleThreadLocal = function() {
-        return singleThreadLocal;
-    };
-    
-    fluid.threadLocal = fluid.singleThreadLocal;
     
     // End FluidIoC material
     if (fluid.engage) {

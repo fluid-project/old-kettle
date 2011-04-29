@@ -107,15 +107,15 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var env = fluid.kettle.createMockEnv("GET", "exhibitions/browse.json?db=mccord");
         var response = app(env);
         
-        jqUnit.assertDeepEq("Processed response", [200, {"Content-type": fluid.kettle.contentTypeRegistry.JSON.contentTypeHeader},
-           "{\"value\":35}"], response);
+        jqUnit.assertDeepEq("Processed response", {status: 200, headers: {"Content-type": fluid.kettle.contentTypeRegistry.JSON.contentTypeHeader},
+           body: "{\"value\":35}"}, response);
            
         remoteReturn = {
             isError: true,
             errorThrown: "Connection Timed out"
         };
         var response2 = app(env);
-        jqUnit.assertEquals("Error response", 500, response2[0]);
+        jqUnit.assertEquals("Error response", 500, response2.status);
         
         fluid.kettle.markupSpout({
             renderHandlerConfig: {
@@ -149,9 +149,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
         };
             
         var response = fluid.kettle.makeRequest(app, "GET", "exhibitions/browse.html?db=mccord");
-        jqUnit.assertEquals("Successful response", 200, response[0]);
-        jqUnit.assertDeepEq("Markup content type", fluid.kettle.headerFromEntry(fluid.kettle.contentTypeRegistry.HTML), response[1]);
-        var markup = response[2];
+        jqUnit.assertEquals("Successful response", 200, response.status);
+        jqUnit.assertDeepEq("Markup content type", fluid.kettle.headerFromEntry(fluid.kettle.contentTypeRegistry.HTML), response.headers);
+        var markup = response.body;
         jqUnit.assertTrue("Rendered data", markup.indexOf("fluid.browse(\".flc-browse\", 35)") !== -1);
 
     });
@@ -162,7 +162,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         }
         registerDataSpout();
         var response3 = fluid.kettle.makeRequest(app, "POST", "exhibitions/browse.json?db=mccord");
-        jqUnit.assertEquals("Method not allowed expected", 405, response3[0]);
+        jqUnit.assertEquals("Method not allowed expected", 405, response3.status);
     });
         
 })(jQuery);

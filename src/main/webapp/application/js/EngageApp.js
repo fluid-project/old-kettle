@@ -14,7 +14,6 @@ https://source.fluidproject.org/svn/LICENSE.txt
 /*global jQuery, fluid*/
 "use strict";
 
-fluid = fluid || {};
 fluid.engage = fluid.engage || {};
 
 (function () {
@@ -68,35 +67,12 @@ fluid.engage = fluid.engage || {};
             mergeAcceptorAtSegment(onApp, segment, acceptorMap[segment]);
         }
     };
-    // temporary function required whilst we use Rhino
-    fluid.engage.endeaden = function (undead) {
-        var togo = undead;
-        var clazz = String(undead.getClass().getName());
-        if (clazz.charAt(0) === "[") {
-            togo = [];
-            for (var i = 0; i < undead.length; ++ i) {
-                togo[i] = fluid.engage.endeaden(undead[i]);
-            }
-        }
-        else if (clazz === "java.util.HashMap") {
-            togo = {};
-            for (var j = undead.keySet().iterator(); j.hasNext();) {
-                var key = j.next();
-                var value = undead.get(key);
-                togo[key] = fluid.engage.endeaden(value);
-            }
-        }
-        else {
-            togo = String(undead);
-        }
-        return togo;
-    };
     
     fluid.engage.applyMountConfig = function (app, mounts) {
         for (var key in mounts) {
             var mount = mounts[key];
             fluid.engage.mountAcceptor(app, mount.target, 
-            fluid.kettle.mountDirectory(mount.absSource, mount.source));
+               fluid.kettle.mountDirectory(mount.absSource, mount.source));
         }
     };
     
@@ -110,7 +86,6 @@ fluid.engage = fluid.engage || {};
     // This remains in "engage" because of its reliance on the still not properly conceived
     // "applyMountConfig->mountAcceptor".
     fluid.engage.initEngageApp = function (config) {
-        config = fluid.engage.endeaden(config);
         var appStorage = {};
         var app = fluid.kettle.makeKettleApp(config, appStorage);
         config.baseDir = fluid.kettle.slashiseUrl(config.baseDir);
