@@ -29,12 +29,10 @@ https://source.fluidproject.org/svn/LICENSE.txt
         engageDemo: {
             target: "engageDemo/",
             source: "services/engageDemo/",
-            rewriteSource: "../../../services/engageDemo/"
           },
         kettleDemo: {
             target: "kettleDemo/",
             source: "services/kettleDemo/",
-            rewriteSource: "../../../services/kettleDemo/"
           }
     };
     
@@ -79,7 +77,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var rewriter = fluid.kettle.makeUrlRewriter(copyMount, renderHandlerConfig);
         jqUnit.assertEquals("Rewrite Long Mount", "../fluid-infusion/framework/fss/css/fss-mobile-layout.css", 
             rewriter("../../../../fluid-infusion/src/webapp/framework/fss/css/fss-mobile-layout.css"));
-        jqUnit.assertEquals("Rewrite Short Mount", "../fluid-engage-core/components/home/css/Home.css", rewriter("../css/Home.css"));
+        jqUnit.assertEquals("Rewrite Short Mount", "components/home/css/Home.css", rewriter("../css/Home.css"));
         jqUnit.assertNull("Rewrite non-Mount", rewriter("../../../../../fluid-infusion"));
         
      // Unix-style URL tests   
@@ -91,6 +89,40 @@ https://source.fluidproject.org/svn/LICENSE.txt
         var file = fluid.kettle.pathToFileURL(infusionbase2);
         jqUnit.assertEquals("File triple slash", "file:///private/var/folders/I3/I3gaY-IBGri5Uac95qFZ4++++TM/-Tmp-/Jetty_0_0_0_0_8080_fe.war__fe__qg2u39/webapp/fluid-infusion/", file);
       
+    });
+    
+    var renderHandlerConfig2 = {
+        target: "kettleDemo/",
+        source: "html/",
+        sourceMountRelative: "kettleDemo"
+    };
+        
+    var mount2 = {
+        "kettleDemo": {
+            "target": "kettleDemo/",
+            "source": "services/kettleDemo"
+            },
+        "infusion": {
+            "target": "fluid-infusion/",
+            "source": "../../../../fluid-infusion/src/webapp/"
+            }
+        };
+        
+    KettleTests.test("URL Tests 2", function() {
+        var baseUrl = "E:\\Source\\gits\\fluid-engage-kettle\\src\\main\\webapp/";
+        var rewBaseUrl = fluid.kettle.slashiseUrl(baseUrl);
+        var copyMount = fluid.copy(mount2);
+        fluid.kettle.computeAbsMounts(copyMount, rewBaseUrl);
+        var rewriter = fluid.kettle.makeUrlRewriter(copyMount, renderHandlerConfig2);
+        
+        var expected = { 
+            "../images/Kettle-Icon_cropped.png": "images/Kettle-Icon_cropped.png",
+            "../../../../../../../fluid-infusion/src/webapp/framework/fss/css/fss-text.css": "../fluid-infusion/framework/fss/css/fss-text.css"
+        };
+        
+        fluid.each(expected, function(value, key) {
+             jqUnit.assertEquals("Rewrite URL " + key, value, rewriter(key)); 
+        });
     });
     
     KettleTests.test("Param tests", function() {

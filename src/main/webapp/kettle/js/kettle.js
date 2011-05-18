@@ -17,7 +17,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     fluid.kettle.computeAbsMounts = function(mounts, baseDir) {
         fluid.transform(mounts, function(mount, key) {
             var absMount = baseDir + mount.source;
-            mount.absSource = fluid.kettle.makeCanon(absMount);
+            mount.absSource = fluid.kettle.ensureFinalSlash(fluid.kettle.makeCanon(absMount));
             mount.key = key;
         });
     };
@@ -90,7 +90,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
                 var source = mount.absSource;
                 if (canon.indexOf(source) === 0) {
                     var extent = canon.substring(source.length);
-                    var togo = targetPrefix + mount.target + extent;
+                    var togo = (mount.key === rhc.sourceMountRelative? "" : targetPrefix + mount.target) + extent;
                     if (urlRewriterI) {
                         togo = urlRewriterI({mount: mount, targetPrefix: targetPrefix, extent: extent, first: togo});
                     }

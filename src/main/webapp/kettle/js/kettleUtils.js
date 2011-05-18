@@ -29,7 +29,11 @@ fluid = fluid || {};
     
     fluid.kettle.slashiseUrl = function(url) {
         return url.replace(/\\/g, "/");
-    }
+    };
+    
+    fluid.kettle.ensureFinalSlash = function(url) {
+        return url? (url.charAt(url.length -1) === "/"? url : url + "/") : "/";
+    };
           
     fluid.kettle.pathToFileURL = function (path) {
         return "file://" + (path.charAt(0) === '/' ? "" : "/") + path;
