@@ -156,7 +156,9 @@ https://source.fluidproject.org/svn/LICENSE.txt
     fluid.kettle.makeCanon = function(compound) {
         var parsed = fluid.kettle.parsePathInfo(compound);
         fluid.kettle.cononocolosePath(parsed.pathInfo);
-        return fluid.kettle.makeRelPath(parsed); 
+        var togo = fluid.kettle.makeRelPath(parsed);
+        console.log("Canoned " + compound + " to " + togo);
+        return togo; 
     }
     
     

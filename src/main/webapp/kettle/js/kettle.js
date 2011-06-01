@@ -15,7 +15,7 @@ https://source.fluidproject.org/svn/LICENSE.txt
     fluid.kettle = fluid.kettle || {};
 
     fluid.kettle.computeAbsMounts = function(mounts, baseDir) {
-        fluid.transform(mounts, function(mount, key) {
+        fluid.each(mounts, function(mount, key) {
             var absMount = baseDir + mount.source;
             mount.absSource = fluid.kettle.ensureFinalSlash(fluid.kettle.makeCanon(absMount));
             mount.key = key;
@@ -121,11 +121,8 @@ https://source.fluidproject.org/svn/LICENSE.txt
     };
     
     fluid.kettle.mountDirectory = function (absSource, relDirPath) {
-        console.log("mountDirectory " + absSource + " "  + relDirPath);
-        if (relDirPath === ".") {
-            relDirPath = "";
-        }
-        var absBase = absSource + relDirPath;
+        console.log("mountDirectory " + absSource);
+        var absBase = absSource;
         return {
             accept: function (segment, relPath, pathInfo, context) {
                 var absPath = absBase + relPath;

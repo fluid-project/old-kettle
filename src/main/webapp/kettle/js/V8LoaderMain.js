@@ -46,7 +46,6 @@
                 console.log("Mount table: " + fluid.prettyPrintJSON(config.mount));
             }
             fluid.asyncEach(appConfig.apps, function(appEntry, key, cont) {
-                console.log("Processing app with key " + key);
                 fluid.kettle.node.loadApp(config, app, appEntry, dir, cont);
             }, cont);
         }, cont);

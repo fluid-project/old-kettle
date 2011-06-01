@@ -49,7 +49,7 @@
     };
     
     // copied from kettle.js for bootstrapping, deframeworkised
-    kettle.computeAbsMounts = function(mounts, baseDir) {
+    kettle.computeAbsMountsBoot = function(mounts, baseDir) {
         for (var key in mounts) {
             var mount = mounts[key];
             var absMount = baseDir + mount.source;
@@ -89,7 +89,6 @@
     };
     
     kettle.node.loadIncludes = function(includes, config, baseDir, finalCallback) {
-        kettle.computeAbsMounts(config.mount, baseDir);
         var i = 0;
         var loadNext = function() {
             var include = includes[i];
@@ -115,23 +114,26 @@
     var window = document.createWindow();
     window.require = require; // allow the module loader to be resolvable from inside the NEW WORLD
     window.__proto__.XMLHttpRequest = XMLHttpRequest; // allow xhr implementation to be seen from window
+    window.location.search = ""; // Required by Fluid 1.4 to find "notrycatch", fix this up
     var Context = process.binding('evals').Context;
     var global = window.__scriptContext = new Context(); // this is where it is mysteriously stashed by jsdom
     global.__proto__ = window;
-    var fluid = global.fluid_1_3 = {
+    var fluid = global.fluid_1_4 = {
         kettle: {}
     };
     for (var key in kettle) { // copy in primordial contents of kettle namespace into the new world
-        fluid.kettle[key] = kettle[key];
+        if (!fluid.kettle[key]) {
+            fluid.kettle[key] = kettle[key];
+        }
     }
     
     var config = kettle.node.readJSONFile(baseDir + "application/kettleConfig.json");
     var includes = kettle.node.readJSONFile(baseDir + config.includes);
     config.baseDir = baseDir;
-    kettle.computeAbsMounts(config.mount, baseDir);
 
-    
     kettle.node.initApp = function() {
+      // use the proper framework version to compute canonicalised mounts
+        fluid.kettle.computeAbsMounts(config.mount, baseDir);
         console.log("Framework includes loaded");
         if (config.debugMode) {
             fluid.setLogging(true);
@@ -149,6 +151,7 @@
         });
     };
     
+    kettle.computeAbsMountsBoot(config.mount, baseDir);
     kettle.node.loadIncludes(includes, config, config.baseDir, kettle.node.initApp);
 
 })();
