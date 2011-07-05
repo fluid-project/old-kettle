@@ -34,4 +34,32 @@ fluid = fluid || {};
         });
     };
     
+    fluid.defaults("fluid.kettleDemo.cherryDemo", {
+         gradeNames: ["fluid.kettle.app", "autoInit"],
+         components: {
+             renderHandler: {
+                 type: "fluid.kettle.renderHandler",
+                 options: {
+                     urlPrefix: "kettleDemo/",
+                     templateSource: "html/",
+                     templateMountRelative: "kettleDemo"
+                 },
+                 components: {
+                     kettle: {
+                         type: "fluid.kettle.renderer",
+                         options: {
+                             path: "kettle",
+                             // templatePath, if different
+                             protoTree:  {
+                                "output": "The CATTT"
+                             }
+                         }
+                     }
+                 }
+             }  
+         }
+    });
+    
+    // TODO: We actually DO need to support multi-resolution of demands blocks!!
+    
 })(jQuery, fluid);
