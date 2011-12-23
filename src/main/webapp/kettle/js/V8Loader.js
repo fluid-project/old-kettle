@@ -35,11 +35,13 @@
     kettle.node.loadScript = function(path, callback) {
         var tag = window.document.createElement("script");
         tag.src = path;
-        window.document.head.appendChild(tag);
-  
         tag.onload = function() {
+            console.log("Script loaded");
             callback(path);
         };
+        window.document.head.appendChild(tag);
+  
+        console.log("Node appended");
     };
     
     // copied from kettle.js for bootstrapping, deframeworkised
@@ -119,7 +121,7 @@
     var global = window.__scriptContext = new Context(); // this is where it is mysteriously stashed by jsdom
     global.console = console; // mysteriously, new jsdom does not poke it in
     global.__proto__ = window;
-    var fluid = global.fluid_1_4 = {
+    var fluid = global.fluid_1_5 = {
         kettle: {}
     };
     for (var key in kettle) { // copy in primordial contents of kettle namespace into the new world

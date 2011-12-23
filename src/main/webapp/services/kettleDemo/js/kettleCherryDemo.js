@@ -42,16 +42,16 @@ fluid = fluid || {};
                  options: {
                      urlPrefix: "kettleDemo/",
                      templateSource: "html/",
-                     templateMountRelative: "kettleDemo"
-                 },
-                 components: {
-                     kettle: {
-                         type: "fluid.kettle.renderer",
-                         options: {
-                             path: "kettle",
-                             // templatePath, if different
-                             protoTree:  {
-                                "output": "The CATTT"
+                     templateMountRelative: "kettleDemo",
+                     components: {
+                         kettle: {
+                             type: "fluid.kettle.renderer",
+                             options: {
+                                 path: "kettle",
+                                 // templatePath, if different
+                                 protoTree:  {
+                                    "output": "The CATTT"
+                                 }
                              }
                          }
                      }

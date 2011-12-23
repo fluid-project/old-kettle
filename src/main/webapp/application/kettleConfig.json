@@ -11,7 +11,7 @@
 "mount": {
     "infusion": {
         "target": "fluid-infusion/",
-        "source": "../../../../fluid-infusion/src/webapp/"
+        "source": "../../../../fluid-infusion-master/src/webapp/"
         },
     "engage": {
         "target": "fluid-engage-core/",
