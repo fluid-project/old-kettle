@@ -1,3 +1,5 @@
+This repository has been archived and is now read-only. Current Kettle development is in the [kettle repository](https://github.com/fluid-project/kettle).
+
 Kettle is the Fluid Project's experimental server-side platform, based on node.js.
 
 The homepage for Kettle is at http://wiki.fluidproject.org/display/fluid/Kettle, with issue tracking at http://issues.fluidproject.org/browse/KETTLE .
